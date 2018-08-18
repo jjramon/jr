@@ -15,12 +15,12 @@ class CreateColegiaturasTable extends Migration
     {
         Schema::create('colegiaturas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idPersona');
+            $table->integer('idUsuario');
             $table->date('fecha');
             $table->string('mesPagado',20);
             $table->boolean('estado');
             $table->timestamps();
-            $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade');
+            $table->foreign('idUsuario')->references('id')->on('users')->onUpdate('cascade');
         });
     }
 

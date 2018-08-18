@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Guatemala',
 
     /*
     |--------------------------------------------------------------------------
@@ -154,11 +154,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        colegioShaddai\Providers\AppServiceProvider::class,
+        colegioShaddai\Providers\AuthServiceProvider::class,
+        // colegioShaddai\Providers\BroadcastServiceProvider::class,
+        colegioShaddai\Providers\EventServiceProvider::class,
+        colegioShaddai\Providers\RouteServiceProvider::class,
 
     ],
 
