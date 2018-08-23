@@ -19,7 +19,7 @@ class CreateMateriasTable extends Migration
             $table->integer('idAlumno');
             $table->integer('idGrado');
             $table->timestamps();
-            $table->foreign('idAlumno')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
         });
     }
