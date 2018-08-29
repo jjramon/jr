@@ -16,18 +16,18 @@ class CreatePersonasTable extends Migration
         Schema::create('personas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idGenero');
-            $table->integer('idPadre');
-            $table->integer('idMadre');
-            $table->integer('idEncargado');
+            $table->integer('idPadre')->nullable();
+            $table->integer('idMadre')->nullable();
+            $table->integer('idEncargado')->nullable();
             $table->integer('tipoPersona');
             $table->string('identificacion',15);
             $table->string('nombre', 40);
             $table->string('apellido', 40);
-            $table->string('tel',15);
-            $table->string('direccion', 80);
-            $table->string('email', 80);
-            $table->date('fechaNacimiento');
-            $table->boolean('estado',1);
+            $table->string('tel',15)->nullable();
+            $table->string('direccion', 80)->nullable();
+            $table->string('email', 80)->nullable()->unique()->index();
+            $table->date('fechaNacimiento')->nullable();
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }

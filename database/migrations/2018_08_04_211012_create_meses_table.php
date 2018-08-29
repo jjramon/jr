@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Personas extends Migration
+class CreateMesesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,12 @@ class Personas extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('meses', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('nombre',25)->unique()->index();
+            $table->boolean('estado')->default(1);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +28,6 @@ class Personas extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('meses');
     }
 }

@@ -18,6 +18,7 @@ class CreateGradosTable extends Migration
             $table->integer('idNivel');
             $table->integer('idSeccion');
             $table->string('nombre',20);
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idNivel')->references('id')->on('niveles')->onUpdate('cascade');
             $table->foreign('idSeccion')->references('id')->on('secciones')->onUpdate('cascade');

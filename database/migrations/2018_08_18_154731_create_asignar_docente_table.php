@@ -17,6 +17,7 @@ class CreateAsignarDocenteTable extends Migration
             $table->increments('id');
             $table->integer('idMateria');
             $table->integer('idMaestro');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idMaestro')->references('id')->on('personas')->onUpdate('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');

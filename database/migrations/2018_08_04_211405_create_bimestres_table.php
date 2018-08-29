@@ -15,7 +15,8 @@ class CreateBimestresTable extends Migration
     {
         Schema::create('bimestres', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('descripcion',10);
+            $table->string('nombre',10)->unique()->index();
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }

@@ -18,9 +18,12 @@ class CreateCalificacionesTable extends Migration
             $table->integer('idMateria');
             $table->integer('idBimestre');
             $table->integer('calificacion');
+            $table->integer('idciclo');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
             $table->foreign('idBimestre')->references('id')->on('bimestres')->onUpdate('cascade');
+            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade');
         });
     }
 

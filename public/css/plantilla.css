@@ -13,7 +13,8 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 
-@media print {
+}
+ @media print {
   *,
   *::before,
   *::after {
@@ -1900,7 +1901,7 @@ fieldset[disabled] a.btn {
 .btn-sm, .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
-  line-height: 1.5; }
+  line-height: 1.5;}
 
 .btn-block {
   display: block;

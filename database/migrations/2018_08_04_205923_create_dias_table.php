@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeccionesTable extends Migration
+class CreateDiasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSeccionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('secciones', function (Blueprint $table) {
+        Schema::create('dias', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre', 1)->unique()->index();;
-            $table->boolean('estado');
+            $table->string('nombre');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateSeccionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('secciones');
+        Schema::dropIfExists('dias');
     }
 }

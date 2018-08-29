@@ -17,9 +17,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->integer('idRoll');
             $table->integer('idPersona');
-            $table->string('password',25)->nullable();
+            $table->string('password',25);
             $table->foreign('idRoll')->references('id')->on('roles')->onUpdate('cascade');
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade');
+            $table->boolean('estado')->default('1');
             $table->rememberToken();
             $table->timestamps();
         });

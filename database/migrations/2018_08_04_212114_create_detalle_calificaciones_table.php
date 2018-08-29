@@ -20,7 +20,8 @@ class CreateDetalleCalificacionesTable extends Migration
             $table->integer('zona');
             $table->integer('asistencia');
             $table->integer('examen');
-            $table->string('Observaciones', 80);
+            $table->string('Observaciones', 80)->nullable();
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idCalificacion')->references('id')->on('calificaciones')->onUpdate('cascade');
         });

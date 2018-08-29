@@ -18,7 +18,7 @@ class CreateBitacorasTable extends Migration
             $table->integer('id_usuario');
             $table->string('tabla',25);
             $table->string('registroAnterior', 80);
-            $table->string('nuevoRegistro', 80);
+            $table->string('nuevoRegistro', 80)->nullable();
             $table->timestamps();
         });
     }

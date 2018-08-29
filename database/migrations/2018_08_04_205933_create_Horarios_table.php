@@ -15,11 +15,14 @@ class CreateHorariosTable extends Migration
     {
         Schema::create('horarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idCatedras');
+            $table->integer('idMateria');
             $table->time('horario');
             $table->time('horario_salida');
+            $table->integer('idDia');
             $table->timestamps();
-            $table->foreign('idCatedras')->references('id')->on('catedras')->onUpdate('cascade');
+            $table->boolean('estado')->default(1);
+            $table->foreign('idDia')->references('id')->on('dias')->onUpdate('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
         });
     }
 
@@ -30,6 +33,6 @@ class CreateHorariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle_catedras');
+        Schema::dropIfExists('horarios');
     }
 }

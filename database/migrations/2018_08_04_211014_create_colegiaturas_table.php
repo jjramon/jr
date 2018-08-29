@@ -17,10 +17,14 @@ class CreateColegiaturasTable extends Migration
             $table->increments('id');
             $table->integer('idAlumno');
             $table->date('fecha');
-            $table->string('mesPagado',20);
-            $table->boolean('estado');
+            $table->integer('idMes');
+            $table->integer('idCiclo');
+            $table->boolean('estado')->default(1);
+            $table->string('condicion');
             $table->timestamps();
             $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
+            $table->foreign('idMes')->references('id')->on('meses')->onUpdate('cascade');
+            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade');
         });
     }
 

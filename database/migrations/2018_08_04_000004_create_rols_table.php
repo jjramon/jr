@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeccionesTable extends Migration
+class CreateRolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateSeccionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('secciones', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nombre', 1)->unique()->index();;
-            $table->boolean('estado');
+        Schema::create('rols', function (Blueprint $table) {
+            $table->increments('id'); 
+            $table->string('nombre', 30)->unique()->index();
+            $table->string('descripcion', 100);
+            $table->boolean('estado')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateSeccionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('secciones');
+        Schema::dropIfExists('rols');
     }
 }

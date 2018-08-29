@@ -18,6 +18,7 @@ class CreateMateriasTable extends Migration
             $table->string('descripcion',20);
             $table->integer('idAlumno');
             $table->integer('idGrado');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
@@ -31,6 +32,6 @@ class CreateMateriasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('catedras');
+        Schema::dropIfExists('materias');
     }
 }

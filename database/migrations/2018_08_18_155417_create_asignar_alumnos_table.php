@@ -17,6 +17,7 @@ class CreateAsignarAlumnosTable extends Migration
             $table->increments('id');
             $table->integer('idMateria');
             $table->integer('idAlumno');
+            $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');

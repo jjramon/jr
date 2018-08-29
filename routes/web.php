@@ -13,18 +13,17 @@
 
 
 
-Route::get('roles', function () {
-    return view('roles');
+
+Route::get('/', function () {
+    return view('plantilla/contenido');
 });
-Route::get('alumnos', function () {
-    return view('alumnos');
-});
-Route::get('tipo de persona', function () {
-    return view('tipoPersonas');
-});
-Route::get('registrarAlumnos', function () {
-    return view('alumnos/registrarAlumnos');
-});
-Route::get('/prueba', function () {
-    return view('alumnos/prueba');
-});
+Route::get('/genero','GeneroController@index');
+Route::post('/genero/registrar', 'GeneroController@store');
+Route::put('/genero/actualizar', 'GeneroController@update');
+Route::put('/genero/desactivar', 'GeneroController@desactivar');
+Route::put('/genero/activar', 'GeneroController@activar');
+Route::get('/rol','RolController@index');
+Route::post('/rol/registrar', 'RolController@store');
+Route::put('/rol/actualizar', 'RolController@update');
+Route::put('/rol/desactivar', 'RolController@desactivar');
+Route::put('/rol/activar', 'RolController@activar');
