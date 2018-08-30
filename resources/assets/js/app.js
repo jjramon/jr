@@ -18,6 +18,8 @@ Vue.component('genero', require('./components/Genero.vue'));
 Vue.component('rol', require('./components/Rol.vue'));
 Vue.component('ciclo', require('./components/Ciclo.vue'));
 Vue.component('dia', require('./components/Dia.vue'));
+Vue.component('seccion', require('./components/Secciones.vue'));
+Vue.component('bimestre', require('./components/Bimestres.vue'));
 const app = new Vue({
     el: '#app',
     data :{

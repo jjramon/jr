@@ -29,6 +29,12 @@
 <template v-if="menu==4">
     <dia></dia>
 </template>
+<template v-if="menu==5">
+    <seccion></seccion>
+</template>
+<template v-if="menu==6">
+    <bimestre></bimestre>
+</template>
     
 
 @endsection

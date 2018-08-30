@@ -3,9 +3,9 @@
 namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
-use colegioShaddai\Seccione;
+use colegioShaddai\Bimestre;
 
-class SeccioneController extends Controller
+class BimestreController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,10 +19,10 @@ class SeccioneController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $dias = Seccione::orderBy('id', 'desc')->paginate(8);
+            $dias = Bimestre::orderBy('id', 'desc')->paginate(8);
         }
         else{
-            $dias = Seccione::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Bimestre::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
         }
         
         return [
@@ -51,7 +51,7 @@ class SeccioneController extends Controller
         if (!$request->ajax()) return redirect('/');
         //
         
-        $dia = new Seccione();
+        $dia = new Bimestre();
         $dia -> nombre = $request->nombre;
         $dia -> estado= '1';
         $dia -> save();
@@ -70,7 +70,7 @@ class SeccioneController extends Controller
         //
         if (!$request->ajax()) return redirect('/');
         //
-        $dia =  Seccione::findOrFail($request->id);
+        $dia =  Bimestre::findOrFail($request->id);
         $dia-> nombre = $request->nombre;
         $dia -> estado= '1';
         $dia -> save();
@@ -80,7 +80,7 @@ class SeccioneController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $dia =  Seccione::findOrFail($request->id);
+        $dia =  Bimestre::findOrFail($request->id);
         $dia -> estado = '0';
         $dia -> save();
     }
@@ -89,7 +89,7 @@ class SeccioneController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $dia =  Seccione::findOrFail($request->id);
+        $dia =  Bimestre::findOrFail($request->id);
         $dia -> estado = '1';
         $dia -> save();
     }

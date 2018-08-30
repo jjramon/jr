@@ -24,6 +24,12 @@
                         <li @click="menu = 4"class="nav-item">
                             <a class="nav-link" href="#"><i class="icon-plus"></i>Días</a>
                     </li>
+                    <li @click="menu = 5"class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-plus"></i>Seccion</a>
+                    </li>
+                    <li @click="menu = 6"class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-plus"></i>Bimestre</a>
+                    </li>
                     </ul>
                 </li>
                 <li class="nav-item nav-dropdown">

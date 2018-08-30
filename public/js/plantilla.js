@@ -4268,7 +4268,7 @@ function init(url) {
 
 }
 
-/*!
+﻿/*!
 * sweetalert2 v7.26.12
 * Released under the MIT License.
 */
