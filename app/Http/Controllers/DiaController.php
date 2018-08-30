@@ -3,10 +3,9 @@
 namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
-use colegioShaddai\Genero;
+use colegioShaddai\Dia;
 
-
-class GeneroController extends Controller
+class DiaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,25 +19,24 @@ class GeneroController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $generos = Genero::orderBy('id', 'desc')->paginate(6);
+            $dias = Dia::orderBy('id', 'desc')->paginate(8);
         }
         else{
-            $generos = Genero::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Dia::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
         }
         
         return [
             'pagination'=> [
-                'total'         =>  $generos ->total(),
-                'current_page'  =>  $generos ->currentPage(),
-                'per_page'      =>  $generos ->perPage(),
-                'last_page'     =>  $generos ->lastPage(),
-                'from'          =>  $generos ->firstItem(),
-                'to'            =>  $generos ->lastItem(),
+                'total'         =>  $dias ->total(),
+                'current_page'  =>  $dias->currentPage(),
+                'per_page'      =>  $dias->perPage(),
+                'last_page'     =>  $dias ->lastPage(),
+                'from'          =>  $dias ->firstItem(),
+                'to'            =>  $dias ->lastItem(),
             ],
-            'generos'=>$generos
+            'dias'=>$dias
         ];
     }
-
 
 
     /**
@@ -49,14 +47,15 @@ class GeneroController extends Controller
      */
     public function store(Request $request)
     {
+        //
         if (!$request->ajax()) return redirect('/');
         //
-        $genero = new Genero();
-        $genero -> genero = $request->genero;
-        $genero -> estado = '1';
-        $genero -> save();
+        
+        $dia = new Dia();
+        $dia -> nombre = $request->nombre;
+        $dia -> estado= '1';
+        $dia -> save();
     }
-
 
 
     /**
@@ -68,29 +67,33 @@ class GeneroController extends Controller
      */
     public function update(Request $request)
     {
+        //
         if (!$request->ajax()) return redirect('/');
         //
-        $genero =  Genero::findOrFail($request->id);
-        $genero -> genero = $request->genero;
-        $genero -> estado = '1';
-        $genero -> save();
+        $dia =  Dia::findOrFail($request->id);
+        $dia-> nombre = $request->nombre;
+        $dia -> estado= '1';
+        $dia -> save();
     }
+
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $genero =  Genero::findOrFail($request->id);
-        $genero -> estado = '0';
-        $genero -> save();
+        $dia =  Dia::findOrFail($request->id);
+        $dia -> estado = '0';
+        $dia -> save();
     }
 
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $rol =  Genero::findOrFail($request->id);
-        $rol -> estado = '1';
-        $rol -> save();
+        $dia =  Dia::findOrFail($request->id);
+        $dia -> estado = '1';
+        $dia -> save();
     }
-   
+
+    
+
 }

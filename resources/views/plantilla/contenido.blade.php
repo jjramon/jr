@@ -23,6 +23,12 @@
 <template v-if="menu==2">
     <rol></rol>
 </template>
+<template v-if="menu==3">
+    <ciclo></ciclo>
+</template>
+<template v-if="menu==4">
+    <dia></dia>
+</template>
     
 
 @endsection

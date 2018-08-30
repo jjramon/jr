@@ -12,12 +12,23 @@
                         </button>
                     </div>
                     <div class="card-body">
-
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <select class="form-control" v-model="criterio">
+                                        <option value="nombre">Nombre:</option>
+                                        <option value="descripcion">Descripción:</option>
+                                    </select>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarRol(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarRol(1,buscar,criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                </div>
+                            </div>
+                        </div>
 
                         <table class="table table-bordered table-striped ">
                             <thead>
                                <tr class="text-center ">
-                                    <div class="row">
+                                    <div class="row table-primary">
                                         <th class="col-lg-2  col-sm-3 col-md-3 col-xs-12">Opciones</th>
                                         <th class ="col-lg-3 col-md-3 col-sm-3 col-xs-12">Nombre</th>
                                         <th class ="col-lg-5 col-md-4 col-sm-4 col-xs-12">Descripción</th>
@@ -46,11 +57,11 @@
                                     <td class ="col-lg-3 col-md-3 col-sm-3 col-xs-12" v-text="rol.nombre"></td>
                                     <td class ="col-lg-5 col-md-4 col-sm-4 col-xs-12" v-text="rol.descripcion"></td>
                                     
-                                    <td >
-                                        <div v-if="rol.estado" class ="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                    <td class = "col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                        <div v-if="rol.estado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>
-                                        <div v-else class ="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                        <div v-else >
                                             <span class="badge badge-dark">Inactivo</span>
                                         </div>
                                     </td>
@@ -61,16 +72,15 @@
                         
                         <nav>
                             <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Ant</a>
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)" >Ant</a>
                                 </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
+                                <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
                                 </li>
-                                <li class="page-item">
 
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Sig</a>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -145,7 +155,9 @@
                     'from': 0,
                     'to': 0,   
                 },
-                offset : 3
+                offset : 3,
+                criterio : 'nombre',
+                buscar : '',
             }
         },
 
@@ -174,9 +186,9 @@
             },       
         },
         methods : {
-            listarRol(page){
+            listarRol(page, buscar, criterio){
                 let me = this;
-                var url = '/rol?page=' + page;
+                var url = '/rol?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
                 axios.get(url)
                 .then(function (response) {
                     var respuesta = response.data;
@@ -186,6 +198,11 @@
                 .catch(function (error){
                     console.log(error);
                 });
+            },
+            cambiarPagina(page, buscar, criterio){
+                let me = this;
+                me.pagination.current_page = page;
+                me.listarRol(page, buscar, criterio);
             },
             registrarRol(){
                 if(this.validarRol()){
@@ -198,7 +215,7 @@
                     'descripcion':this.descripcion
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarRol();
+                    me.listarRol(1,'','nombre');
                 })
                 .catch(function (error){
                     console.log(error);
@@ -216,7 +233,7 @@
                     
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarRol();
+                    me.listarRol(1,'','nombre');
                 })
                 .catch(function (error){
                     console.log(error);
@@ -243,7 +260,7 @@
                             'id': id
                         }).then(function(response){
                             
-                            me.listarRol();
+                            me.listarRol(1,'','nombre');
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -280,9 +297,9 @@
                             'id': id
                         }).then(function(response){
                             
-                            me.listarRol();
+                            me.listarRol(1,'','nombre');
                             swalWithBootstrapButtons(
-                                'Descativado!',
+                                'Ativado!',
                                 'el registro se activado.'
                             )                     
                                   
@@ -340,7 +357,7 @@
             }
         },
         mounted() {
-            this.listarRol();
+            this.listarRol(1, this.buscar, this.criterio);
         }
     }
 </script>

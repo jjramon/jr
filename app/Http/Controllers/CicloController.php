@@ -3,10 +3,9 @@
 namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
-use colegioShaddai\Genero;
+use colegioShaddai\Ciclo;
 
-
-class GeneroController extends Controller
+class CicloController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,25 +19,24 @@ class GeneroController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $generos = Genero::orderBy('id', 'desc')->paginate(6);
+            $ciclos = Ciclo::orderBy('id', 'desc')->paginate(8);
         }
         else{
-            $generos = Genero::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $ciclos = Ciclo::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
         }
         
         return [
             'pagination'=> [
-                'total'         =>  $generos ->total(),
-                'current_page'  =>  $generos ->currentPage(),
-                'per_page'      =>  $generos ->perPage(),
-                'last_page'     =>  $generos ->lastPage(),
-                'from'          =>  $generos ->firstItem(),
-                'to'            =>  $generos ->lastItem(),
+                'total'         =>  $ciclos ->total(),
+                'current_page'  =>  $ciclos ->currentPage(),
+                'per_page'      =>  $ciclos ->perPage(),
+                'last_page'     =>  $ciclos ->lastPage(),
+                'from'          =>  $ciclos ->firstItem(),
+                'to'            =>  $ciclos ->lastItem(),
             ],
-            'generos'=>$generos
+            'ciclos'=>$ciclos
         ];
     }
-
 
 
     /**
@@ -49,14 +47,15 @@ class GeneroController extends Controller
      */
     public function store(Request $request)
     {
+        //
         if (!$request->ajax()) return redirect('/');
         //
-        $genero = new Genero();
-        $genero -> genero = $request->genero;
-        $genero -> estado = '1';
-        $genero -> save();
+        
+        $ciclo = new Ciclo();
+        $ciclo -> nombre = $request->nombre;
+        $ciclo -> estado= '1';
+        $ciclo -> save();
     }
-
 
 
     /**
@@ -68,29 +67,33 @@ class GeneroController extends Controller
      */
     public function update(Request $request)
     {
+        //
         if (!$request->ajax()) return redirect('/');
         //
-        $genero =  Genero::findOrFail($request->id);
-        $genero -> genero = $request->genero;
-        $genero -> estado = '1';
-        $genero -> save();
+        $ciclo =  Ciclo::findOrFail($request->id);
+        $ciclo -> nombre = $request->nombre;
+        $ciclo -> estado= '1';
+        $ciclo -> save();
     }
+
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $genero =  Genero::findOrFail($request->id);
-        $genero -> estado = '0';
-        $genero -> save();
+        $ciclo =  Ciclo::findOrFail($request->id);
+        $ciclo -> estado = '0';
+        $ciclo -> save();
     }
 
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $rol =  Genero::findOrFail($request->id);
-        $rol -> estado = '1';
-        $rol -> save();
+        $ciclo =  Ciclo::findOrFail($request->id);
+        $ciclo -> estado = '1';
+        $ciclo -> save();
     }
-   
+
+
+
 }

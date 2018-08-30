@@ -17,7 +17,14 @@ class RolController extends Controller
     public function index(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $rols = Rols::paginate(8);
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        if ($buscar ==''){
+            $rols = Rol::orderBy('id', 'desc')->paginate(6);
+        }
+        else{
+            $rols = Rol::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+        }
         return [
             'pagination'=> [
                 'total'         =>  $rols ->total(),
@@ -43,10 +50,11 @@ class RolController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         //
+        
         $rol = new Rol();
         $rol -> nombre = $request->nombre;
         $rol -> descripcion = $request->descripcion;
-        $rol -> estado=$request->estado = '1';
+        $rol -> estado= '1';
         $rol -> save();
     }
 

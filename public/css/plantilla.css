@@ -7448,7 +7448,9 @@ base-chart.chart {
     padding-left: 7.5px; }
 
 .main .container-fluid {
-  padding: 0 30px; }
+  padding: 5%; 
+  background-color: #D3D3D3;
+}
 
 .input-group-addon,
 .input-group-btn {

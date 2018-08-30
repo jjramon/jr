@@ -16,6 +16,8 @@ window.Vue = require('vue');
  */
 Vue.component('genero', require('./components/Genero.vue'));
 Vue.component('rol', require('./components/Rol.vue'));
+Vue.component('ciclo', require('./components/Ciclo.vue'));
+Vue.component('dia', require('./components/Dia.vue'));
 const app = new Vue({
     el: '#app',
     data :{
