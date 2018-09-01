@@ -15,7 +15,7 @@ class CreatePersonasTable extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idGenero');
+            $table->integer('idGenero')->unsigned();
             $table->integer('idPadre')->nullable();
             $table->integer('idMadre')->nullable();
             $table->integer('idEncargado')->nullable();

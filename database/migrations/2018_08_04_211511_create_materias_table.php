@@ -16,12 +16,10 @@ class CreateMateriasTable extends Migration
         Schema::create('materias', function (Blueprint $table) {
             $table->increments('id');
             $table->string('descripcion',20);
-            $table->integer('idAlumno');
-            $table->integer('idGrado');
+            $table->integer('idGrado')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
-            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
+             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
         });
     }
 

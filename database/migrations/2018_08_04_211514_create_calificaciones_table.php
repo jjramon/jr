@@ -15,10 +15,11 @@ class CreateCalificacionesTable extends Migration
     {
         Schema::create('calificaciones', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idMateria');
-            $table->integer('idBimestre');
+            $table->integer('idMateria')->unsigned();
+            $table->integer('idBimestre')->unsigned();
             $table->integer('calificacion');
-            $table->integer('idciclo');
+            $table->integer('idciclo')->unsigned();
+            $table->integer('promedio');
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');

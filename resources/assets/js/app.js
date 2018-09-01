@@ -14,12 +14,15 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-Vue.component('genero', require('./components/Genero.vue'));
-Vue.component('rol', require('./components/Rol.vue'));
-Vue.component('ciclo', require('./components/Ciclo.vue'));
-Vue.component('dia', require('./components/Dia.vue'));
+Vue.component('genero', require('./components/Generos.vue'));
+Vue.component('rol', require('./components/Roles.vue'));
+Vue.component('ciclo', require('./components/Ciclos.vue'));
+Vue.component('dia', require('./components/Dias.vue'));
 Vue.component('seccion', require('./components/Secciones.vue'));
 Vue.component('bimestre', require('./components/Bimestres.vue'));
+Vue.component('nivel', require('./components/Niveles.vue'));
+Vue.component('horario', require('./components/Horarios.vue'));
+
 const app = new Vue({
     el: '#app',
     data :{

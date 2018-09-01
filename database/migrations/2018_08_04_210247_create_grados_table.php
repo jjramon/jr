@@ -15,13 +15,17 @@ class CreateGradosTable extends Migration
     {
         Schema::create('grados', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idNivel');
-            $table->integer('idSeccion');
+            $table->integer('idNivel')->unsigned();
+            $table->integer('idSeccion')->unsigned();
+            $table->integer('idMateria')->unsigned();
+            $table->integer('idAlumno')->unsigned();
             $table->string('nombre',20);
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idNivel')->references('id')->on('niveles')->onUpdate('cascade');
             $table->foreign('idSeccion')->references('id')->on('secciones')->onUpdate('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
+            $table->foreign('idAlumno')->references('id')->on('persona')->onUpdate('cascade');
         });
     }
 

@@ -15,7 +15,7 @@ class CreateDiasTable extends Migration
     {
         Schema::create('dias', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
+            $table->string('nombre',20)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });

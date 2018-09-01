@@ -15,12 +15,12 @@ class CreateDetalleCalificacionesTable extends Migration
     {
         Schema::create('detalleCalificaciones', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idCalificacion');
+            $table->integer('idCalificacion')->unsigned();
             $table->integer('conducta');
             $table->integer('zona');
             $table->integer('asistencia');
             $table->integer('examen');
-            $table->string('Observaciones', 80)->nullable();
+            $table->string('Observaciones', 150)->nullable();
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idCalificacion')->references('id')->on('calificaciones')->onUpdate('cascade');

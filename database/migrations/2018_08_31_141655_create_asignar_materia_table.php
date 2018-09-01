@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGenerosTable extends Migration
+class CreateAsignarMateriaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateGenerosTable extends Migration
      */
     public function up()
     {
-        Schema::create('generos', function (Blueprint $table) {
+        Schema::create('asignar_materia', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('genero',10)->unique();
-            $table->boolean('estado')->defualt('1');
+            $table->integer('idGrado');
+            $table->integer('idMateria');
             $table->timestamps();
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
+            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
         });
     }
 
@@ -28,6 +30,6 @@ class CreateGenerosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('generos');
+        Schema::dropIfExists('asignar_materia');
     }
 }

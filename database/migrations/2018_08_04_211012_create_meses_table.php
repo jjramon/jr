@@ -15,7 +15,7 @@ class CreateMesesTable extends Migration
     {
         Schema::create('meses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',25)->unique()->index();
+            $table->string('nombre',25)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });

@@ -15,14 +15,14 @@ class CreateHorariosTable extends Migration
     {
         Schema::create('horarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idMateria');
+            
             $table->time('horario');
             $table->time('horario_salida');
             $table->integer('idDia');
             $table->timestamps();
             $table->boolean('estado')->default(1);
             $table->foreign('idDia')->references('id')->on('dias')->onUpdate('cascade');
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
+            
         });
     }
 

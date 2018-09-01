@@ -4,12 +4,8 @@ namespace colegioShaddai;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Dia extends Model
+class Nivele extends Model
 {
     //
     protected $fillable =  ['nombre','estado'];
-    public function horarios()
-    {
-        return $this->hasMany('colegioShaddai\Horario');
-    }
 }
