@@ -25,20 +25,18 @@
                             </div>
                         </div>
 
-                        <table class="table table-bordered table-striped ">
+                        <table class="table table-bordered table-striped table-responsive-md">
                             <thead>
-                               <tr class="text-center ">
-                                    <div class="row table-primary">
-                                        <th class="col-lg-2  col-sm-3 col-md-3 col-xs-12">Opciones</th>
-                                        <th class ="col-lg-3 col-md-3 col-sm-3 col-xs-12">Nombre</th>
-                                        <th class ="col-lg-5 col-md-4 col-sm-4 col-xs-12">Descripción</th>
-                                        <th class ="col-lg-2 col-md-2 col-sm-2 col-xs-12">Estado</th>
-                                    </div>
+                               <tr class="table-primary">
+                                    <th class="text-center ">Opciones</th>
+                                    <th class="text-center ">Nombre</th>
+                                    <th class="text-center ">Descripción</th>
+                                    <th class="text-center ">Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="rol in arrayRol" :key="rol.id" class="row text-center table-sm"> 
-                                    <td class="col-lg-2  col-sm-3 col-md-3 col-xs-12">
+                                <tr v-for="rol in arrayRol" :key="rol.id" class="text-center table-sm"> 
+                                    <td >
                                         <button type="button" @click= "abrirModal('rol','actualizar',rol)" class="btn btn-info btn-sm" >
                                             <i class="icon-pencil"></i>
                                         </button> &nbsp;
@@ -54,10 +52,10 @@
                                         </template>
                                         
                                     </td>
-                                    <td class ="col-lg-3 col-md-3 col-sm-3 col-xs-12" v-text="rol.nombre"></td>
-                                    <td class ="col-lg-5 col-md-4 col-sm-4 col-xs-12" v-text="rol.descripcion"></td>
+                                    <td  v-text="rol.nombre"></td>
+                                    <td  v-text="rol.descripcion"></td>
                                     
-                                    <td class = "col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                    <td>
                                         <div v-if="rol.estado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>

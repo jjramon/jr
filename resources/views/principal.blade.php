@@ -15,7 +15,8 @@
     <!-- css -->
 
     <link href="css/plantilla.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/sweetalert2.css">
+
+
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
@@ -73,6 +74,7 @@
     <!-- scripts -->
     <script src="js/app.js"></script>
     <script src="js/plantilla.js"></script>
+
 </body>
 
 </html>

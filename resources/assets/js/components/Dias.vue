@@ -24,19 +24,19 @@
                             </div>
                         </div>
 
-                        <table class="table table-bordered table-striped ">
+                        <table class="table table-bordered table-striped  table-responsive-md">
                             <thead>
-                               <tr class="text-center ">
-                                    <div class="row table-primary">
-                                        <th class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Opciones</th>
-                                        <th class ="col-lg-4 col-md-4 col-sm-4 col-xs-12">Día</th>
-                                        <th class ="col-lg-4 col-md-4 col-sm-4 col-xs-12">Estado</th>
-                                    </div>
+                               <tr class="table-primary ">
+                                    <th class="text-center">Opciones</th>
+                                    <th class="text-center">Dia</th>
+                                    <th class="text-center">Estado</th>                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="dia in arrayDia" :key="dia.id" class="row text-center table-sm"> 
-                                    <td class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                
+                                <tr v-for="dia in arrayDia" :key="dia.id" class=" table-sm text-center"> 
+                                    
+                                    <td>
                                         <button type="button" @click= "abrirModal('dia','actualizar',dia)" class="btn btn-info btn-sm" >
                                             <i class="icon-pencil"></i>
                                         </button> &nbsp;
@@ -51,10 +51,9 @@
                                             </button>
                                         </template>
 
-                                        
                                     </td>
-                                    <td class ="col-lg-4 col-md-4 col-sm-4 col-xs-12" v-text="dia.nombre"></td>
-                                    <td class = "col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                    <td  v-text="dia.nombre"></td>
+                                    <td >
                                         <div v-if="dia.estado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>
@@ -62,8 +61,9 @@
                                             <span class="badge badge-dark">Inactivo</span>
                                         </div>
                                     </td>
+                                    
+                                </tr>  
 
-                                </tr>   
                             </tbody>
                         </table>
                         

@@ -17,7 +17,7 @@
                 </div>
         </main>
     </template>
-
+    
     <!--menu usuarios-->
     <template v-if="menu==1">
         <rol></rol>
@@ -42,6 +42,7 @@
     <template v-if="menu==7">
         <h1>alumno</h1>          
     </template>
+
     <!--menu materias -->
     <template v-if="menu==8">
         <ciclo></ciclo>

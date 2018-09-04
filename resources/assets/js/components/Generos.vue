@@ -25,19 +25,17 @@
                         </div>
                     </div>
                     <div class="container">
-                    <table class="table  table-bordered table-striped">
+                    <table class="table  table-bordered table-striped table-responsive-md">
                         <thead>
-                            <tr class=" text-center ">
-                               <div class="row table-primary">
-                                    <th class="col-lg-4  col-sm-4 col-md-4 col-xs-12">Opciones</th>
-                                    <th class ="col-lg-4 col-md-4 col-sm-4 col-xs-12">Generos</th>
-                                    <th class =" col-lg-4 col-md-4 col-sm-4 col-xs-12">Estado</th>
-                                </div>
+                            <tr class="table-primary">
+                                <th class=" text-center ">Opciones</th>
+                                <th class=" text-center ">Generos</th>
+                                <th class=" text-center ">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="genero in arrayGenero" :key="genero.id" class="row text-center"> 
-                                <td class="col-lg-4  col-sm-4 col-md-4 col-xs-12">
+                            <tr v-for="genero in arrayGenero" :key="genero.id" class=" text-center"> 
+                                <td >
                                     <button type="button" @click= "abrirModal('genero','actualizar',genero)" class="btn btn-info btn-sm" >
                                         <i class="icon-pencil"></i>
                                     </button> &nbsp;
@@ -52,8 +50,8 @@
                                             </button>
                                         </template>
                                 </td>
-                                <td class ="col-lg-4  col-sm-4 col-md-4 col-xs-12" v-text="genero.genero"></td>
-                                <td class ="col-lg-4  col-sm-4 col-md-4 col-xs-12" >
+                                <td v-text="genero.genero"></td>
+                                <td >
                                         <div v-if="genero.estado" >
                                             <span class="badge badge-success ">Activo</span>
                                         </div>
