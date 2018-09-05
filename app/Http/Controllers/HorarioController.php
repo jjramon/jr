@@ -4,6 +4,7 @@ namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
 use colegioShaddai\Horario;
+use colegioShaddai\Dia;
 
 class HorarioController extends Controller
 {
@@ -15,18 +16,18 @@ class HorarioController extends Controller
     public function index(Request $request)
     {
         //
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
-        $criterio = $request->criterio;
+       
         if ($buscar ==''){
             $horarios = Horario::join('dias','horarios.idDia','=','dias.id')
-            ->select ('horarios.id','horarios.horario', 'horarios.horario_salida', 'horarios.idDia', 'dias.nombre as nombre_dia', 'dias.estado')
+            ->select ('horarios.id','horarios.horario', 'horarios.horario_salida', 'horarios.idDia', 'dias.nombre as nombre_dia', 'horarios.estado')
             ->orderBy('horarios.id', 'desc')->paginate(8);
         }
         else{
             $horarios = Horario::join('dias','horarios.idDia','=','dias.id')
             ->select ('horarios.id','horarios.horario', 'horarios.horario_salida', 'horarios.idDia', 'dias.nombre as nombre_dia', 'dias.estado')
-            ->where('horarios.'.$criterio, 'like', '%'.$buscar.'%')
+            ->where('horarios.idDia', 'like', $buscar)
             ->orderBy('horarios.id', 'desc')->paginate(3);
             
         }
@@ -44,7 +45,13 @@ class HorarioController extends Controller
         ];
     }
 
-  
+    public function selectDia(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/'); 
+        $dias = Dia::where('estado', '=', '1')
+        ->select('id', 'nombre')->orderBy('id','asc')->get();
+        return ['dias'=> $dias];
+    }
 
     /**
      * Store a newly created resource in storage.

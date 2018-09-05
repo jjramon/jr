@@ -17,6 +17,7 @@
 Route::get('/', function () {
     return view('plantilla/contenido');
 });
+
 Route::get('/genero','GeneroController@index');
 Route::post('/genero/registrar', 'GeneroController@store');
 Route::put('/genero/actualizar', 'GeneroController@update');
@@ -64,3 +65,4 @@ Route::post('/horario/registrar', 'HorarioController@store');
 Route::put('/horario/actualizar', 'HorarioController@update');
 Route::put('/horario/desactivar', 'HorarioController@desactivar');
 Route::put('/horario/activar', 'HorarioController@activar');
+Route::get('/horario/selectDia', 'HorarioController@selectDia');

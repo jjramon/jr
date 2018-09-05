@@ -39987,7 +39987,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position:absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color:red !important;\n    font-weight:bold;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 50% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position:absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color:red !important;\n    font-weight:bold;\n}\n\n", ""]);
 
 // exports
 
@@ -40127,6 +40127,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -40136,7 +40155,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             horario: '',
             horario_salida: '',
             nombre_dia: '',
-            arrayDia: [],
+            arrayHorario: [],
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
@@ -40151,8 +40170,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'to': 0
             },
             offset: 3,
-            criterio: 'nombre',
-            buscar: ''
+            criterio: 'horario',
+            buscar: '',
+            arrayDia: []
         };
     },
 
@@ -40183,12 +40203,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         listarHorario: function listarHorario(page, buscar, criterio) {
+            this.selectDia();
             var me = this;
             var url = '/horario?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
-                me.arrayDia = respuesta.horarios.data;
+                me.arrayHorario = respuesta.horarios.data;
                 me.pagination = respuesta.pagination;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        selectDia: function selectDia() {
+            var me = this;
+            var url = '/horario/selectDia';
+            axios.get(url).then(function (response) {
+
+                var respuesta = response.data;
+                me.arrayDia = respuesta.dias;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -40199,36 +40231,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             me.listarHorario(page, buscar, criterio);
         },
         registrarHorario: function registrarHorario() {
-            if (this.validarDia()) {
+            if (this.validarHorario()) {
                 return;
             }
 
             var me = this;
-            axios.post('/bimestre/registrar', {
-                'nombre': this.nombre
+            axios.post('/horario/registrar', {
+                'horario': this.horario,
+                'horario_salida': this.horario_salida,
+                'idDia': this.idDia
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarDia(1, '', 'nombre');
+                me.listarHorario(1, '', 'horario');
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        actualizarDia: function actualizarDia() {
-            if (this.validarDia()) {
+        actualizarHorario: function actualizarHorario() {
+            if (this.validarHorario()) {
                 return;
             }
             var me = this;
-            axios.put('/bimestre/actualizar', {
-                'id': this.dia_id,
-                'nombre': this.nombre
+            axios.put('/horario/actualizar', {
+                'id': this.horario_id,
+                'horario': this.horario,
+                'horario_salida': this.horario_salida,
+                'idDia': this.idDia
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarDia(1, '', 'nombre');
+                me.listarHorario(1, '', 'horario');
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        desactivarDia: function desactivarDia(id) {
+        desactivarHorario: function desactivarHorario(id) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -40238,7 +40274,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
 
             swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere desactivar el bimestre?',
+                title: '¿está seguro de que quiere desactivar el horario?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'desactivar',
@@ -40247,10 +40283,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (result) {
                 if (result.value) {
                     var me = _this;
-                    axios.put('/bimestre/desactivar', {
+                    axios.put('/horario/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarDia(1, '', 'nombre');
+                        me.listarHorario(1, '', 'horario');
                         swalWithBootstrapButtons('Descativado!', 'el registro se a desactivado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -40258,7 +40294,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
-        activarDia: function activarDia(id) {
+        activarHorario: function activarHorario(id) {
             var _this2 = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -40268,7 +40304,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
 
             swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere activar el bimestre?',
+                title: '¿está seguro de que quiere activar el horario?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'activar',
@@ -40277,11 +40313,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (result) {
                 if (result.value) {
                     var me = _this2;
-                    axios.put('/bimestre/activar', {
+                    axios.put('/horario/activar', {
                         'id': id
                     }).then(function (response) {
 
-                        me.listarDia(1, '', 'nombre');
+                        me.listarHorario(1, '', 'horario');
                         swalWithBootstrapButtons('Ativado!', 'el registro se activado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -40289,18 +40325,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
-        validarDia: function validarDia() {
-            this.errorDia = 0;
+        validarHorario: function validarHorario() {
+            this.errorHorario = 0;
             this.errorMostrarMsHorario = [];
-            if (!this.nombre) this.errorMostrarMsHorario.push("El horario no puede estar vacio.");
+            if (this.idDia == 0) this.errorMostrarMsHorario.push("Seleccione un dia");
+            if (!this.horario) this.errorMostrarMsHorario.push("El horario de entrada no puede estar vacio.");
+            if (!this.horario_salida) this.errorMostrarMsHorario.push("El horario de salida no puede estar vacio.");
             if (this.errorMostrarMsHorario.length) this.errorHorario = 1;
             return this.errorHorario;
         },
         cerrarModal: function cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
-            this.nombre = '';
-            this.descripcion = '';
+            this.horario = '';
+            this.horario_salida = '';
+            this.idDia = '';
         },
         abrirModal: function abrirModal(modelo, accion) {
             var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -40311,21 +40350,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         switch (accion) {
                             case 'registrar':
                                 {
+
                                     this.modal = 1;
-                                    this.tituloModal = 'Registrar bimestre';
-                                    this.nombre = "";
-                                    this.descripcion = "";
+                                    this.tituloModal = 'Registrar horario';
+                                    this.horario = "";
+                                    this.horario_salida = "";
+                                    this.nombre_dia = "";
                                     this.tipoAccion = 1;
                                     break;
                                 }
                             case 'actualizar':
                                 {
                                     this.modal = 1;
-                                    this.tituloModal = "Actualizar bimestre";
+                                    this.tituloModal = "Actualizar horario";
                                     this.tipoAccion = 2;
-                                    this.nombre = data['nombre'];
-                                    this.descripcion = data['descripcion'];
-                                    this.dia_id = data['id'];
+                                    this.horario = data['horario'];
+                                    this.idDia = data['idDia'];
+                                    this.horario_salida = data['horario_salida'];
+                                    this.horario_id = data['id'];
                                     break;
                                 }
                         }
@@ -40334,7 +40376,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.listarDia(1, this.buscar, this.criterio);
+        this.listarHorario(1, this.buscar, this.criterio);
     }
 });
 
@@ -40375,17 +40417,26 @@ var render = function() {
             _c("div", { staticClass: "col-md-12" }, [
               _c("div", { staticClass: "input-group" }, [
                 _c(
+                  "label",
+                  {
+                    staticClass: "col-md-1 form-control-label",
+                    attrs: { for: "text-input" }
+                  },
+                  [_vm._v("Día:")]
+                ),
+                _vm._v(" "),
+                _c(
                   "select",
                   {
                     directives: [
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.criterio,
-                        expression: "criterio"
+                        value: _vm.buscar,
+                        expression: "buscar"
                       }
                     ],
-                    staticClass: "form-control col-md-4",
+                    staticClass: "form-control col-md-8",
                     on: {
                       change: function($event) {
                         var $$selectedVal = Array.prototype.filter
@@ -40396,49 +40447,29 @@ var render = function() {
                             var val = "_value" in o ? o._value : o.value
                             return val
                           })
-                        _vm.criterio = $event.target.multiple
+                        _vm.buscar = $event.target.multiple
                           ? $$selectedVal
                           : $$selectedVal[0]
                       }
                     }
                   },
                   [
-                    _c("option", { attrs: { value: "nombre" } }, [
-                      _vm._v("Horario:")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.buscar,
-                      expression: "buscar"
-                    }
+                    _c("option", { attrs: { value: "0", disabled: "" } }, [
+                      _vm._v("Seleccione")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.arrayDia, function(dia) {
+                      return _c("option", {
+                        key: dia.id,
+                        domProps: {
+                          value: dia.id,
+                          textContent: _vm._s(dia.nombre)
+                        }
+                      })
+                    })
                   ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", placeholder: "Texto a buscar" },
-                  domProps: { value: _vm.buscar },
-                  on: {
-                    keyup: function($event) {
-                      if (
-                        !("button" in $event) &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      _vm.listarDia(1, _vm.buscar, _vm.criterio)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.buscar = $event.target.value
-                    }
-                  }
-                }),
+                  2
+                ),
                 _vm._v(" "),
                 _c(
                   "button",
@@ -40447,7 +40478,7 @@ var render = function() {
                     attrs: { type: "submit" },
                     on: {
                       click: function($event) {
-                        _vm.listarDia(1, _vm.buscar, _vm.criterio)
+                        _vm.listarHorario(1, _vm.buscar, _vm.criterio)
                       }
                     }
                   },
@@ -40468,10 +40499,10 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.arrayDia, function(dia) {
+                _vm._l(_vm.arrayHorario, function(horario) {
                   return _c(
                     "tr",
-                    { key: dia.id, staticClass: "text-center table-sm" },
+                    { key: horario.id, staticClass: "text-center table-sm" },
                     [
                       _c(
                         "td",
@@ -40483,14 +40514,18 @@ var render = function() {
                               attrs: { type: "button" },
                               on: {
                                 click: function($event) {
-                                  _vm.abrirModal("dia", "actualizar", dia)
+                                  _vm.abrirModal(
+                                    "horario",
+                                    "actualizar",
+                                    horario
+                                  )
                                 }
                               }
                             },
                             [_c("i", { staticClass: "icon-pencil" })]
                           ),
                           _vm._v("  \n                                "),
-                          dia.estado
+                          horario.estado
                             ? [
                                 _c(
                                   "button",
@@ -40499,7 +40534,7 @@ var render = function() {
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.desactivarDia(dia.id)
+                                        _vm.desactivarHorario(horario.id)
                                       }
                                     }
                                   },
@@ -40514,7 +40549,7 @@ var render = function() {
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.activarDia(dia.id)
+                                        _vm.activarHorario(horario.id)
                                       }
                                     }
                                   },
@@ -40526,11 +40561,21 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c("td", {
-                        domProps: { textContent: _vm._s(dia.nombre) }
+                        domProps: { textContent: _vm._s(horario.horario) }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        domProps: {
+                          textContent: _vm._s(horario.horario_salida)
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        domProps: { textContent: _vm._s(horario.nombre_dia) }
                       }),
                       _vm._v(" "),
                       _c("td", [
-                        dia.estado
+                        horario.estado
                           ? _c("div", [
                               _c(
                                 "span",
@@ -40696,37 +40741,138 @@ var render = function() {
                       _c(
                         "label",
                         {
-                          staticClass: "col-md-3 form-control-label",
+                          staticClass: "col-md-6 form-control-label",
                           attrs: { for: "text-input" }
                         },
-                        [_vm._v("Bimestre:")]
+                        [_vm._v("Horario de entrada:")]
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-md-9" }, [
+                      _c("div", { staticClass: "col-md-6" }, [
                         _c("input", {
                           directives: [
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.nombre,
-                              expression: "nombre"
+                              value: _vm.horario,
+                              expression: "horario"
                             }
                           ],
                           staticClass: "form-control",
                           attrs: {
-                            type: "text",
-                            placeholder: "Ingrese nuevo bimestre"
+                            type: "time",
+                            placeholder: "Ingrese horario de entrada",
+                            required: ""
                           },
-                          domProps: { value: _vm.nombre },
+                          domProps: { value: _vm.horario },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.nombre = $event.target.value
+                              _vm.horario = $event.target.value
                             }
                           }
                         })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-6 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Horario de salida:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.horario_salida,
+                              expression: "horario_salida"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "time",
+                            placeholder: "Ingrese horario de salida",
+                            required: ""
+                          },
+                          domProps: { value: _vm.horario_salida },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.horario_salida = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Día:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.idDia,
+                                expression: "idDia"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.idDia = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              { attrs: { value: "0", disabled: "" } },
+                              [_vm._v("Seleccione")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.arrayDia, function(dia) {
+                              return _c("option", {
+                                key: dia.id,
+                                domProps: {
+                                  value: dia.id,
+                                  textContent: _vm._s(dia.nombre)
+                                }
+                              })
+                            })
+                          ],
+                          2
+                        )
                       ])
                     ]),
                     _vm._v(" "),
@@ -40737,8 +40883,8 @@ var render = function() {
                           {
                             name: "show",
                             rawName: "v-show",
-                            value: _vm.errorDia,
-                            expression: "errorDia"
+                            value: _vm.errorHorario,
+                            expression: "errorHorario"
                           }
                         ],
                         staticClass: "form-group row div-error"
@@ -40747,7 +40893,7 @@ var render = function() {
                         _c(
                           "div",
                           { staticClass: "text-center text-error" },
-                          _vm._l(_vm.errorMostrarMsDia, function(error) {
+                          _vm._l(_vm.errorMostrarMsHorario, function(error) {
                             return _c("div", {
                               key: error,
                               domProps: { textContent: _vm._s(error) }
@@ -40783,7 +40929,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            _vm.registrarDia()
+                            _vm.registrarHorario()
                           }
                         }
                       },
@@ -40799,7 +40945,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            _vm.actualizarDia()
+                            _vm.actualizarHorario()
                           }
                         }
                       },

@@ -15,11 +15,13 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <div class="input-group">
-                                    <select class="form-control col-md-4" v-model="criterio">
-                                        <option value="nombre">Horario:</option>
+                                    <label class="col-md-1 form-control-label" for="text-input">Día:</label>
+                                    <select class="form-control col-md-8" v-model="buscar">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="dia in arrayDia" :key="dia.id" :value="dia.id" v-text="dia.nombre"></option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarDia(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarDia(1,buscar,criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    
+                                    <button type="submit" @click="listarHorario(1,buscar,criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -37,27 +39,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="dia in arrayDia" :key="dia.id" class="text-center table-sm"> 
+                                <tr v-for="horario in arrayHorario" :key="horario.id" class="text-center table-sm"> 
                                     <td >
-                                        <button type="button" @click= "abrirModal('dia','actualizar',dia)" class="btn btn-info btn-sm" >
+                                        <button type="button" @click= "abrirModal('horario','actualizar',horario)" class="btn btn-info btn-sm" >
                                             <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="dia.estado">
-                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarDia(dia.id)">
+                                        <template v-if="horario.estado">
+                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarHorario(horario.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm" @click="activarDia(dia.id)">
+                                            <button type="button" class="btn btn-success btn-sm" @click="activarHorario(horario.id)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
 
                                         
                                     </td>
-                                    <td  v-text="dia.nombre"></td>
+                                    <td  v-text="horario.horario"></td>
+                                    <td  v-text="horario.horario_salida"></td>
+                                    <td  v-text="horario.nombre_dia"></td>
                                     <td >
-                                        <div v-if="dia.estado" >
+                                        <div v-if="horario.estado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -100,22 +104,37 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Bimestre:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Ingrese nuevo bimestre">
+                                    <label class="col-md-6 form-control-label" for="text-input">Horario de entrada:</label>
+                                    <div class="col-md-6">
+                                        <input type="time" v-model="horario" class="form-control" placeholder="Ingrese horario de entrada" required>
                                     </div>
                                 </div>
-                                <div v-show="errorDia" class="form-group row div-error">
+                                <div class="form-group row">
+                                    <label class="col-md-6 form-control-label" for="text-input">Horario de salida:</label>
+                                    <div class="col-md-6">
+                                        <input type="time" v-model="horario_salida" class="form-control" placeholder="Ingrese horario de salida" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Día:</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" v-model="idDia">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="dia in arrayDia" :key="dia.id" :value="dia.id" v-text="dia.nombre"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div v-show="errorHorario" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsDia" :key="error" v-text="error"></div>
+                                        <div v-for="error in errorMostrarMsHorario" :key="error" v-text="error"></div>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDia()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDia()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarHorario()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarHorario()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -133,10 +152,10 @@
             return{
                 horario_id: 0,
                 idDia: 0,
-                horario : '',
+                horario: '',
                 horario_salida:'',
                 nombre_dia:'',
-                arrayDia : [],
+                arrayHorario : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -151,8 +170,9 @@
                     'to': 0,   
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio :'horario',
                 buscar : '',
+                arrayDia : [],
             }
         },
 
@@ -182,13 +202,28 @@
         },
         methods : {
             listarHorario(page, buscar, criterio){
+                this.selectDia();
                 let me = this;
                 var url = '/horario?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
                 axios.get(url)
                 .then(function (response) {
                     var respuesta = response.data;
-                    me.arrayDia = respuesta.horarios.data;
+                    me.arrayHorario = respuesta.horarios.data;
                     me.pagination = respuesta.pagination;
+                    
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
+            selectDia(){
+                let me = this;
+                var url = '/horario/selectDia'
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayDia = respuesta.dias;
                 })
                 .catch(function (error){
                     console.log(error);
@@ -200,39 +235,43 @@
                 me.listarHorario(page, buscar, criterio);
             },
             registrarHorario(){
-                if(this.validarDia()){
+                if(this.validarHorario()){
                     return;
                 }
 
                 let me = this;
-                axios.post('/bimestre/registrar',{
-                    'nombre':this.nombre,
+                axios.post('/horario/registrar',{
+                    'horario':this.horario,
+                    'horario_salida':this.horario_salida,
+                    'idDia':this.idDia,
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarDia(1,'','nombre');
+                    me.listarHorario(1,'','horario');
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
-            actualizarDia(){
-                if(this.validarDia()){
+            actualizarHorario(){
+                if(this.validarHorario()){
                     return;
                 }
                 let me = this;
-                axios.put('/bimestre/actualizar',{
-                    'id':this.dia_id,
-                    'nombre':this.nombre                  
+                axios.put('/horario/actualizar',{
+                    'id':this.horario_id,
+                    'horario':this.horario,
+                    'horario_salida':this.horario_salida,
+                    'idDia':this.idDia,              
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarDia(1,'','nombre');
+                    me.listarHorario(1,'','horario');
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
             
-            desactivarDia(id){
+            desactivarHorario(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -240,7 +279,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere desactivar el bimestre?',
+                title: '¿está seguro de que quiere desactivar el horario?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'desactivar',
@@ -249,10 +288,10 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/bimestre/desactivar',{
+                        axios.put('/horario/desactivar',{
                             'id': id
                         }).then(function(response){
-                            me.listarDia(1,'','nombre');
+                            me.listarHorario(1,'','horario');
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -268,7 +307,7 @@
                         }
                 })
             },
-            activarDia(id){
+            activarHorario(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -276,7 +315,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere activar el bimestre?',
+                title: '¿está seguro de que quiere activar el horario?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'activar',
@@ -285,11 +324,11 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/bimestre/activar',{
+                        axios.put('/horario/activar',{
                             'id': id
                         }).then(function(response){
                             
-                            me.listarDia(1,'','nombre');
+                            me.listarHorario(1,'','horario');
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -305,18 +344,21 @@
                         }
                 })
             },
-            validarDia(){
-                this.errorDia = 0;
+            validarHorario(){
+                this.errorHorario = 0;
                 this.errorMostrarMsHorario=[];
-                if(!this.nombre) this.errorMostrarMsHorario.push("El horario no puede estar vacio.");
+                if(this.idDia==0) this.errorMostrarMsHorario.push("Seleccione un dia");
+                if(!this.horario) this.errorMostrarMsHorario.push("El horario de entrada no puede estar vacio.");
+                if(!this.horario_salida) this.errorMostrarMsHorario.push("El horario de salida no puede estar vacio.");
                 if(this.errorMostrarMsHorario.length)this.errorHorario = 1;
                 return this.errorHorario;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre='';
-                this.descripcion='';
+                this.horario='';
+                this.horario_salida='';
+                this.idDia='';
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
@@ -325,36 +367,40 @@
                         switch(accion){
                             case 'registrar':
                             {
+                                
                                 this.modal=1;
-                                this.tituloModal='Registrar bimestre';
-                                this.nombre="";
-                                this.descripcion="";
+                                this.tituloModal='Registrar horario';
+                                this.horario="";
+                                this.horario_salida="";
+                                this.nombre_dia="";
                                 this.tipoAccion=1;
                                 break;
                             }
                             case 'actualizar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = "Actualizar bimestre";
+                                this.tituloModal = "Actualizar horario";
                                 this.tipoAccion = 2;
-                                this.nombre = data['nombre'];
-                                this.descripcion = data['descripcion'];
-                                this.dia_id = data['id'];
+                                this.horario = data['horario'];
+                                this.idDia = data['idDia']
+                                this.horario_salida = data['horario_salida'];
+                                this.horario_id = data['id'];
                                 break;
                             }
                         }
                     }
                 }
+                
             }
         },
         mounted() {
-            this.listarDia(1, this.buscar, this.criterio);
+            this.listarHorario(1, this.buscar, this.criterio);
         }
     }
 </script>
 <style>
     .modal-content{
-        width: 100% !important;
+        width: 50% !important;
         position: absolute !important;
     }
     .mostrar{
