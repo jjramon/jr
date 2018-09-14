@@ -15,11 +15,11 @@ class CreateAsignarHorariosTable extends Migration
     {
         Schema::create('asignar_horarios', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idMateria');
-            $table->integer('idHorario');
+            $table->integer('idMateria')->unsigned();
+            $table->integer('idHorario')->unsigned();
             $table->timestamps();
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
-            $table->foreign('idHorario')->references('id')->on('horarios')->onUpdate('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idHorario')->references('id')->on('horarios')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

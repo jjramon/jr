@@ -22,13 +22,14 @@ class HorarioController extends Controller
         if ($buscar ==''){
             $horarios = Horario::join('dias','horarios.idDia','=','dias.id')
             ->select ('horarios.id','horarios.horario', 'horarios.horario_salida', 'horarios.idDia', 'dias.nombre as nombre_dia', 'horarios.estado')
-            ->orderBy('horarios.id', 'desc')->paginate(8);
+            ->where('dias.estado','=', '1')
+            ->orderBy('horarios.idDia', 'asc')->paginate(8);
         }
         else{
             $horarios = Horario::join('dias','horarios.idDia','=','dias.id')
             ->select ('horarios.id','horarios.horario', 'horarios.horario_salida', 'horarios.idDia', 'dias.nombre as nombre_dia', 'dias.estado')
             ->where('horarios.idDia', 'like', $buscar)
-            ->orderBy('horarios.id', 'desc')->paginate(3);
+            ->orderBy('horarios.horario', 'asc')->paginate(3);
             
         }
         

@@ -15,11 +15,11 @@ class CreateAsignarMateriaTable extends Migration
     {
         Schema::create('asignar_materia', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idGrado');
-            $table->integer('idMateria');
+            $table->integer('idGrado')->unsigned();
+            $table->integer('idMateria')->unsigned();
             $table->timestamps();
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
-            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

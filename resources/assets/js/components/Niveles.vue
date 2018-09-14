@@ -227,7 +227,7 @@
             
             desactivarDia(id){
                 const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
+                confirmButtonClass: 'btn btn-dark',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })

@@ -15,10 +15,9 @@ class CreateHorariosTable extends Migration
     {
         Schema::create('horarios', function (Blueprint $table) {
             $table->increments('id');
-            
             $table->time('horario');
             $table->time('horario_salida');
-            $table->integer('idDia');
+            $table->integer('idDia')->unsigned();
             $table->timestamps();
             $table->boolean('estado')->default(1);
             $table->foreign('idDia')->references('id')->on('dias')->onUpdate('cascade');

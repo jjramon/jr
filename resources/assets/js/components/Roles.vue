@@ -41,7 +41,7 @@
                                             <i class="icon-pencil"></i>
                                         </button> &nbsp;
                                         <template v-if="rol.estado">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarRol(rol.id)">
+                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarRol(rol.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
@@ -239,7 +239,7 @@
             },
             desactivarRol(id){
                 const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
+                confirmButtonClass: 'btn btn-dark',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })

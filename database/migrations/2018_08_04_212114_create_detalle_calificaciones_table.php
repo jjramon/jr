@@ -13,7 +13,7 @@ class CreateDetalleCalificacionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('detalleCalificaciones', function (Blueprint $table) {
+        Schema::create('detalle_calificaciones', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idCalificacion')->unsigned();
             $table->integer('conducta');
@@ -23,7 +23,7 @@ class CreateDetalleCalificacionesTable extends Migration
             $table->string('Observaciones', 150)->nullable();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idCalificacion')->references('id')->on('calificaciones')->onUpdate('cascade');
+            $table->foreign('idCalificacion')->references('id')->on('calificaciones')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

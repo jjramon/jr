@@ -15,11 +15,11 @@ class CreateAsignarVistasTable extends Migration
     {
         Schema::create('asignar_vistas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idRoll');
-            $table->integer('idVista');
+            $table->integer('idRoll')->unsigned();
+            $table->integer('idVista')->unsigned();
             $table->timestamps();
-            $table->foreign('idRoll')->references('id')->on('rols')->onUpdate('cascade');
-            $table->foreign('idVista')->references('id')->on('vistas')->onUpdate('cascade');
+            $table->foreign('idRoll')->references('id')->on('rols')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idVista')->references('id')->on('vistas')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

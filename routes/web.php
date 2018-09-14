@@ -66,3 +66,34 @@ Route::put('/horario/actualizar', 'HorarioController@update');
 Route::put('/horario/desactivar', 'HorarioController@desactivar');
 Route::put('/horario/activar', 'HorarioController@activar');
 Route::get('/horario/selectDia', 'HorarioController@selectDia');
+
+Route::get('/tipo_persona','Tipo_personaController@index');
+Route::post('/tipo_persona/registrar', 'Tipo_personaController@store');
+Route::put('/tipo_persona/actualizar', 'Tipo_personaController@update');
+Route::put('/tipo_persona/desactivar', 'Tipo_personaController@desactivar');
+Route::put('/tipo_persona/activar', 'Tipo_personaController@activar');
+Route::get('/tipo_persona/selectDia', 'Tipo_personaController@selectDia');
+
+Route::get('/persona','PersonaController@index');
+Route::post('/persona/registrar', 'PersonaController@store');
+Route::put('/persona/actualizar', 'PersonaController@update');
+Route::put('/persona/desactivar', 'PersonaController@desactivar');
+Route::put('/persona/activar', 'PersonaController@activar');
+Route::get('/persona/selectTipoPersona', 'PersonaController@selectTipoPersona');
+Route::get('/persona/selectGenero', 'PersonaController@selectGenero');
+
+Route::get('/alumno','AlumnoController@index');
+Route::post('/alumno/registrar', 'AlumnoController@store');
+Route::put('/alumno/actualizar', 'AlumnoController@update');
+Route::put('/alumno/desactivar', 'AlumnoController@desactivar');
+Route::put('/alumno/activar', 'AlumnoController@activar');
+Route::get('/alumno/selectTipoPersona', 'AlumnoController@selectTipoPersona');
+Route::get('/alumno/selectGenero', 'AlumnoController@selectGenero');
+
+Route::get('/user','UserController@index');
+Route::post('/user/registrar', 'UserController@store');
+Route::put('/user/actualizar', 'UserController@update');
+Route::put('/user/desactivar', 'UserController@desactivar');
+Route::put('/user/activar', 'UserController@activar');
+Route::get('/user/selectTipoPersona', 'UserController@selectTipoPersona');
+Route::get('/user/selectGenero', 'UserController@selectGenero');

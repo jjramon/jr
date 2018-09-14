@@ -22,6 +22,10 @@ Vue.component('seccion', require('./components/Secciones.vue'));
 Vue.component('bimestre', require('./components/Bimestres.vue'));
 Vue.component('nivel', require('./components/Niveles.vue'));
 Vue.component('horario', require('./components/Horarios.vue'));
+Vue.component('tipopersona', require('./components/Tipo_personas.vue'));
+Vue.component('persona', require('./components/Personas.vue'));
+Vue.component('alumno', require('./components/Alumnos.vue'));
+Vue.component('usuario', require('./components/Users.vue'));
 
 const app = new Vue({
     el: '#app',

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBimestresTable extends Migration
+class CreateAlumnosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateBimestresTable extends Migration
      */
     public function up()
     {
-        Schema::create('bimestres', function (Blueprint $table) {
+        Schema::create('alumnos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',10)->unique();
-            $table->boolean('estado')->default(1);
+            $table->integer('idPersona')->unsigned();
+            $table->date('fechaNacimiento');
             $table->timestamps();
+            $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -28,6 +29,6 @@ class CreateBimestresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bimestres');
+        Schema::dropIfExists('alumnos');
     }
 }

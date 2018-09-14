@@ -23,7 +23,7 @@
         <rol></rol>
     </template>
     <template v-if="menu==2">
-        <h1>vistas</h1> 
+        <usuario></usuario> 
     </template>
     <template v-if="menu==3">
         <h1>asignar vistas</h1>      
@@ -34,40 +34,43 @@
         <genero></genero>
     </template>
     <template v-if="menu==5">
-        <h1>docente</h1>        
+        <tipopersona></tipopersona>       
     </template>
     <template v-if="menu==6">
-        <h1>padre de familia</h1>          
+        <persona></persona>      
     </template>
     <template v-if="menu==7">
-        <h1>alumno</h1>          
+        <h1>padre de familia</h1>          
+    </template>
+    <template v-if="menu==8">
+        <alumno></alumno>          
     </template>
 
     <!--menu materias -->
-    <template v-if="menu==8">
+    <template v-if="menu==9">
         <ciclo></ciclo>
     </template>
-    <template v-if="menu==9">
+    <template v-if="menu==10">
         <dia></dia>
     </template>
-    <template v-if="menu==10">
+    <template v-if="menu==11">
         <horario></horario>
     </template>
-    <template v-if="menu==11">
+    <template v-if="menu==12">
         <bimestre></bimestre>
     </template>
-    <template v-if="menu==12">
+    <template v-if="menu==13">
         <h1>Materia</h1>      
     </template>
 
     <!--menu grados -->
-    <template v-if="menu==13">
+    <template v-if="menu==14">
         <seccion></seccion>
     </template>
-    <template v-if="menu==14">
+    <template v-if="menu==15">
         <nivel></nivel>
     </template>
-    <template v-if="menu==15">
+    <template v-if="menu==16">
         <h1>grado</h1>      
     </template>
     

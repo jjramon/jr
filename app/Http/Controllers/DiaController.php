@@ -19,10 +19,10 @@ class DiaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $dias = Dia::orderBy('id', 'desc')->paginate(8);
+            $dias = Dia::orderBy('id', 'asc')->paginate(8);
         }
         else{
-            $dias = Dia::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Dia::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','asc')->paginate(3);
         }
         
         return [

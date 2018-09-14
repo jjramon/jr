@@ -22,9 +22,9 @@ class CreateCalificacionesTable extends Migration
             $table->integer('promedio');
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
-            $table->foreign('idBimestre')->references('id')->on('bimestres')->onUpdate('cascade');
-            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idBimestre')->references('id')->on('bimestres')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -15,12 +15,12 @@ class CreateAsignarDocenteTable extends Migration
     {
         Schema::create('asignar_docente', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idMateria');
-            $table->integer('idMaestro');
+            $table->integer('idMateria')->unsigned();
+            $table->integer('idMaestro')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idMaestro')->references('id')->on('personas')->onUpdate('cascade');
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
+            $table->foreign('idMaestro')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

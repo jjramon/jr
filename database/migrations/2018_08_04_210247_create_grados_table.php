@@ -22,10 +22,10 @@ class CreateGradosTable extends Migration
             $table->string('nombre',20);
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idNivel')->references('id')->on('niveles')->onUpdate('cascade');
-            $table->foreign('idSeccion')->references('id')->on('secciones')->onUpdate('cascade');
-            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade');
-            $table->foreign('idAlumno')->references('id')->on('persona')->onUpdate('cascade');
+            $table->foreign('idNivel')->references('id')->on('niveles')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idSeccion')->references('id')->on('secciones')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idAlumno')->references('id')->on('persona')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -6,8 +6,8 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i>Horarios
-                        <button type="button" @click="abrirModal('horario','registrar')" class="btn btn-success" >
+                        <i class="fa fa-align-justify"></i>Personas
+                        <button type="button" @click="abrirModal('persona','registrar')" class="btn btn-success" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -15,53 +15,62 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <div class="input-group">
-                                    <label class="col-md-1 form-control-label" for="text-input">Día:</label>
-                                    <select class="form-control col-md-3" v-model="buscar">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="dia in arrayDia" :key="dia.id" :value="dia.id" v-text="dia.nombre"></option>
+                                    <label class="col-md-1 form-control-label" for="text-input">Tipo:</label>
+                                    <select class="form-control col-md-2" v-model="criterio">
+                                            <option value="" >Seleccione</option>
+                                            <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
                                     </select>
+                                
+                                    <label class="col-md-2 form-control-label" for="text-input">Buscar:</label>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">              
                                     
-                                    <button type="submit" @click="listarHorario(1,buscar,criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <button type="submit" @click="listarPersona(1, buscar, criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table table-bordered table-striped table-responsive-md">
+                        <table class="table table-bordered table-striped table-responsive-lg">
                             <thead>
                                <tr class="table-primary">
                                     
                                         <th class="text-center">Opciones</th>
-                                        <th class="text-center">Horario Inicial</th>
-                                        <th class="text-center">Horario Salida</th>
-                                        <th class="text-center">Dia</th>
+                                        <th class="text-center"></th>
+                                        <th class="text-center">Nombrel</th>
+                                        <th class="text-center">Apellido</th>
+                                        <th class="text-center">Codigo Unico</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">Fecha de nacimiento</th>
                                         <th class="text-center">Estado</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="horario in arrayHorario" :key="horario.id" class="text-center table-sm"> 
+                                <tr v-for="persona in arrayPersona" :key="persona.id" class="text-center table-sm"> 
                                     <td >
-                                        <button type="button" @click= "abrirModal('horario','actualizar',horario)" class="btn btn-info btn-sm" >
+                                        <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm" >
                                             <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="horario.estado">
-                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarHorario(horario.id)">
+                                        <template v-if="persona.estado">
+                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarPersona(persona.idPersona)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm" @click="activarHorario(horario.id)">
+                                            <button type="button" class="btn btn-success btn-sm" @click="activarPersona(persona.idPersona)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
 
                                         
                                     </td>
-                                    <td  v-text="horario.horario"></td>
-                                    <td  v-text="horario.horario_salida"></td>
-                                    <td  v-text="horario.nombre_dia"></td>
+                                    <td  v-text="persona.nombreTPersona"></td>
+                                    <td  v-text="persona.nombre"></td>
+                                    <td  v-text="persona.apellido"></td>
+                                    <td  v-text="persona.identificacion"></td>
+                                    <td  v-text="persona.nombreGenero"></td>
+                                    <td  v-text="persona.fechaNac"></td>           
                                     <td >
-                                        <div v-if="horario.estado" >
+                                        <div v-if="persona.estado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -103,39 +112,62 @@
                         </div>
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                
                                 <div class="form-group row">
-                                    <label class="col-md-6 form-control-label" for="text-input">Horario de entrada:</label>
+                                    <label class="col-md-3 form-control-label" for="text-input">Tipo de persona</label>
                                     <div class="col-md-6">
-                                        <input type="time" v-model="horario" class="form-control" placeholder="Ingrese horario de entrada" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-6 form-control-label" for="text-input">Horario de salida:</label>
-                                    <div class="col-md-6">
-                                        <input type="time" v-model="horario_salida" class="form-control" placeholder="Ingrese horario de salida" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Día:</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" v-model="idDia">
+                                        <select class="form-control" v-model="idTipo_persona">
                                             <option value="0" disabled>Seleccione</option>
-                                            <option v-for="dia in arrayDia" :key="dia.id" :value="dia.id" v-text="dia.nombre"></option>
+                                            <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
                                         </select>
                                     </div>
                                 </div>
-                                <div v-show="errorHorario" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsHorario" :key="error" v-text="error"></div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="nombre" class="form-control" placeholder="Ingrese nombre" required>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Apellido:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="apellido" class="form-control" placeholder="Ingrese apellido" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Codigo unico:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="identificacion" class="form-control" placeholder="Ingrese codigo del estudiante" required>
+                                    </div>
+                                </div>
+                              
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Genero:</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" v-model="idGenero">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="genero in arrayGenero" :key="genero.id" :value="genero.id" v-text="genero.genero"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Fecha de nacimiento:</label>
+                                    <div class="col-md-9">
+                                        <input type="date"  v-model="fechaNac" class="form-control" placeholder="año-mes-dia" required>
+                                    </div>
+                                </div>
+                               
+                                <div v-show="errorPersona" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarHorario()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarHorario()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -151,17 +183,22 @@
     export default {
         data (){
             return{
-                horario_id: 0,
-                idDia: 0,
-                horario: '',
-                horario_salida:'',
-                nombre_dia:'',
-                arrayHorario : [],
+                idPersona: 0,
+                idAlumno: 0,
+                idGenero: 0,
+                idTipo_persona: 0,
+                nombre: '',
+                apellido:'',
+                identificacion:'',
+                nombreTPersona:'',
+                nombreGenero:'',
+                fechaNac:'',
+                arrayPersona : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorHorario : 0,
-                errorMostrarMsHorario : [],
+                errorPersona : 0,
+                errorMostrarMsPersona : [],
                  pagination : {
                     'total': 0,
                     'current_page': 0,
@@ -171,9 +208,10 @@
                     'to': 0,   
                 },
                 offset : 3,
-                criterio :'horario',
+                criterio :'',
                 buscar : '',
-                arrayDia : [],
+                arrayTipo_persona : [],
+                arrayGenero : [],
             }
         },
 
@@ -202,14 +240,16 @@
             },       
         },
         methods : {
-            listarHorario(page, buscar, criterio){
-                this.selectDia();
-                let me = this;
-                var url = '/horario?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
+            listarPersona(page, buscar, criterio){
+                this.selectTypoPersona();
+                this.selectGenero();
+                let me = this;           
+                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
+                
                 axios.get(url)
                 .then(function (response) {
                     var respuesta = response.data;
-                    me.arrayHorario = respuesta.horarios.data;
+                    me.arrayPersona = respuesta.persona.data;
                     me.pagination = respuesta.pagination;
                     
                 })
@@ -217,14 +257,27 @@
                     console.log(error);
                 });
             },
-            selectDia(){
+            selectTypoPersona(){
                 let me = this;
-                var url = '/horario/selectDia'
+                var url = '/alumno/selectTipoPersona'
                 axios.get(url)
                 .then(function (response) {
                     
                     var respuesta = response.data;
-                    me.arrayDia = respuesta.dias;
+                    me.arrayTipo_persona = respuesta.tipo_persona;
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
+            selectGenero(){
+                let me = this;
+                var url = '/alumno/selectGenero'
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayGenero = respuesta.genero;
                 })
                 .catch(function (error){
                     console.log(error);
@@ -233,54 +286,61 @@
             cambiarPagina(page, buscar, criterio){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarHorario(page, buscar, criterio);
+                me.listarPersona(page, buscar, criterio);
             },
-            registrarHorario(){
-                if(this.validarHorario()){
+            registrarPersona(){
+                if(this.validarPersona()){
                     return;
                 }
 
                 let me = this;
-                axios.post('/horario/registrar',{
-                    'horario':this.horario,
-                    'horario_salida':this.horario_salida,
-                    'idDia':this.idDia,
+                axios.post('/alumno/registrar',{
+                    'nombre':this.nombre,
+                    'apellido':this.apellido,
+                    'identificacion':this.identificacion,
+                    'idTipoPersona':this.idTipo_persona,
+                    'idGenero':this.idGenero,
+                    'fechaNacimiento':this.fechaNac
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarHorario(1,'','horario');
+                    me.listarPersona(1,'','');
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
-            actualizarHorario(){
-                if(this.validarHorario()){
+            actualizarPersona(){
+                if(this.validarPersona()){
                     return;
                 }
                 let me = this;
-                axios.put('/horario/actualizar',{
-                    'id':this.horario_id,
-                    'horario':this.horario,
-                    'horario_salida':this.horario_salida,
-                    'idDia':this.idDia,              
+                axios.put('/alumno/actualizar',{
+                    'idAlumno':this.idAlumno,
+                    'idPersona':this.idPersona,
+                    'nombre':this.nombre,
+                    'apellido':this.apellido,
+                    'identificacion':this.identificacion,
+                    'idTipoPersona':this.idTipo_persona,
+                    'idGenero':this.idGenero,  
+                    'fechaNacimiento':this.fechaNac          
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarHorario(1,'','horario');
+                    me.listarPersona(1,'','');
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
             
-            desactivarHorario(id){
+            desactivarPersona(id){
                 const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-dark',
+                confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere desactivar el horario?',
+                title: '¿está seguro de que quiere desactivar la persona?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'desactivar',
@@ -289,10 +349,12 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/horario/desactivar',{
-                            'id': id
+                        console.log(id);
+                        
+                        axios.put('/alumno/desactivar',{
+                            'idPersona': id
                         }).then(function(response){
-                            me.listarHorario(1,'','horario');
+                            me.listarPersona(1,'','');
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -308,7 +370,7 @@
                         }
                 })
             },
-            activarHorario(id){
+            activarPersona(id){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -316,7 +378,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere activar el horario?',
+                title: '¿está seguro de que quiere activar la persona?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'activar',
@@ -325,11 +387,11 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/horario/activar',{
-                            'id': id
+                        axios.put('/alumno/activar',{
+                            'idPersona': id
                         }).then(function(response){
                             
-                            me.listarHorario(1,'','horario');
+                            me.listarPersona(1,'','');
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -345,48 +407,62 @@
                         }
                 })
             },
-            validarHorario(){
-                this.errorHorario = 0;
-                this.errorMostrarMsHorario=[];
-                if(this.idDia==0) this.errorMostrarMsHorario.push("Seleccione un dia");
-                if(!this.horario) this.errorMostrarMsHorario.push("El horario de entrada no puede estar vacio.");
-                if(!this.horario_salida) this.errorMostrarMsHorario.push("El horario de salida no puede estar vacio.");
-                if(this.horario>this.horario_salida) this.errorMostrarMsHorario.push("El horario de salida no puede menor que el horario de entrada");
-                if(this.errorMostrarMsHorario.length)this.errorHorario = 1;
-                return this.errorHorario;
+            validarPersona(){
+
+                this.errorPersona = 0;
+                this.errorMostrarMsPersona=[];
+                if(this.idtipoPersona==0) this.errorMostrarMsPersona.push("Seleccione un tipo de persona");
+                if(this.idGenero==0) this.errorMostrarMsPersona.push("Seleccione un genero");
+                if(!this.nombre) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
+                if(!this.apellido) this.errorMostrarMsPersona.push("El apellido no puede estar vacio.");
+                if(this.errorMostrarMsPersona.length)this.errorPersona = 1;
+                return this.errorPersona;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.horario='';
-                this.horario_salida='';
-                this.idDia='';
+                this.nombre= '';;
+                this.apellido= '';;
+                this.identificacion= '';;
+                this.idTipo_persona= '';;   
+                this.idGnero= '';;
+                this.idPersona= '';;
+                this.fechaNac= '';;
+                this.idAlumno = '';
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
-                    case "horario":
+                    case "persona":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 
                                 this.modal=1;
-                                this.tituloModal='Registrar horario';
-                                this.horario="";
-                                this.horario_salida="";
-                                this.nombre_dia="";
+                                this.tituloModal='Registrar alumno';
+                                this.nombre='';
+                                this.apellido='';
+                                this.idPersona='';
+                                this.identificacion='';
+                                this.idTipo_persona='';  
+                                this.fechaNac=''; 
+                                this.idAlumno = '';
                                 this.tipoAccion=1;
                                 break;
                             }
                             case 'actualizar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = "Actualizar horario";
+                                this.tituloModal = "Actualizar alumno";
                                 this.tipoAccion = 2;
-                                this.horario = data['horario'];
-                                this.idDia = data['idDia']
-                                this.horario_salida = data['horario_salida'];
-                                this.horario_id = data['id'];
+                                this.idAlumno = data['idAlumno'];
+                                this.nombre = data['nombre'];
+                                this.apellido = data['apellido'];
+                                this.identificacion = data['identificacion'];
+                                this.fechaNac=data['fechaNacimiento'];
+                                this.idTipo_persona = data['idTipoPersona'];
+                                this.idGenero = data['idGenero'];
+                                this.idPersona= data['idPersona'];  
                                 break;
                             }
                         }
@@ -396,13 +472,13 @@
             }
         },
         mounted() {
-            this.listarHorario(1, this.buscar, this.criterio);
+            this.listarPersona(1, this.buscar, this.criterio);
         }
     }
 </script>
 <style>
     .modal-content{
-        width: 50% !important;
+        width: 100% !important;
         position: absolute !important;
     }
     .mostrar{

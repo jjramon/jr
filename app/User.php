@@ -15,15 +15,21 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'identificacion', 'nombre', 'apellido', 'genero', 'direccion', 'fechaNacimiento',
+        'id', 'idPersona', 'idRol', 'usuario', 'password', 'estado',
     ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
-    *
-    *protected $hidden = [
-     *   'password', 'remember_token',
-    ]; */
+    */
+    protected $hidden = [
+        'password', 'remember_token',
+    ]; 
+    public function rol(){
+        return $this->belongsTo('colegioShaddai\Rol');
+    }
+    public function persona(){
+        return $this->belongsTo('colegioShaddai\Persona');
+    }
 }

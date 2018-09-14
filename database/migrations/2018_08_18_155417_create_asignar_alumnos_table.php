@@ -15,12 +15,12 @@ class CreateAsignarAlumnosTable extends Migration
     {
         Schema::create('asignar_alumnos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idGrado');
-            $table->integer('idAlumno');
+            $table->integer('idGrado')->unsigned();
+            $table->integer('idAlumno')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade');
-            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade');
+            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
