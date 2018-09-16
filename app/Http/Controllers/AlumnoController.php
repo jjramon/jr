@@ -7,7 +7,7 @@ use colegioShaddai\Persona;
 use colegioShaddai\Alumno;
 use colegioShaddai\Tipo_persona;
 use colegioShaddai\Genero;
-USE Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use  Jenssegers \ Date \ Date ;
 use Carbon\Carbon;
 
@@ -32,7 +32,7 @@ class AlumnoController extends Controller
                 ->join('generos', 'personas.idGenero', '=', 'generos.id')
                 ->where('tipo_personas.estado','=', '1')
                 ->where('generos.estado','=', '1')
-                ->where('tipo_personas.nombre','like',"Alumno")   
+                ->where('tipo_personas.nombre','==',"Alumno")   
                 ->select('alumnos.id as idAlumno', 'personas.id as idPersona','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'alumnos.fechaNacimiento as fechaNac',  'personas.estado')
                 ->orderBy('personas.apellido', 'asc')->paginate(10);  
 
@@ -48,7 +48,7 @@ class AlumnoController extends Controller
                 ->where('tipo_personas.id','like', $criterio)           
                 ->select('alumnos.id as idAlumno', 'personas.id as idPersona','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'alumnos.fechaNacimiento as fechaNac',  'personas.estado')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
-            }        
+            }       
         if($criterio != '' && $buscar != '')
         {
                

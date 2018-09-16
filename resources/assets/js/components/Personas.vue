@@ -1,3 +1,28 @@
+<style>
+
+   .modal-content{
+        width: 100%;
+        height: 550px;
+        overflow-y: scroll;
+        overflow-x: unset;
+        position: absolute; 
+    }
+    .mostrar{
+        display: list-item !important;
+        opacity: 1 !important;
+        position:absolute !important;
+        background-color: #3c29297a !important;
+    }
+    .div-error{
+        display: flex;
+        justify-content: center;
+    }
+    .text-error{
+        color:red !important;
+        font-weight:bold;
+    }
+
+</style>
 <template>
            <main class="main">
             <!-- Breadcrumb -->
@@ -33,51 +58,84 @@
                             <thead>
                                <tr class="table-primary">
                                     
-                                        <th class="text-center">Opciones</th>
+                                        <th class="text-center ">Opciones Persona</th>
+                                        <th class="text-center">Opciones Usuario</th>
                                         <th class="text-center"></th>
-                                        <th class="text-center">Nombrel</th>
+                                        <th class="text-center">Nombre</th>
                                         <th class="text-center">Apellido</th>
-                                        <th class="text-center">DPI</th>
+                                        <th class="text-center col-3" >DPI</th>
                                         <th class="text-center">Genero</th>
                                         <th class="text-center">Direccion</th>
                                         <th class="text-center">Telefono I</th>
                                         <th class="text-center">Telefono II</th>
                                         <th class="text-center">Correo</th>
-                                        <th class="text-center">Estado</th>
+                                        <th class="text-center">Usuario</th>
+                                        <th class="text-center">Rol</th>
+                                        <th class="text-center">Estado Persona</th>
+                                        <th class="text-center">Estado Usuario</th>
+
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="persona in arrayPersona" :key="persona.id" class="text-center table-sm"> 
+                                <tr v-for="persona in arrayPersona" :key="persona.idPersona" class="text-center table-sm"> 
+                                    <td class="text-center ">
+                                        <div class="row">
+                                            <div class="col-12 align-center">
+                                                <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
+                                                    <i class="icon-pencil"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-12 align-center">
+                                                <template v-if="persona.estadoPersona">
+                                                    <button type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(persona.idPersona)">
+                                                        <i class="icon-trash"></i>
+                                                    </button>
+                                                </template>
+                                                <template v-else>
+                                                    <button type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(persona.idPersona)">
+                                                        <i class="icon-check"></i>
+                                                    </button>
+                                                </template>
+                                        </div>
+                                        </div>
+                                    </td>
                                     <td >
-                                        <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm" >
-                                            <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <template v-if="persona.estado">
-                                            <button type="button" class="btn btn-warning btn-sm" @click="desactivarPersona(persona.id)">
+                                        <template v-if="persona.usuarioEstado" >
+                                            <button type="button" class="btn btn-warning btn-sm " @click="desactivarPersona(persona.idUsuario)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm" @click="activarPersona(persona.id)">
+                                        <template v-else >
+                                            <button type="button" class="btn btn-success btn-sm " @click="activarPersona(persona.idUsuario)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
-
-                                        
                                     </td>
-                                    <td  v-text="persona.nombreTPersona"></td>
-                                    <td  v-text="persona.nombre"></td>
-                                    <td  v-text="persona.apellido"></td>
-                                    <td  v-text="persona.identificacion"></td>
-                                    <td  v-text="persona.nombreGenero"></td>
+                                    <td  v-text="persona.nombreTPersona" class="align-middle"></td>
+                                    <td  v-text="persona.nombrePersona" class="align-middle"></td>
+                                    <td  v-text="persona.apellido" class="align-middle"></td>
+                                    <td  v-text="persona.identificacion" class="col-3 align-middle"></td>
+                                    <td  v-text="persona.nombreGenero" class="align-middle"></td>
                                     <td  v-text="persona.direccion"></td>
-                                    <td  v-text="persona.tel"></td>
-                                    <td  v-text="persona.tel2"></td>
-                                    <td  v-text="persona.correo"></td>
+                                    <td  v-text="persona.tel" class="align-middle"></td>
+                                    <td  v-text="persona.tel2" class="align-middle"></td>
+                                    <td  v-text="persona.correo" class="align-middle"></td>
+                                    <td  v-text="persona.usuario" class="align-middle"></td>
+                                    <td  v-text="persona.nombreRol" class="align-middle"></td>
                                     
                                     <td >
-                                        <div v-if="persona.estado" >
+                                        <div v-if="persona.estadoPersona">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else >
+                                            <span class="badge badge-dark">Inactivo</span>
+                                        </div>
+                                    </td>
+                                    
+                                    
+                                    <td >
+                                        <div v-if="persona.usuarioEstado" >
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -108,7 +166,7 @@
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
             <!--Inicio del modal agregar/actualizar-->
-            <div class="modal fade"  tabindex="-1" :class="{'mostrar':modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal fullscreen-modal fade "  tabindex="-1" :class="{'mostrar':modal}"  role="dialog" aria-labelledby="myModalLabel" style="display: none;" >
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -122,7 +180,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Tipo de persona</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" v-model="idTipo_persona">
+                                        <select class="form-control" v-model="idTipoPersona">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
                                         </select>
@@ -131,7 +189,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Ingrese nombre" required>
+                                        <input type="text" v-model="nombrePersona" class="form-control" placeholder="Ingrese nombre" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -159,6 +217,7 @@
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="genero in arrayGenero" :key="genero.id" :value="genero.id" v-text="genero.genero"></option>
                                         </select>
+                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -178,6 +237,35 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Correo electronico:</label>
                                     <div class="col-md-9">
                                         <input type="email" v-model="correo" class="form-control" placeholder="Ingrese el correo electronico">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Tipo de Rol:</label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" v-model="idRol">
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Usuario:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese primer telefono" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
+                                    <div class="col-md-9">
+                                        <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="password" class="form-control" placeholder="Ingrese una contraseña" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
+                                    <div class="col-md-9">
+                                        <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="confirPassword" class="form-control" placeholder="Ingrese una contraseña" required>
                                     </div>
                                 </div>
                                 
@@ -210,8 +298,14 @@
             return{
                 persona_id: 0,
                 idGenero: 0,
-                idTipo_persona: 0,
-                nombre: '',
+                idTipoPersona: 0,
+                idRol:0,
+                nombreRol:'',
+                idUsuario:0,
+                usuario:'',
+                password:'',
+                confirPassword:'',
+                nombrePersona: '',
                 apellido:'',
                 direccion:'',
                 identificacion:'',
@@ -221,6 +315,9 @@
                 nombreTPersona:'',
                 nombreGenero:'',
                 arrayPersona : [],
+                arrayRol:[],
+                arrayTipo_persona : [],
+                arrayGenero : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -237,8 +334,7 @@
                 offset : 3,
                 criterio :'',
                 buscar : '',
-                arrayTipo_persona : [],
-                arrayGenero : [],
+                
             }
         },
 
@@ -270,6 +366,7 @@
             listarPersona(page, buscar, criterio){
                 this.selectTypoPersona();
                 this.selectGenero();
+                this.selectRol();
                 let me = this;           
                 var url = '/persona?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
                 
@@ -310,6 +407,19 @@
                     console.log(error);
                 });
             },
+            selectRol(){
+                let me = this;
+                var url = '/persona/selectRol'
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayRol = respuesta.rols;
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
             cambiarPagina(page, buscar, criterio){
                 let me = this;
                 me.pagination.current_page = page;
@@ -319,18 +429,21 @@
                 if(this.validarPersona()){
                     return;
                 }
-
+                
                 let me = this;
                 axios.post('/persona/registrar',{
-                    'nombre':this.nombre,
+                    'nombrePersona':this.nombrePersona,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
                     'direccion':this.direccion,
                     'tel':this.tel,
                     'tel2':this.tel2,
                     'correo':this.correo,
-                    'idTipoPersona':this.idTipo_persona,
-                    'idGenero':this.idGenero
+                    'idTipoPersona':this.idTipoPersona,
+                    'idGenero':this.idGenero,
+                    'idRol':this.idRol,
+                    'usuario':this.usuario,
+                    'password':this.password,
                 }).then(function(response){
                     me.cerrarModal();
                     me.listarPersona(1,'','');
@@ -342,19 +455,38 @@
             actualizarPersona(){
                 if(this.validarPersona()){
                     return;
-                }
+                }                 
+                console.log(this.idPersona);
+                console.log(this.idUsuario); 
+                console.log(this.nombrePersona); 
+                console.log(this.apellido); 
+                console.log(this.identificacion); 
+                console.log(this.direccion); 
+                console.log(this.tel); 
+                console.log(this.tel2); 
+                console.log(this.correo); 
+                console.log(this.idTipoPersona); 
+                console.log(this.idGenero);  
+                console.log(this.idRol); 
+                console.log(this.usuario); 
+                console.log(this.password); 
                 let me = this;
                 axios.put('/persona/actualizar',{
-                    'id':this.persona_id,
-                    'nombre':this.nombre,
+                    'idPersona':this.idPersona,
+                    'idUsuario':this.idUsuario,
+                    'idRol':this.idRol,
+                    'nombrePersona':this.nombrePersona,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
                     'direccion':this.direccion,
                     'tel':this.tel,
                     'tel2':this.tel2,
                     'correo':this.correo,
-                    'idTipoPersona':this.idTipo_persona,
-                    'idGenero':this.idGenero,            
+                    'idTipoPersona':this.idTipoPersona,
+                    'idGenero':this.idGenero,
+                    'idRol':this.idRol,
+                    'usuario':this.usuario,
+                    'password':this.password,        
                 }).then(function(response){
                     me.cerrarModal();
                     me.listarPersona(1,'','');
@@ -440,9 +572,10 @@
             validarPersona(){
                 this.errorPersona = 0;
                 this.errorMostrarMsPersona=[];
+                if(this.password != this.confirPassword)this.errorMostrarMsPersona.push("las contraseñas no coinciden");
                 if(this.idtipoPersona=='') this.errorMostrarMsPersona.push("Seleccione un tipo de persona");
                 if(this.idGenero=='') this.errorMostrarMsPersona.push("Seleccione un genero");
-                if(!this.nombre) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
+                if(!this.nombrePersona) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
                 if(!this.apellido) this.errorMostrarMsPersona.push("El apellido no puede estar vacio.");
                 if(!this.direccion) this.errorMostrarMsPersona.push("El dirección no puede estar vacio.");
                 if(!this.tel) this.errorMostrarMsPersona.push("El tel no puede estar vacio.");
@@ -453,15 +586,21 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre;
+                this.nombrePersona;
                 this.apellido;
                 this.identificacion;
                 this.direccion;
                 this.tel;
                 this.tel2;
                 this.correo;
-                this.idTipo_persona;   
-                this.idGnero;
+                this.idTipoPersona;   
+                this.idGenero;
+                this.usuario;
+                this.password;
+                this.idRol;
+                this.idUsuairo;
+                this.idPersona;
+                this.usuarioEstado;
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
@@ -470,17 +609,22 @@
                         switch(accion){
                             case 'registrar':
                             {
-                                
                                 this.modal=1;
                                 this.tituloModal='Registrar horario';
-                                this.nombre='';
-                                this.apellido='';
-                                this.identificacion='';
-                                this.direccion='';
-                                this.tel='';
-                                this.tel2='';
-                                this.correo='';
-                                this.idTipo_persona='';   
+                                this.nombrePersona = "";
+                                this.apellido = "";
+                                this.identificacion = "";
+                                this.direccion = "";
+                                this.tel = "";
+                                this.tel2 = "";
+                                this.correo = "";
+                                this.idTipoPersona = "";   
+                                this.idGnero = "";
+                                this.usuario = "";
+                                this.password = "";
+                                this.idRol = "";
+                                this.idUsuairo = "";
+                                this.idPersona = "";
                                 this.tipoAccion=1;
                                 break;
                             }
@@ -489,16 +633,21 @@
                                 this.modal = 1;
                                 this.tituloModal = "Actualizar horario";
                                 this.tipoAccion = 2;
-                                this.nombre = data['nombre'];
+                                this.nombrePersona = data['nombrePersona'];
                                 this.apellido = data['apellido'];
                                 this.identificacion = data['identificacion'];
                                 this.direccion = data['direccion'];
                                 this.tel = data['tel'];
                                 this.tel2 = data['tel2'];
                                 this.correo = data['correo'];
-                                this.idTipo_persona = data['idTipoPersona'];
+                                this.idTipoPersona = data['idTipoPersona'];
                                 this.idGenero = data['idGenero'];
-                                this.persona_id = data['id'];  
+                                this.idPersona = data['idPersona'];
+                                this.idRol = data['idRol'];
+                                this.idUsuario = data['idUsuario'];
+                                this.usuario = data['usuario'];
+                                this.password = data['password'];  
+
                                 break;
                             }
                         }
@@ -512,24 +661,3 @@
         }
     }
 </script>
-<style>
-    .modal-content{
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .mostrar{
-        display: list-item !important;
-        opacity: 1 !important;
-        position:absolute !important;
-        background-color: #3c29297a !important;
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-    }
-    .text-error{
-        color:red !important;
-        font-weight:bold;
-    }
-
-</style>

@@ -10,7 +10,7 @@ class UserController extends Controller
     {
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
@@ -91,12 +91,11 @@ class UserController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
-            $insertar = new Persona();
-            $insertar -> idGenero = $request->idGenero;
-            $insertar -> idTipoPersona = $request->idTipoPersona;
-            $insertar -> nombre = $request->nombre;
-            $insertar -> apellido = $request->apellido;
-            $insertar -> identificacion = $request->identificacion;
+            $insertar = new User();
+            $insertar -> idPersona = $request->idPersona;
+            $insertar -> idRol = $request->idRol;
+            $insertar -> usuario = $request->usuario;
+            $insertar -> password = bcrypt($request->password);
             $insertar -> estado= '1';
             $insertar -> save();
 
@@ -123,7 +122,7 @@ class UserController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
-            $actualizar = Persona::findOrFail($request->idPersona);
+            $actualizar = Persona::findOrFail($request->idUser);
             $actualizar -> idGenero = $request->idGenero;
             $actualizar -> idTipoPersona = $request->idTipoPersona;
             $actualizar -> nombre = $request->nombre;
@@ -132,7 +131,7 @@ class UserController extends Controller
             $actualizar -> estado= '1';
             $actualizar -> save();
 
-            $actualiza = Alumno::findOrFail($request->idAlumno);
+            $actualiza = Alumno::findOrFail($request->idPersona);
             $actualiza -> fechaNacimiento = $request->fechaNacimiento;
             $actualiza -> save();
 

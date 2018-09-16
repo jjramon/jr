@@ -20,7 +20,7 @@ class RolController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $rols = Rol::orderBy('id', 'desc')->paginate(6);
+            $rols = Rol::orderBy('id', 'asc')->paginate(6);
         }
         else{
             $rols = Rol::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
@@ -58,12 +58,14 @@ class RolController extends Controller
         $rol -> save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function selectRol(Request $request)
+    {
+        $select=Rol::where('estado','=','1')
+        ->select('id','nombre')
+        ->orderby('nombre','asc')->get();
+
+        return ['rols' => $select];
+    }
    
     public function update(Request $request)
     {

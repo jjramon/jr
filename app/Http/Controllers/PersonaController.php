@@ -4,15 +4,17 @@ namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
 use colegioShaddai\Persona;
-use colegioShaddai\Tipo_persona;
-use colegioShaddai\Genero;
+use colegioShaddai\User;
+use Illuminate\Support\Facades\DB;
+use  Jenssegers \ Date \ Date ;
+use Carbon\Carbon;
 
 class PersonaController extends Controller
 {
     
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
@@ -21,38 +23,47 @@ class PersonaController extends Controller
       
         if($buscar == '' && $criterio=='')
             {
-                $personas = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
-                ->join('generos', 'idGenero', '=', 'generos.id')
-                ->where('personas.estado','=', '1')
+                $personas = Persona::join('users', 'personas.id', '=', 'users.idPersona')
+                ->join('rols','users.idRol', '=', 'rols.id')
+                ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+                ->where('rols.estado','=', '1')
+                ->where('users.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')
-                ->where('tipo_personas.nombre','!=',"Alumno")           
-                ->select('personas.id', 'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
-                ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
+                ->where('generos.estado','=', '1')  
+                ->where('tipo_personas.nombre','!=', "Alumno")         
+                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
+                ->orderBy('tipo_personas.id', 'asc')->paginate(10);   
             }
         if($criterio != '' && $buscar == '')
             {
-                $personas = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
-                ->join('generos', 'idGenero', '=', 'generos.id')
-                ->where('personas.estado','=', '1')
+                $personas = Persona::join('users', 'personas.id', '=', 'users.idPersona')
+                ->join('rols','users.idRol', '=', 'rols.id')
+                ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+                ->where('rols.estado','=', '1')
+                ->where('users.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')
-                ->where('tipo_personas.id','=', $criterio)           
-                ->select('personas.id', 'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
+                ->where('generos.estado','=', '1')    
+                ->where('tipo_personas.id','=', $criterio)         
+                ->select('personas.id', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as idEstado','rols.id','rols.nombre as nombreRol','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
             } 
         if($criterio != '' && $buscar != '')
         {
                
-            $personas = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
-            ->join('generos', 'idGenero', '=', 'generos.id')
-            ->where('personas.estado','=', '1')
+            $personas = Persona::join('users', 'personas.id', '=', 'users.idPersona')
+            ->join('rols','users.idRol', '=', 'rols.id')
+            ->join('generos', 'personas.idGenero', '=', 'generos.id')
+            ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+            ->where('rols.estado','=', '1')
+            ->where('users.estado','=', '1')
             ->where('tipo_personas.estado','=', '1')
-            ->where('generos.estado','=', '1')
+            ->where('generos.estado','=', '1')    
             ->where('personas.apellido','like','%'.$buscar.'%')
             ->orwhere('personas.nombre','like','%'.$buscar.'%')
             ->where('tipo_personas.id','like', $criterio)
-            ->select('personas.id', 'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
+            ->select('personas.id', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as idEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
             ->orderBy('personas.apellido', 'asc')->paginate(10);
             
         }
@@ -70,59 +81,76 @@ class PersonaController extends Controller
         ];
     }
     
-    public function selectTipoPersona(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/'); 
-        $tipo_persona = Tipo_persona::where('estado', '=', '1')->where('nombre', '!=', "Alumno")
-        ->select('id', 'nombre')->orderBy('nombre','asc')->get();
-        return ['tipo_persona'=> $tipo_persona];
-    }
+    
 
-    public function selectGenero(Request $request)
-    {
-        if (!$request->ajax()) return redirect('/'); 
-        $genero = Genero::where('estado', '=', '1')
-        ->select('id', 'genero')->orderBy('genero','asc')->get();
-        return ['genero'=> $genero];
-    }
+    
 
     public function store(Request $request)
     {
 
         if (!$request->ajax()) return redirect('/');
+            try{
+                DB::beginTransaction();    
+                $persona = new Persona();
+                $persona -> idGenero = $request->idGenero;
+                $persona -> idTipoPersona = $request->idTipoPersona;
+                $persona -> nombre = $request->nombrePersona;
+                $persona -> apellido = $request->apellido;
+                $persona -> identificacion = $request->identificacion;
+                $persona -> direccion = $request->direccion;
+                $persona -> tel = $request->tel;
+                $persona -> tel2 = $request->tel2;
+                $persona -> correo = $request->correo;
+                $persona -> save();
+
+                $usuario = new User();
+                $usuario -> idPersona = $persona->id;
+                $usuario -> idRol = $request->idRol;
+                $usuario -> usuario = $request->usuario;
+                $usuario -> password = bcrypt($request->password);
+                $usuario -> save();
 
             
-        $persona = new Persona();
-        $persona -> idGenero = $request->idGenero;
-        $persona -> idTipoPersona = $request->idTipoPersona;
-        $persona -> nombre = $request->nombre;
-        $persona -> apellido = $request->apellido;
-        $persona -> identificacion = $request->identificacion;
-        $persona -> direccion = $request->direccion;
-        $persona -> tel = $request->tel;
-        $persona -> tel2 = $request->tel2;
-        $persona -> correo = $request->correo;
-        $persona -> estado= '1';
-        $persona -> save();
+                DB::commit();
+            }
+            catch (Exeption $e)
+            {
+                DB::rollBack();
+            }
     }
     
     
     public function update(Request $request)
     {
-
         if (!$request->ajax()) return redirect('/');
-            $persona =  Persona::findOrFail($request->id);
-            $persona -> idGenero = $request->idGenero;
-            $persona -> idTipoPersona = $request->idTipoPersona;
-            $persona -> nombre = $request->nombre;
-            $persona -> apellido = $request->apellido;
-            $persona -> identificacion = $request->identificacion;
-            $persona -> direccion = $request->direccion;
-            $persona -> tel = $request->tel;
-            $persona -> tel2 = $request->tel2;
-            $persona -> correo = $request->correo;
-            $persona -> estado= '1';
-            $persona -> save();
+        try{
+            DB::beginTransaction();
+            $actualizar = Persona::findOrFail($request->idPersona); 
+            $actualizar -> idGenero = $request->idGenero;
+            $actualizar -> idTipoPersona = $request->idTipoPersona;
+            $actualizar -> nombre = $request->nombrePersona;
+            $actualizar -> apellido = $request->apellido;
+            $actualizar -> identificacion = $request->identificacion;
+            $actualizar -> direccion = $request->direccion;
+            $actualizar -> tel = $request->tel;
+            $actualizar -> tel2 = $request->tel2;
+            $actualizar -> correo = $request->correo;
+            $actualizar -> save();
+
+            $usuario = User::findOrFail($request->idUsuario); 
+            $usuario -> idPersona = $actualizar->id;
+            $usuario -> idRol = $request->idRol;
+            $usuario -> usuario = $request->usuario;
+            $usuario -> password = bcrypt($request->password);
+            $usuario -> save();
+
+            DB::commit();
+
+        }
+        catch (Exeption $e)
+        {
+            DB::rollBack();
+        }
     }
     
     public function desactivar(Request $request)

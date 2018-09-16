@@ -80,6 +80,13 @@ class Tipo_personaController extends Controller
         $tipo_persona -> estado = '0';
         $tipo_persona -> save();
     }
+    public function selectTipoPersona(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/'); 
+        $tipo_persona = Tipo_persona::where('estado', '=', '1')->where('nombre', '!=', "Alumno")
+        ->select('id', 'nombre')->orderBy('nombre','asc')->get();
+        return ['tipo_persona'=> $tipo_persona];
+    }
 
     public function activar(Request $request)
     {

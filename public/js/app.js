@@ -42026,7 +42026,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position:absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color:red !important;\n    font-weight:bold;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-content{\n     width: 100%;\n     height: 550px;\n     overflow-y: scroll;\n     overflow-x: unset;\n     position: absolute;\n}\n.mostrar{\n     display: list-item !important;\n     opacity: 1 !important;\n     position:absolute !important;\n     background-color: #3c29297a !important;\n}\n.div-error{\n     display: flex;\n     justify-content: center;\n}\n.text-error{\n     color:red !important;\n     font-weight:bold;\n}\n\n", ""]);
 
 // exports
 
@@ -42037,6 +42037,96 @@ exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    pos
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -42249,8 +42339,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             persona_id: 0,
             idGenero: 0,
-            idTipo_persona: 0,
-            nombre: '',
+            idTipoPersona: 0,
+            idRol: 0,
+            nombreRol: '',
+            idUsuario: 0,
+            usuario: '',
+            password: '',
+            confirPassword: '',
+            nombrePersona: '',
             apellido: '',
             direccion: '',
             identificacion: '',
@@ -42260,6 +42356,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             nombreTPersona: '',
             nombreGenero: '',
             arrayPersona: [],
+            arrayRol: [],
+            arrayTipo_persona: [],
+            arrayGenero: [],
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
@@ -42275,9 +42374,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             offset: 3,
             criterio: '',
-            buscar: '',
-            arrayTipo_persona: [],
-            arrayGenero: []
+            buscar: ''
+
         };
     },
 
@@ -42310,6 +42408,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         listarPersona: function listarPersona(page, buscar, criterio) {
             this.selectTypoPersona();
             this.selectGenero();
+            this.selectRol();
             var me = this;
             var url = '/persona?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
@@ -42343,6 +42442,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
+        selectRol: function selectRol() {
+            var me = this;
+            var url = '/persona/selectRol';
+            axios.get(url).then(function (response) {
+
+                var respuesta = response.data;
+                me.arrayRol = respuesta.rols;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
         cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
             me.pagination.current_page = page;
@@ -42355,15 +42465,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var me = this;
             axios.post('/persona/registrar', {
-                'nombre': this.nombre,
+                'nombrePersona': this.nombrePersona,
                 'apellido': this.apellido,
                 'identificacion': this.identificacion,
                 'direccion': this.direccion,
                 'tel': this.tel,
                 'tel2': this.tel2,
                 'correo': this.correo,
-                'idTipoPersona': this.idTipo_persona,
-                'idGenero': this.idGenero
+                'idTipoPersona': this.idTipoPersona,
+                'idGenero': this.idGenero,
+                'idRol': this.idRol,
+                'usuario': this.usuario,
+                'password': this.password
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarPersona(1, '', '');
@@ -42372,22 +42485,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         actualizarPersona: function actualizarPersona() {
+            var _axios$put;
+
             if (this.validarPersona()) {
                 return;
             }
+            console.log(this.idPersona);
+            console.log(this.idUsuario);
+            console.log(this.nombrePersona);
+            console.log(this.apellido);
+            console.log(this.identificacion);
+            console.log(this.direccion);
+            console.log(this.tel);
+            console.log(this.tel2);
+            console.log(this.correo);
+            console.log(this.idTipoPersona);
+            console.log(this.idGenero);
+            console.log(this.idRol);
+            console.log(this.usuario);
+            console.log(this.password);
             var me = this;
-            axios.put('/persona/actualizar', {
-                'id': this.persona_id,
-                'nombre': this.nombre,
+            axios.put('/persona/actualizar', (_axios$put = {
+                'idPersona': this.idPersona,
+                'idUsuario': this.idUsuario,
+                'idRol': this.idRol,
+                'nombrePersona': this.nombrePersona,
                 'apellido': this.apellido,
                 'identificacion': this.identificacion,
                 'direccion': this.direccion,
                 'tel': this.tel,
                 'tel2': this.tel2,
                 'correo': this.correo,
-                'idTipoPersona': this.idTipo_persona,
+                'idTipoPersona': this.idTipoPersona,
                 'idGenero': this.idGenero
-            }).then(function (response) {
+            }, _defineProperty(_axios$put, 'idRol', this.idRol), _defineProperty(_axios$put, 'usuario', this.usuario), _defineProperty(_axios$put, 'password', this.password), _axios$put)).then(function (response) {
                 me.cerrarModal();
                 me.listarPersona(1, '', '');
             }).catch(function (error) {
@@ -42458,9 +42589,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         validarPersona: function validarPersona() {
             this.errorPersona = 0;
             this.errorMostrarMsPersona = [];
+            if (this.password != this.confirPassword) this.errorMostrarMsPersona.push("las contraseñas no coinciden");
             if (this.idtipoPersona == '') this.errorMostrarMsPersona.push("Seleccione un tipo de persona");
             if (this.idGenero == '') this.errorMostrarMsPersona.push("Seleccione un genero");
-            if (!this.nombre) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
+            if (!this.nombrePersona) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
             if (!this.apellido) this.errorMostrarMsPersona.push("El apellido no puede estar vacio.");
             if (!this.direccion) this.errorMostrarMsPersona.push("El dirección no puede estar vacio.");
             if (!this.tel) this.errorMostrarMsPersona.push("El tel no puede estar vacio.");
@@ -42471,15 +42603,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         cerrarModal: function cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
-            this.nombre;
+            this.nombrePersona;
             this.apellido;
             this.identificacion;
             this.direccion;
             this.tel;
             this.tel2;
             this.correo;
-            this.idTipo_persona;
-            this.idGnero;
+            this.idTipoPersona;
+            this.idGenero;
+            this.usuario;
+            this.password;
+            this.idRol;
+            this.idUsuairo;
+            this.idPersona;
+            this.usuarioEstado;
         },
         abrirModal: function abrirModal(modelo, accion) {
             var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -42490,17 +42628,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         switch (accion) {
                             case 'registrar':
                                 {
-
                                     this.modal = 1;
                                     this.tituloModal = 'Registrar horario';
-                                    this.nombre = '';
-                                    this.apellido = '';
-                                    this.identificacion = '';
-                                    this.direccion = '';
-                                    this.tel = '';
-                                    this.tel2 = '';
-                                    this.correo = '';
-                                    this.idTipo_persona = '';
+                                    this.nombrePersona = "";
+                                    this.apellido = "";
+                                    this.identificacion = "";
+                                    this.direccion = "";
+                                    this.tel = "";
+                                    this.tel2 = "";
+                                    this.correo = "";
+                                    this.idTipoPersona = "";
+                                    this.idGnero = "";
+                                    this.usuario = "";
+                                    this.password = "";
+                                    this.idRol = "";
+                                    this.idUsuairo = "";
+                                    this.idPersona = "";
                                     this.tipoAccion = 1;
                                     break;
                                 }
@@ -42509,16 +42652,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = "Actualizar horario";
                                     this.tipoAccion = 2;
-                                    this.nombre = data['nombre'];
+                                    this.nombrePersona = data['nombrePersona'];
                                     this.apellido = data['apellido'];
                                     this.identificacion = data['identificacion'];
                                     this.direccion = data['direccion'];
                                     this.tel = data['tel'];
                                     this.tel2 = data['tel2'];
                                     this.correo = data['correo'];
-                                    this.idTipo_persona = data['idTipoPersona'];
+                                    this.idTipoPersona = data['idTipoPersona'];
                                     this.idGenero = data['idGenero'];
-                                    this.persona_id = data['id'];
+                                    this.idPersona = data['idPersona'];
+                                    this.idRol = data['idRol'];
+                                    this.idUsuario = data['idUsuario'];
+                                    this.usuario = data['usuario'];
+                                    this.password = data['password'];
+
                                     break;
                                 }
                         }
@@ -42693,39 +42841,93 @@ var render = function() {
                 _vm._l(_vm.arrayPersona, function(persona) {
                   return _c(
                     "tr",
-                    { key: persona.id, staticClass: "text-center table-sm" },
+                    {
+                      key: persona.idPersona,
+                      staticClass: "text-center table-sm"
+                    },
                     [
+                      _c("td", { staticClass: "text-center " }, [
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col-12 align-center" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-info btn-sm ",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.abrirModal(
+                                      "persona",
+                                      "actualizar",
+                                      persona
+                                    )
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "icon-pencil" })]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col-12 align-center" },
+                            [
+                              persona.estadoPersona
+                                ? [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-warning btn-sm align-center row",
+                                        attrs: { type: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.desactivarPersona(
+                                              persona.idPersona
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "icon-trash" })]
+                                    )
+                                  ]
+                                : [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-success btn-sm align-center row",
+                                        attrs: { type: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.activarPersona(
+                                              persona.idPersona
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "icon-check" })]
+                                    )
+                                  ]
+                            ],
+                            2
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "td",
                         [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-info btn-sm",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  _vm.abrirModal(
-                                    "persona",
-                                    "actualizar",
-                                    persona
-                                  )
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "icon-pencil" })]
-                          ),
-                          _vm._v("  \n                                "),
-                          persona.estado
+                          persona.usuarioEstado
                             ? [
                                 _c(
                                   "button",
                                   {
-                                    staticClass: "btn btn-warning btn-sm",
+                                    staticClass: "btn btn-warning btn-sm ",
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.desactivarPersona(persona.id)
+                                        _vm.desactivarPersona(persona.idUsuario)
                                       }
                                     }
                                   },
@@ -42736,11 +42938,11 @@ var render = function() {
                                 _c(
                                   "button",
                                   {
-                                    staticClass: "btn btn-success btn-sm",
+                                    staticClass: "btn btn-success btn-sm ",
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.activarPersona(persona.id)
+                                        _vm.activarPersona(persona.idUsuario)
                                       }
                                     }
                                   },
@@ -42752,26 +42954,31 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: {
                           textContent: _vm._s(persona.nombreTPersona)
                         }
                       }),
                       _vm._v(" "),
                       _c("td", {
-                        domProps: { textContent: _vm._s(persona.nombre) }
+                        staticClass: "align-middle",
+                        domProps: { textContent: _vm._s(persona.nombrePersona) }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: { textContent: _vm._s(persona.apellido) }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "col-3 align-middle",
                         domProps: {
                           textContent: _vm._s(persona.identificacion)
                         }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: { textContent: _vm._s(persona.nombreGenero) }
                       }),
                       _vm._v(" "),
@@ -42780,19 +42987,48 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: { textContent: _vm._s(persona.tel) }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: { textContent: _vm._s(persona.tel2) }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: { textContent: _vm._s(persona.correo) }
                       }),
                       _vm._v(" "),
+                      _c("td", {
+                        staticClass: "align-middle",
+                        domProps: { textContent: _vm._s(persona.usuario) }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        staticClass: "align-middle",
+                        domProps: { textContent: _vm._s(persona.nombreRol) }
+                      }),
+                      _vm._v(" "),
                       _c("td", [
-                        persona.estado
+                        persona.estadoPersona
+                          ? _c("div", [
+                              _c(
+                                "span",
+                                { staticClass: "badge badge-success" },
+                                [_vm._v("Activo")]
+                              )
+                            ])
+                          : _c("div", [
+                              _c("span", { staticClass: "badge badge-dark" }, [
+                                _vm._v("Inactivo")
+                              ])
+                            ])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        persona.usuarioEstado
                           ? _c("div", [
                               _c(
                                 "span",
@@ -42898,14 +43134,13 @@ var render = function() {
     _c(
       "div",
       {
-        staticClass: "modal fade",
+        staticClass: "modal fullscreen-modal fade ",
         class: { mostrar: _vm.modal },
         staticStyle: { display: "none" },
         attrs: {
           tabindex: "-1",
           role: "dialog",
-          "aria-labelledby": "myModalLabel",
-          "aria-hidden": "true"
+          "aria-labelledby": "myModalLabel"
         }
       },
       [
@@ -42972,8 +43207,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.idTipo_persona,
-                                expression: "idTipo_persona"
+                                value: _vm.idTipoPersona,
+                                expression: "idTipoPersona"
                               }
                             ],
                             staticClass: "form-control",
@@ -42987,7 +43222,7 @@ var render = function() {
                                     var val = "_value" in o ? o._value : o.value
                                     return val
                                   })
-                                _vm.idTipo_persona = $event.target.multiple
+                                _vm.idTipoPersona = $event.target.multiple
                                   ? $$selectedVal
                                   : $$selectedVal[0]
                               }
@@ -43033,8 +43268,8 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.nombre,
-                              expression: "nombre"
+                              value: _vm.nombrePersona,
+                              expression: "nombrePersona"
                             }
                           ],
                           staticClass: "form-control",
@@ -43043,13 +43278,13 @@ var render = function() {
                             placeholder: "Ingrese nombre",
                             required: ""
                           },
-                          domProps: { value: _vm.nombre },
+                          domProps: { value: _vm.nombrePersona },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.nombre = $event.target.value
+                              _vm.nombrePersona = $event.target.value
                             }
                           }
                         })
@@ -43349,6 +43584,193 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Tipo de Rol:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-6" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.idRol,
+                                expression: "idRol"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.idRol = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              { attrs: { value: "0", disabled: "" } },
+                              [_vm._v("Seleccione")]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(_vm.arrayRol, function(rols) {
+                              return _c("option", {
+                                key: rols.id,
+                                domProps: {
+                                  value: rols.id,
+                                  textContent: _vm._s(rols.nombre)
+                                }
+                              })
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Usuario:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.usuario,
+                              expression: "usuario"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "text",
+                            maxlength: "20",
+                            placeholder: "Ingrese primer telefono",
+                            required: ""
+                          },
+                          domProps: { value: _vm.usuario },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.usuario = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Contraseña:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.password,
+                              expression: "password"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "password",
+                            pattern: "[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*",
+                            title:
+                              "Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito",
+                            maxlength: "20",
+                            placeholder: "Ingrese una contraseña",
+                            required: ""
+                          },
+                          domProps: { value: _vm.password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.password = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-md-3 form-control-label",
+                          attrs: { for: "text-input" }
+                        },
+                        [_vm._v("Contraseña:")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-9" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.confirPassword,
+                              expression: "confirPassword"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "password",
+                            pattern: "[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*",
+                            title:
+                              "Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito",
+                            maxlength: "20",
+                            placeholder: "Ingrese una contraseña",
+                            required: ""
+                          },
+                          domProps: { value: _vm.confirPassword },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.confirPassword = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c(
                       "div",
                       {
@@ -43440,15 +43862,17 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", { staticClass: "table-primary" }, [
-        _c("th", { staticClass: "text-center" }, [_vm._v("Opciones")]),
+        _c("th", { staticClass: "text-center " }, [_vm._v("Opciones Persona")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Opciones Usuario")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }),
         _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Nombrel")]),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Nombre")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Apellido")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("DPI")]),
+        _c("th", { staticClass: "text-center col-3" }, [_vm._v("DPI")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Genero")]),
         _vm._v(" "),
@@ -43460,7 +43884,13 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Correo")]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Estado")])
+        _c("th", { staticClass: "text-center" }, [_vm._v("Usuario")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Rol")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Estado Persona")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Estado Usuario")])
       ])
     ])
   }

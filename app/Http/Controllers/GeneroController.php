@@ -75,6 +75,14 @@ class GeneroController extends Controller
         $genero -> estado = '1';
         $genero -> save();
     }
+    public function selectGenero(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/'); 
+        $genero = Genero::where('estado', '=', '1')
+        ->select('id', 'genero')->orderBy('genero','asc')->get();
+        return ['genero'=> $genero];
+    }
+
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
