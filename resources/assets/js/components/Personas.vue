@@ -24,10 +24,10 @@
 
 </style>
 <template>
-           <main class="main">
+    <main class="main">
             <!-- Breadcrumb -->
 
-            <div class="container-fluid">
+        <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
@@ -58,22 +58,17 @@
                             <thead>
                                <tr class="table-primary">
                                     
-                                        <th class="text-center ">Opciones Persona</th>
-                                        <th class="text-center">Opciones Usuario</th>
-                                        <th class="text-center"></th>
+                                        <th class="text-center ">Opciones</th>
                                         <th class="text-center">Nombre</th>
                                         <th class="text-center">Apellido</th>
-                                        <th class="text-center col-3" >DPI</th>
-                                        <th class="text-center">Genero</th>
+                                        <th class="text-center" >DPI</th>
                                         <th class="text-center">Direccion</th>
-                                        <th class="text-center">Telefono I</th>
-                                        <th class="text-center">Telefono II</th>
+                                        <th class="text-center">Telefono</th>
                                         <th class="text-center">Correo</th>
                                         <th class="text-center">Usuario</th>
                                         <th class="text-center">Rol</th>
-                                        <th class="text-center">Estado Persona</th>
-                                        <th class="text-center">Estado Usuario</th>
-
+                                        <th class="text-center">Visualizar</th>
+                                        <th class="text-center">Estado</th>
                                     
                                 </tr>
                             </thead>
@@ -88,44 +83,39 @@
                                             </div>
                                             <div class="col-12 align-center">
                                                 <template v-if="persona.estadoPersona">
-                                                    <button type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(persona.idPersona)">
+                                                    <button type="button" class="btn btn-warning btn-sm align-center row" @click="desactivar(persona.idPersona, persona.idUsuario)">
                                                         <i class="icon-trash"></i>
                                                     </button>
                                                 </template>
                                                 <template v-else>
-                                                    <button type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(persona.idPersona)">
+                                                    <button type="button" class="btn btn-success btn-sm align-center row" @click="activar(persona.idPersona, persona.idUsuario)">
                                                         <i class="icon-check"></i>
                                                     </button>
                                                 </template>
+                                            </div>
                                         </div>
-                                        </div>
+                                    
                                     </td>
-                                    <td >
-                                        <template v-if="persona.usuarioEstado" >
-                                            <button type="button" class="btn btn-warning btn-sm " @click="desactivarPersona(persona.idUsuario)">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else >
-                                            <button type="button" class="btn btn-success btn-sm " @click="activarPersona(persona.idUsuario)">
-                                                <i class="icon-check"></i>
-                                            </button>
-                                        </template>
-                                    </td>
-                                    <td  v-text="persona.nombreTPersona" class="align-middle"></td>
                                     <td  v-text="persona.nombrePersona" class="align-middle"></td>
                                     <td  v-text="persona.apellido" class="align-middle"></td>
-                                    <td  v-text="persona.identificacion" class="col-3 align-middle"></td>
-                                    <td  v-text="persona.nombreGenero" class="align-middle"></td>
+                                    <td  v-text="persona.identificacion" class=" align-middle"></td>
                                     <td  v-text="persona.direccion"></td>
                                     <td  v-text="persona.tel" class="align-middle"></td>
-                                    <td  v-text="persona.tel2" class="align-middle"></td>
                                     <td  v-text="persona.correo" class="align-middle"></td>
                                     <td  v-text="persona.usuario" class="align-middle"></td>
                                     <td  v-text="persona.nombreRol" class="align-middle"></td>
-                                    
+                                    <td>
+                                        
+                                        <template>
+                                            <button type="button" @click= "abrirModal('persona','visualizar',persona)" class="btn btn-primary btn-sm " >
+                                                   
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        </template>
+                                    </td>
                                     <td >
-                                        <div v-if="persona.estadoPersona">
+                                        
+                                        <div v-if="persona.estadoPersona && persona.usuarioEstado">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -133,15 +123,6 @@
                                         </div>
                                     </td>
                                     
-                                    
-                                    <td >
-                                        <div v-if="persona.usuarioEstado" >
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
-                                        <div v-else >
-                                            <span class="badge badge-dark">Inactivo</span>
-                                        </div>
-                                    </td>
 
                                 </tr>   
                             </tbody>
@@ -164,139 +145,186 @@
                     </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
-            </div>
-            <!--Inicio del modal agregar/actualizar-->
-            <div class="modal fullscreen-modal fade "  tabindex="-1" :class="{'mostrar':modal}"  role="dialog" aria-labelledby="myModalLabel" style="display: none;" >
-                <div class="modal-dialog modal-primary modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" v-text="tituloModal"></h4>
-                            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo de persona</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" v-model="idTipoPersona">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="nombrePersona" class="form-control" placeholder="Ingrese nombre" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Apellido:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="apellido" class="form-control" placeholder="Ingrese apellido" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">DPI:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="identificacion" class="form-control" placeholder="Ingrese DPI" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Dirección:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="direccion" class="form-control" placeholder="Ingrese dirección" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Genero:</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" v-model="idGenero">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="genero in arrayGenero" :key="genero.id" :value="genero.id" v-text="genero.genero"></option>
-                                        </select>
+            
+                <!--Inicio del modal agregar/actualizar-->
+                <div class="modal fullscreen-modal fade "  tabindex="-1" :class="{'mostrar':modal}"  role="dialog" aria-labelledby="myModalLabel" style="display: none;" >
+                    <div class="modal-dialog modal-primary modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" v-text="tituloModal"></h4>
+                                <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Tipo de persona</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idTipoPersona">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
+                                            </select>
+                                            <select class="form-control bg-white" v-if ="tipoAccion==3" v-model="idTipoPersona" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
+                                            </select>
+                                        </div>
                                         
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Telefono:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="tel" class="form-control" placeholder="Ingrese primer telefono" required>
+  
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="nombrePersona" class="form-control" placeholder="Ingrese nombre" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="nombrePersona" class="form-control bg-white" disabled>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Telefono 2:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="tel2" class="form-control" placeholder="Ingrese segundo telefono">
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Apellido:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="apellido" class="form-control" placeholder="Ingrese apellido" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="apellido" class="form-control bg-white" disabled>
+                                        
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Correo electronico:</label>
-                                    <div class="col-md-9">
-                                        <input type="email" v-model="correo" class="form-control" placeholder="Ingrese el correo electronico">
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">DPI:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="identificacion" class="form-control" placeholder="Ingrese DPI" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="identificacion" class="form-control bg-white" disabled>
+                                        
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo de Rol:</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" v-model="idRol">
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
-                                        </select>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 form-control-label" for="text-input">Dirección:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="direccion" class="form-control" placeholder="Ingrese dirección" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="direccion" class="form-control bg-white" disabled>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Usuario:</label>
-                                    <div class="col-md-9">
-                                        <input type="text" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese primer telefono" required>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Genero:</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idGenero">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="genero in arrayGenero" :key="genero.id" :value="genero.id" v-text="genero.genero"></option>
+                                            </select>
+                                            <select class="form-control bg-white" v-if="tipoAccion == 3" v-model="idGenero" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="genero in arrayGenero" :key="genero.id" :value="genero.id" v-text="genero.genero"></option>
+                                            </select>
+                                            
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Telefono:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="tel" class="form-control" placeholder="Ingrese primer telefono" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="tel" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row" >
+                                        <label class="col-md-3  form-control-label" for="text-input">Telefono 2:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="tel2" class="form-control" placeholder="Ingrese segundo telefono">
+                                            <input type="text" v-if="tipoAccion == 3" v-model="tel2" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 form-control-label" for="text-input">Correo electronico:</label>
+                                        <div class="col-md-9">
+                                            <input type="email" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="correo" class="form-control" placeholder="Ingrese el correo electronico">
+                                            <input type="email" v-if="tipoAccion == 3" v-model="correo" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Tipo de Rol:</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idRol">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
+                                            </select>
+                                            <select class="form-control bg-white" v-if="tipoAccion == 3" v-model="idRol" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 form-control-label" for="text-input">Usuario:</label>
+                                        <div class="col-md-9">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese primer telefono" required>
+                                            <input type="text" v-if="tipoAccion == 3" maxlength="20" v-model="usuario" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
 
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
-                                    <div class="col-md-9">
-                                        <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="password" class="form-control" placeholder="Ingrese una contraseña" required>
+                                    <div class="form-group row" v-if="tipoAccion == 1 || tipoAccion == 2">
+                                        <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
+                                        <div class="col-md-9">
+                                            <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="password" class="form-control" placeholder="Ingrese una contraseña" required>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
-                                    <div class="col-md-9">
-                                        <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="confirPassword" class="form-control" placeholder="Ingrese una contraseña" required>
+                                    
+                                    <div class="form-group row" v-if="tipoAccion == 1 || tipoAccion == 2">
+                                        <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
+                                        <div class="col-md-9">
+                                            <input type="password"  pattern="[A-Za-z][A-Za-z0-9]*[0-9][A-Za-z0-9]*" title="Una contraseña válida es un conjuto de caracteres, donde cada uno consiste de una letra mayúscula o minúscula, o un dígito. La contraseña debe empezar con una letra y contener al menor un dígito" maxlength="20" v-model="confirPassword" class="form-control" placeholder="Ingrese una contraseña" required>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div v-show="errorPersona" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
+                                    
+                                    <div v-show="errorPersona" class="form-group row div-error">
+                                        <div class="text-center text-error">
+                                            <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
+                                        </div>
                                     </div>
-                                </div>
 
-                            </form>
+                                </form>
+                            </div>
+                            
+                               
+                            
+                            <div class="modal-footer">
+                                
+                                <label for="text-input" v-if="tipoAccion == 3">Persona:</label>
+                                <button v-if="tipoAccion == 3 && estadoPersona == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(idPersona)">
+                                    <i class="icon-trash"></i>
+                                </button>
+                                <button v-if="tipoAccion == 3 && estadoPersona == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(idPersona)">
+                                    <i class="icon-check"></i>
+                                </button>
+                                
+                                <label for="text-input" v-if="tipoAccion == 3">Usuairo:</label>
+                                    
+                                <button v-if="tipoAccion == 3 && usuarioEstado == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarUsuario(idUsuario)">
+                                    <i class="icon-trash"></i>
+                                </button>
+                                <button v-if="tipoAccion == 3 && usuarioEstado == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarUsuario(idUsuario)">
+                                        <i class="icon-check"></i>
+                                </button>
+                                
+                                <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
-                        </div>
+                        <!-- /.modal-content -->
+                    
                     </div>
-                    <!-- /.modal-content -->
+                    <!-- /.modal-dialog -->
                 </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!--Fin del modal-->
+                <!--Fin del modal-->
+        </div>
             
-        </main>
+    </main>
 </template>
 
 <script>
     export default {
         data (){
             return{
-                persona_id: 0,
+                idPersona: 0,
                 idGenero: 0,
                 idTipoPersona: 0,
                 idRol:0,
@@ -456,20 +484,7 @@
                 if(this.validarPersona()){
                     return;
                 }                 
-                console.log(this.idPersona);
-                console.log(this.idUsuario); 
-                console.log(this.nombrePersona); 
-                console.log(this.apellido); 
-                console.log(this.identificacion); 
-                console.log(this.direccion); 
-                console.log(this.tel); 
-                console.log(this.tel2); 
-                console.log(this.correo); 
-                console.log(this.idTipoPersona); 
-                console.log(this.idGenero);  
-                console.log(this.idRol); 
-                console.log(this.usuario); 
-                console.log(this.password); 
+                
                 let me = this;
                 axios.put('/persona/actualizar',{
                     'idPersona':this.idPersona,
@@ -482,7 +497,7 @@
                     'tel':this.tel,
                     'tel2':this.tel2,
                     'correo':this.correo,
-                    'idTipoPersona':this.idTipoPersona,
+                    'nombreTPersona':this.Persona,
                     'idGenero':this.idGenero,
                     'idRol':this.idRol,
                     'usuario':this.usuario,
@@ -496,7 +511,7 @@
                 });
             },
             
-            desactivarPersona(id){
+            desactivar(id, idd){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -514,8 +529,85 @@
                     if (result.value) {
                         let me = this;
                         axios.put('/persona/desactivar',{
-                            'id': id
+                            'idPersona': id,
+                            'idUsuario': idd
                         }).then(function(response){
+                            me.listarPersona(1,'','');
+                            swalWithBootstrapButtons(
+                                'Descativado!',
+                                'el registro se a desactivado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+            activar(id , idd){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere activar la persona?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'activar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        let me = this;
+                        axios.put('/persona/activar',{
+                            'idPersona': id,
+                            'idUsuario': idd
+                        }).then(function(response){
+                            
+                            me.listarPersona(1,'','');
+                            swalWithBootstrapButtons(
+                                'Ativado!',
+                                'el registro se activado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+            desactivarPersona(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere desactivar la persona?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'desactivar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        
+                        let me = this;
+                        axios.put('/persona/desactivarPersona',{
+                            'idPersona': id
+                        }).then(function(response){
+                            me.cerrarModal();
                             me.listarPersona(1,'','');
                             swalWithBootstrapButtons(
                                 'Descativado!',
@@ -548,11 +640,89 @@
                 reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
+                        
                         let me = this;
-                        axios.put('/persona/activar',{
-                            'id': id
+                        axios.put('/persona/activarPersona',{
+                            'idPersona': id
                         }).then(function(response){
                             
+                            me.listarPersona(1,'','');
+                            me.cerrarModal();
+                            swalWithBootstrapButtons(
+                                'Ativado!',
+                                'el registro se activado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+            desactivarUsuario(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere desactivar el usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'desactivar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        
+                        let me = this;
+                        axios.put('/persona/desactivarUsuario',{
+                            'idUsuario': id
+                        }).then(function(response){
+                            me.listarPersona(1,'','');
+                            me.cerrarModal();
+                            swalWithBootstrapButtons(
+                                'Descativado!',
+                                'el registro se a desactivado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+            activarUsuario(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere activar el usuairo?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'activar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    
+                    if (result.value) {
+                        let me = this;
+                        axios.put('/persona/activarUsuario',{
+                            'idUsuario': id
+                        }).then(function(response){
+                            me.cerrarModal();
                             me.listarPersona(1,'','');
                             swalWithBootstrapButtons(
                                 'Ativado!',
@@ -650,6 +820,30 @@
 
                                 break;
                             }
+                            case 'visualizar':
+                            {
+                                this.modal = 1;
+                                this.tituloModal = "Visualizar datos";
+                                this.tipoAccion = 3;
+                                this.nombrePersona = data['nombrePersona'];
+                                this.apellido = data['apellido'];
+                                this.identificacion = data['identificacion'];
+                                this.direccion = data['direccion'];
+                                this.tel = data['tel'];
+                                this.tel2 = data['tel2'];
+                                this.correo = data['correo'];
+                                this.idTipoPersona = data['idTipoPersona'];
+                                this.idGenero = data['idGenero'];
+                                this.idPersona = data['idPersona'];
+                                this.idRol = data['idRol'];
+                                this.idUsuario = data['idUsuario'];
+                                this.usuario = data['usuario'];
+                                this.password = data['password'];  
+                                this.usuarioEstado = data['usuarioEstado'];  
+                                this.estadoPersona = data['estadoPersona']; 
+
+                                break;
+                            }                                                          
                         }
                     }
                 }

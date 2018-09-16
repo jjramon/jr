@@ -78,8 +78,12 @@ Route::get('/persona','PersonaController@index');
 Route::post('/persona/registrar', 'PersonaController@store');
 Route::put('/persona/actualizar', 'PersonaController@update');
 Route::put('/persona/desactivar', 'PersonaController@desactivar');
-Route::get('/persona/selectRol', 'RolController@selectRol');
+Route::put('/persona/desactivarPersona', 'PersonaController@desactivarPersona');
+Route::put('/persona/desactivarUsuario', 'PersonaController@desactivarUsuario');
 Route::put('/persona/activar', 'PersonaController@activar');
+Route::put('/persona/activarPersona', 'PersonaController@activarPersona');
+Route::put('/persona/activarUsuario', 'PersonaController@activarUsuario');
+Route::get('/persona/selectRol', 'RolController@selectRol');
 Route::get('/persona/selectTipoPersona', 'Tipo_personaController@selectTipoPersona');
 Route::get('/persona/selectGenero', 'GeneroController@selectGenero');
 

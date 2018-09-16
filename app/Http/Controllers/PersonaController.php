@@ -28,7 +28,6 @@ class PersonaController extends Controller
                 ->join('generos', 'personas.idGenero', '=', 'generos.id')
                 ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
                 ->where('rols.estado','=', '1')
-                ->where('users.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
                 ->where('generos.estado','=', '1')  
                 ->where('tipo_personas.nombre','!=', "Alumno")         
@@ -156,17 +155,57 @@ class PersonaController extends Controller
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-            $persona =  Persona::findOrFail($request->id);
+            $persona =  Persona::findOrFail($request->idPersona);
             $persona -> estado = '0';
             $persona -> save();
+
+            $usuario = User::findOrFail($request->idUsuario);
+            $usuario -> estado = '0';
+            $usuario -> save();
+    }
+    
+    public function desactivarPersona(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $persona =  Persona::findOrFail($request->idPersona);
+            $persona -> estado = '0';
+            $persona -> save();
+
+            
+    }
+    
+    public function desactivarUsuario(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $usuario = User::findOrFail($request->idUsuario);
+            $usuario -> estado = '0';
+            $usuario -> save();
     }
     
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-            $persona =  Persona::findOrFail($request->id);
+            $persona =  Persona::findOrFail($request->idPersona);
             $persona -> estado = '1';
             $persona -> save();
+
+            $usuario = User::findOrFail($request->idUsuario);
+            $usuario -> estado = '1';
+            $usuario -> save();
+    }
+    public function activarPersona(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $persona =  Persona::findOrFail($request->idPersona);
+            $persona -> estado = '1';
+            $persona -> save();
+    }
+    public function activarUsuario(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $usuario = User::findOrFail($request->idUsuario);
+            $usuario -> estado = '1';
+            $usuario -> save();
     }
 
 }    
