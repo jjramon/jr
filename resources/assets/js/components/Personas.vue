@@ -39,13 +39,14 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <div class="input-group">
-                                    <label class="col-md-1 form-control-label" for="text-input">Tipo:</label>
-                                    <select class="form-control col-md-2" v-model="criterio">
+                                <div class="input-group" >
+                                    
+                                        <label class="col-md-2 form-control-label" for="text-input">Tipo:</label>
+                                         <select class="form-control col-md-2" v-model="criterio">
                                             <option value="" >Seleccione</option>
                                             <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
-                                    </select>
-                                
+                                        </select>
+                                    
                                     <label class="col-md-2 form-control-label" for="text-input">Buscar:</label>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">              
                                     
@@ -58,12 +59,11 @@
                             <thead>
                                <tr class="table-primary">
                                     
-                                        <th class="text-center ">Opciones</th>
-                                        <th class="text-center">Nombre</th>
-                                        <th class="text-center">Apellido</th>
+                                        <th class="text-center" width="100 px">Opciones</th>
+                                        <th class="text-center" width="350 px">Nombre</th>
                                         <th class="text-center" >DPI</th>
-                                        <th class="text-center">Direccion</th>
-                                        <th class="text-center">Telefono</th>
+                                        <th class="text-center" width="400 px">Direccion</th>
+                                        <th class="text-center" width="100 px">Telefono</th>
                                         <th class="text-center">Correo</th>
                                         <th class="text-center">Usuario</th>
                                         <th class="text-center">Rol</th>
@@ -74,32 +74,26 @@
                             </thead>
                             <tbody>
                                 <tr v-for="persona in arrayPersona" :key="persona.idPersona" class="text-center table-sm"> 
-                                    <td class="text-center ">
-                                        <div class="row">
-                                            <div class="col-12 align-center">
-                                                <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
-                                                    <i class="icon-pencil"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-12 align-center">
-                                                <template v-if="persona.estadoPersona">
-                                                    <button type="button" class="btn btn-warning btn-sm align-center row" @click="desactivar(persona.idPersona, persona.idUsuario)">
-                                                        <i class="icon-trash"></i>
-                                                    </button>
-                                                </template>
-                                                <template v-else>
-                                                    <button type="button" class="btn btn-success btn-sm align-center row" @click="activar(persona.idPersona, persona.idUsuario)">
-                                                        <i class="icon-check"></i>
-                                                    </button>
-                                                </template>
-                                            </div>
-                                        </div>
-                                    
+                                    <td class="align-midle ">
+                                       
+                                        <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
+                                            <i class="icon-pencil"></i>
+                                        </button>
+                                            
+                                        <template v-if="persona.estadoPersona">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idUsuario)">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idUsuario)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
                                     </td>
-                                    <td  v-text="persona.nombrePersona" class="align-middle"></td>
-                                    <td  v-text="persona.apellido" class="align-middle"></td>
-                                    <td  v-text="persona.identificacion" class=" align-middle"></td>
-                                    <td  v-text="persona.direccion"></td>
+                                    <td  v-text="persona.nombrePersona + ' ' + persona.apellido" class="align-middle"></td>
+                                    <td  v-text="persona.identificacion" class="align-middle"></td>
+                                    <td  v-text="persona.direccion" class="align-middle"></td>
                                     <td  v-text="persona.tel" class="align-middle"></td>
                                     <td  v-text="persona.correo" class="align-middle"></td>
                                     <td  v-text="persona.usuario" class="align-middle"></td>
@@ -235,7 +229,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-3 form-control-label" for="text-input">Correo electronico:</label>
                                         <div class="col-md-9">
-                                            <input type="email" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="correo" class="form-control" placeholder="Ingrese el correo electronico">
+                                            <input type="email" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="correo" class="form-control" placeholder="ejmplo@ejemplo.com">
                                             <input type="email" v-if="tipoAccion == 3" v-model="correo" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
@@ -255,7 +249,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-3 form-control-label" for="text-input">Usuario:</label>
                                         <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese primer telefono" required>
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese el usuario" required>
                                             <input type="text" v-if="tipoAccion == 3" maxlength="20" v-model="usuario" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
@@ -362,6 +356,7 @@
                 offset : 3,
                 criterio :'',
                 buscar : '',
+                tipoBusqueda:'',
                 
             }
         },
@@ -497,9 +492,8 @@
                     'tel':this.tel,
                     'tel2':this.tel2,
                     'correo':this.correo,
-                    'nombreTPersona':this.Persona,
+                    'idTipoPersona':this.idTipoPersona,
                     'idGenero':this.idGenero,
-                    'idRol':this.idRol,
                     'usuario':this.usuario,
                     'password':this.password,        
                 }).then(function(response){
@@ -780,7 +774,7 @@
                             case 'registrar':
                             {
                                 this.modal=1;
-                                this.tituloModal='Registrar horario';
+                                this.tituloModal='Registrar persona';
                                 this.nombrePersona = "";
                                 this.apellido = "";
                                 this.identificacion = "";

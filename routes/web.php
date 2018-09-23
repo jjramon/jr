@@ -14,7 +14,7 @@
 
 
 
-Route::get('/', function () {
+Route::get('/main', function () {
     return view('plantilla/contenido');
 });
 
@@ -100,3 +100,16 @@ Route::post('/user/registrar', 'UserController@store');
 Route::put('/user/actualizar', 'UserController@update');
 Route::put('/user/desactivar', 'UserController@desactivar');
 Route::put('/user/activar', 'UserController@activar');
+
+Route::get('/asignaralumno','AsgPadreAlumController@index');
+Route::get('/asignaralumno/buscarpadre','PersonaController@buscarPadre');
+Route::get('/asignaralumno/buscarhijo','PersonaController@buscarHijo');
+Route::post('/asignaralumno/registrar','AsgPadreAlumController@store');
+Route::put('/asignaralumno/actualizar','AsgPadreAlumController@update');
+Route::put('/asignaralumno/desacativar','AsgPadreAlumController@desactivar');
+Route::put('/asignaralumno/acativar','AsgPadreAlumController@activar');
+
+Route::get('/','Auth\LoginController@showLoginForm');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

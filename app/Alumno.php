@@ -15,5 +15,7 @@ class Alumno extends Model
     public function persona(){
         return $this->belongsTo('colegioShaddai\Persona');
     }
-    
+    public function asignaralumno(){
+        return $this->hasOne('colegioShaddai\asignar_padre_alumno');
+    }
 }

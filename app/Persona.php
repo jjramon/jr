@@ -18,11 +18,12 @@ class Persona extends Model
     public function genereos(){
         return $this->belongsTo('colegioShaddai\Genero');
     }
-    public function alumno(){
-        return $this->hasOne('colegioShaddai\Alumno');
-    }
+    
     public function user(){
         return $this->hasOne('colegioShaddai\User');
+    }
+    public function asignarpadres(){
+        return $this->hasOne('colegioShaddai\asignar_padre_alumno');
     }
 }
 

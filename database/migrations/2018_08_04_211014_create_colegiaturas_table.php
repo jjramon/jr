@@ -22,7 +22,7 @@ class CreateColegiaturasTable extends Migration
             $table->boolean('estado')->default(1);
             $table->string('condicion',15)->default('Pagado');
             $table->timestamps();
-            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idMes')->references('id')->on('meses')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
         });

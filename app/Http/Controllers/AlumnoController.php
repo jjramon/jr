@@ -17,7 +17,7 @@ class AlumnoController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
@@ -27,13 +27,12 @@ class AlumnoController extends Controller
         if($buscar == '' && $criterio=='')
             {
                 
-                $leer = Alumno::join('personas', 'idPersona', '=', 'personas.id')
+                $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
                 ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
                 ->join('generos', 'personas.idGenero', '=', 'generos.id')
                 ->where('tipo_personas.estado','=', '1')
                 ->where('generos.estado','=', '1')
-                ->where('tipo_personas.nombre','==',"Alumno")   
-                ->select('alumnos.id as idAlumno', 'personas.id as idPersona','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'alumnos.fechaNacimiento as fechaNac',  'personas.estado')
+                ->select('generos.id as idGenero','tipo_personas.id as idTipoPersona','alumnos.id as idAlumno', 'personas.id as idPersona','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'alumnos.fechaNacimiento as fechaNac',  'personas.estado')
                 ->orderBy('personas.apellido', 'asc')->paginate(10);  
 
             }
@@ -79,6 +78,7 @@ class AlumnoController extends Controller
             'persona'=>$leer
         ];
     }
+    
     
     public function selectTipoPersona(Request $request)
     {

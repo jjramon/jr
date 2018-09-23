@@ -6,15 +6,14 @@ use Illuminate\Http\Request;
 use colegioShaddai\Persona;
 use colegioShaddai\User;
 use Illuminate\Support\Facades\DB;
-use  Jenssegers \ Date \ Date ;
-use Carbon\Carbon;
+
 
 class PersonaController extends Controller
 {
     
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
@@ -32,7 +31,7 @@ class PersonaController extends Controller
                 ->where('generos.estado','=', '1')  
                 ->where('tipo_personas.nombre','!=', "Alumno")         
                 ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
-                ->orderBy('tipo_personas.id', 'asc')->paginate(10);   
+                ->orderBy('personas.nombre', 'asc')->paginate(10);   
             }
         if($criterio != '' && $buscar == '')
             {
@@ -41,11 +40,10 @@ class PersonaController extends Controller
                 ->join('generos', 'personas.idGenero', '=', 'generos.id')
                 ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
                 ->where('rols.estado','=', '1')
-                ->where('users.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')    
+                ->where('generos.estado','=', '1')      
                 ->where('tipo_personas.id','=', $criterio)         
-                ->select('personas.id', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as idEstado','rols.id','rols.nombre as nombreRol','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
+                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
             } 
         if($criterio != '' && $buscar != '')
@@ -59,11 +57,11 @@ class PersonaController extends Controller
             ->where('users.estado','=', '1')
             ->where('tipo_personas.estado','=', '1')
             ->where('generos.estado','=', '1')    
+            ->where('tipo_personas.id','=', $criterio)
             ->where('personas.apellido','like','%'.$buscar.'%')
             ->orwhere('personas.nombre','like','%'.$buscar.'%')
-            ->where('tipo_personas.id','like', $criterio)
-            ->select('personas.id', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as idEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado')
-            ->orderBy('personas.apellido', 'asc')->paginate(10);
+            ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
+            ->orderBy('personas.nombre', 'asc')->paginate(10);
             
         }
 
@@ -80,9 +78,39 @@ class PersonaController extends Controller
         ];
     }
     
-    
+    public function buscarPadre(Request $request)
+    {
+        //if (!$request->ajax()) return redirect('/');
+        $filtro = $request->filtro;
+       
+        $padreF = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+        ->where('personas.apellido','like','%'.$filtro.'%')
+        ->orwhere('personas.nombre','like','%'.$filtro.'%')
+        ->orwhere('personas.identificacion','like','%'.$filtro.'%')
+        ->where('personas.estado','=',"1")
+        ->where('tipo_personas.nombre','=',"Padre de familia")
+        ->select('personas.id as idPadreF' , 'personas.nombre as nombrePadreF', 'personas.apellido as apellidoPadreF')
+        ->orderBy('personas.nombre' , 'asc')->take(1)->get();
 
-    
+        return ['padre' => $padreF];
+    }
+    public function buscarHijo(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $filtro = $request->filtro;
+       
+        $hijo = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+        ->join('alumnos', 'personas.id', '=','alumnos.idPersona')
+        ->where('personas.apellido','like','%'.$filtro.'%')
+        ->orwhere('personas.nombre','like','%'.$filtro.'%')
+        ->orwhere('personas.identificacion','like','%'.$filtro.'%')
+        ->where('personas.estado','=',"1")
+        ->where('tipo_personas.nombre','=',"Alumno")
+        ->select('alumnos.id as idHijo' , 'personas.nombre as nombreHijo', 'personas.apellido as apellidoHijo')
+        ->orderBy('personas.nombre' , 'asc')->take(1)->get();
+
+        return ['hijo' => $hijo];
+    }
 
     public function store(Request $request)
     {
