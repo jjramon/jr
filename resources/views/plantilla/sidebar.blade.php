@@ -52,6 +52,9 @@
                                     <li @click="menu = 8"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Bimestre</a>
                                     </li>
+                                    <li @click="menu = 9"class="nav-item">
+                                        <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Materia</a>
+                                    </li>
                                 </ul>
                             </li>
 
@@ -59,13 +62,13 @@
                             <li class="nav-item nav-dropdown">
                                 <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-bookmark"></i>Grados</a>
                                 <ul class="nav-dropdown-items">
-                                    <li @click="menu = 9"class="nav-item">
+                                    <li @click="menu = 10"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Seccion</a>
                                     </li>
-                                    <li @click="menu = 10"class="nav-item">
+                                    <li @click="menu = 11"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Nivel</a>
                                     </li> 
-                                    <li @click="menu = 11"class="nav-item">
+                                    <li @click="menu = 12"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Grado</a>
                                     </li>
                                 </ul>
@@ -77,13 +80,13 @@
                 <li class="nav-item nav-dropdown">
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-users"></i> Registrar personal</a>
                     <ul class="nav-dropdown-items">
-                        <li @click="menu = 12" class="nav-item">
+                        <li @click="menu = 13" class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Personas</a>
                         </li>
-                        <li @click="menu = 13" class="nav-item">
+                        <li @click="menu = 14" class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Alumno</a>
                         </li>
-                        <li @click="menu = 14" class="nav-item">
+                        <li @click="menu = 15" class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Asignar padres</a>
                         </li>
                     </ul>
@@ -94,19 +97,19 @@
                 <li class="nav-item nav-dropdown">
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-users"></i> Materias</a>
                     <ul class="nav-dropdown-items">
-                        <li @click="menu = 15"class="nav-item">
+                        <li @click="menu = 16"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Materia</a>
                         </li>
-                        <li @click="menu = 16"class="nav-item">
+                        <li @click="menu = 17"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar grado</a>
                         </li>
-                        <li @click="menu = 17"class="nav-item">
+                        <li @click="menu = 18"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar docente</a>
                         </li>
-                        <li @click="menu = 18"class="nav-item">
+                        <li @click="menu = 19"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar alumnos</a>
                         </li>
-                        <li @click="menu = 19"class="nav-item">
+                        <li @click="menu = 20"class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>ingresar calificación</a>
                             </li>
                     </ul>
@@ -116,10 +119,10 @@
                 <li class="nav-item nav-dropdown">
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-users"></i> Pagos</a>
                     <ul class="nav-dropdown-items">
-                        <li @click="menu = 20"class="nav-item">
+                        <li @click="menu = 21"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Pago</a>
                         </li>
-                        <li @click="menu = 21"class="nav-item">
+                        <li @click="menu = 22"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Morosos</a>
                         </li>
                     </ul>

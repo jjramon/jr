@@ -27,6 +27,7 @@ Vue.component('persona', require('./components/Personas.vue'));
 Vue.component('alumno', require('./components/Alumnos.vue'));
 Vue.component('usuario', require('./components/Users.vue'));
 Vue.component('padrealumno', require('./components/Asig_pad_alum.vue'));
+Vue.component('materia', require('./components/Materias.vue'));
 
 const app = new Vue({
     el: '#app',

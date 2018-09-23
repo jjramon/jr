@@ -19,7 +19,7 @@ class CreateAsignarAlumnosTable extends Migration
             $table->integer('idAlumno')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
         });
     }

@@ -67,6 +67,12 @@ Route::put('/horario/desactivar', 'HorarioController@desactivar');
 Route::put('/horario/activar', 'HorarioController@activar');
 Route::get('/horario/selectDia', 'HorarioController@selectDia');
 
+Route::get('/materia','MateriaController@index');
+Route::post('/materia/registrar', 'MateriaController@store');
+Route::put('/materia/actualizar', 'MateriaController@update');
+Route::put('/materia/desactivar', 'MateriaController@desactivar');
+Route::put('/materia/activar', 'MateriaController@activar');
+
 Route::get('/tipo_persona','Tipo_personaController@index');
 Route::post('/tipo_persona/registrar', 'Tipo_personaController@store');
 Route::put('/tipo_persona/actualizar', 'Tipo_personaController@update');

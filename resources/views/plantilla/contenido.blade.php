@@ -45,50 +45,53 @@
             <template v-if="menu==8">
                 <bimestre></bimestre>
             </template>
-        <!---Mantenimiento menu grados -->
             <template v-if="menu==9">
+                <materia></materia>
+            </template>
+        <!---Mantenimiento menu grados -->
+            <template v-if="menu==10">
                 <seccion></seccion>
             </template>
-            <template v-if="menu==10">
+            <template v-if="menu==11">
                 <nivel></nivel>
             </template>
-            <template v-if="menu==11">
+            <template v-if="menu==12">
                 <h1>grado</h1>      
             </template>
 
         <!---Maenu personas -->
-            <template v-if="menu==12">
+            <template v-if="menu==13">
                 <persona></persona>      
             </template>
-            <template v-if="menu==13">
+            <template v-if="menu==14">
                 <alumno></alumno> 
             </template>
-            <template v-if="menu==14">
+            <template v-if="menu==15">
             <padrealumno></padrealumno>       
             </template>
 
         <!---Maenu materias -->
-            <template v-if="menu==15">
+            <template v-if="menu==16">
                 <h1>Materia</h1>      
             </template>
-            <template v-if="menu==16">
+            <template v-if="menu==17">
                 <h1>asignar grado</h1>      
             </template>
-            <template v-if="menu==17">
+            <template v-if="menu==18">
                 <h1>asignar docente</h1>      
             </template>
-            <template v-if="menu==18">
+            <template v-if="menu==19">
                 <h1>asignar alumno</h1>      
             </template>
-            <template v-if="menu==19">
+            <template v-if="menu==20">
                 <h1>ingresar calificaicones</h1>      
             </template>
 
         <!---Maenu pagos -->
-            <template v-if="menu==20">
+            <template v-if="menu==21">
                 <h1>Pagos</h1>     
             </template>
-            <template v-if="menu==21">
+            <template v-if="menu==22">
                 <h1>Morosos</h1> 
             </template>
 
