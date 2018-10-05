@@ -21,6 +21,7 @@ class CreateAsignarAlumnosTable extends Migration
             $table->timestamps();
             $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

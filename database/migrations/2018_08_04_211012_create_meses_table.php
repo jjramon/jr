@@ -18,6 +18,7 @@ class CreateMesesTable extends Migration
             $table->string('nombre',25)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

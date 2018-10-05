@@ -18,6 +18,7 @@ class CreateGenerosTable extends Migration
             $table->string('genero',10)->unique();
             $table->boolean('estado')->defualt('1');
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

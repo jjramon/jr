@@ -28,6 +28,7 @@ class CreatePersonasTable extends Migration
             $table->timestamps();
             $table->foreign('idGenero')->references('id')->on('generos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idTipoPersona')->references('id')->on('tipo_personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

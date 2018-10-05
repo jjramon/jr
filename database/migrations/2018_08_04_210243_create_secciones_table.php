@@ -18,6 +18,7 @@ class CreateSeccionesTable extends Migration
             $table->string('nombre', 1)->unique();
             $table->boolean('estado');
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

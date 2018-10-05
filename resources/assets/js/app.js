@@ -28,6 +28,8 @@ Vue.component('alumno', require('./components/Alumnos.vue'));
 Vue.component('usuario', require('./components/Users.vue'));
 Vue.component('padrealumno', require('./components/Asig_pad_alum.vue'));
 Vue.component('materia', require('./components/Materias.vue'));
+Vue.component('carrera', require('./components/Carreras.vue'));
+Vue.component('grado', require('./components/Grados.vue'));
 
 const app = new Vue({
     el: '#app',

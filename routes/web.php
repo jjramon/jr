@@ -115,6 +115,21 @@ Route::put('/asignaralumno/actualizar','AsgPadreAlumController@update');
 Route::put('/asignaralumno/desacativar','AsgPadreAlumController@desactivar');
 Route::put('/asignaralumno/acativar','AsgPadreAlumController@activar');
 
+Route::get('/carrera','CarreraController@index');
+Route::post('/carrera/registrar', 'CarreraController@store');
+Route::put('/carrera/actualizar', 'CarreraController@update');
+Route::put('/carrera/desactivar', 'CarreraController@desactivar');
+Route::put('/carrera/activar', 'CarreraController@activar');
+
+Route::get('/grado','GradoController@index');
+Route::post('/grado/registrar', 'GradoController@store');
+Route::get('/grado/selectNivel', 'NiveleController@selectNivel');
+Route::get('/grado/selectCarrera', 'CarreraController@selectCarrera');
+Route::get('/grado/selectSeccion', 'SeccioneController@selectSeccion');
+Route::put('/grado/actualizar', 'GradoController@update');
+Route::put('/grado/desactivar', 'GradoController@desactivar');
+Route::put('/grado/activar', 'GradoController@activar');
+
 Route::get('/','Auth\LoginController@showLoginForm');
 Auth::routes();
 

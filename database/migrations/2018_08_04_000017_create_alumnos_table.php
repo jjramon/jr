@@ -19,6 +19,7 @@ class CreateAlumnosTable extends Migration
             $table->date('fechaNacimiento');
             $table->timestamps();
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

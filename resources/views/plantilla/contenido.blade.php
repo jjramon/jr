@@ -55,8 +55,11 @@
             <template v-if="menu==11">
                 <nivel></nivel>
             </template>
+            <template v-if="menu==23">
+                <carrera></carrera>      
+            </template>
             <template v-if="menu==12">
-                <h1>grado</h1>      
+                <grado></grado>      
             </template>
 
         <!---Maenu personas -->

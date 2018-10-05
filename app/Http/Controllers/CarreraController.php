@@ -3,29 +3,26 @@
 namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
-use colegioShaddai\Grado;
+use colegioShaddai\Carrera;
 
-class GradoController extends Controller
+class CarreraController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
-        //
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
         $criterio = $request->criterio;
-        if ($criterio ==''){
-            $select = Grado::join('niveles','grados.idNivel','=','niveles.id')
-            ->join('secciones','grados.idSeccion','=','secciones.id')
-            ->join('carreras','grados.idCarrera','=','carreras.id')
-            ->where('secciones.estado','=','1')
-            ->where('niveles.estado','=','1')
-            ->select('grados.id as idGrado', 'carreras.id as idCarrera','niveles.id as idNivel',
-            'secciones.id as idSeccion','grados.nombre as nombreGrado','niveles.nombre as nombreNivel', 
-            'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera', 'grados.estado as estadoGrado')
-            ->orderBy('niveles.id', 'asc')->paginate(8);
+        if ($buscar ==''){
+            $select = Carrera::orderBy('id', 'asc')->paginate(8);
         }
-        //else{
-        //    $select = Grado::where($criterio, 'like', 'grados.idNivel')->orderBy('id','asc')->paginate(3);
-        //}
+        else{
+            $select = Carrera::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','asc')->paginate(3);
+        }
         
         return [
             'pagination'=> [
@@ -36,10 +33,18 @@ class GradoController extends Controller
                 'from'          =>  $select ->firstItem(),
                 'to'            =>  $select ->lastItem(),
             ],
-            'grado'=>$select
+            'carrera'=>$select
         ];
     }
-    
+    public function selectCarrera(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $select = Carrera::where('estado', '=', '1')
+        ->select('id', 'nombre')->orderBy('nombre','asc')->get();
+        return ['carrera'=> $select];
+       
+        
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -53,11 +58,8 @@ class GradoController extends Controller
         if (!$request->ajax()) return redirect('/');
         //
         
-        $insert = new Grado();
+        $insert = new Carrera();
         $insert -> nombre = $request->nombre;
-        $insert -> idNivel = $request->idNivel;
-        $insert -> idSeccion = $request->idSeccion;
-        $insert -> idCarrera = $request->idCarrera;
         $insert -> estado= '1';
         $insert -> save();
     }
@@ -75,11 +77,8 @@ class GradoController extends Controller
         //
         if (!$request->ajax()) return redirect('/');
         //
-        $update =  Grado::findOrFail($request->idGrado);
+        $update =  Carrera::findOrFail($request->id);
         $update-> nombre = $request->nombre;
-        $update -> idNivel = $request->idNivel;
-        $update -> idSeccion = $request->idSeccion;
-        $update -> idCarrera = $request->idCarrera;
         $update -> estado= '1';
         $update -> save();
     }
@@ -88,7 +87,7 @@ class GradoController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $down =  Grado::findOrFail($request->id);
+        $down =  Carrera::findOrFail($request->id);
         $down -> estado = '0';
         $down -> save();
     }
@@ -97,7 +96,7 @@ class GradoController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         //
-        $up =  Grado::findOrFail($request->id);
+        $up =  Carrera::findOrFail($request->id);
         $up -> estado = '1';
         $up -> save();
     }

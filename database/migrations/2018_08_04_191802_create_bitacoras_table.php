@@ -20,6 +20,7 @@ class CreateBitacorasTable extends Migration
             $table->string('registroAnterior', 80);
             $table->string('nuevoRegistro', 80)->nullable();
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

@@ -18,6 +18,7 @@ class CreateNivelesTable extends Migration
             $table->string('nombre', 40)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

@@ -19,10 +19,11 @@ class NiveleController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $dias = Nivele::orderBy('id', 'desc')->paginate(8);
+            $dias = Nivele::orderBy('id', 'asc')->paginate(8);
         }
         else{
-            $dias = Nivele::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Nivele::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','asc
+            .')->paginate(3);
         }
         
         return [
@@ -57,6 +58,15 @@ class NiveleController extends Controller
         $dia -> save();
     }
 
+    public function selectNivel(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $select = Nivele::where('estado','=','1')
+        ->select('id', 'nombre')
+        ->orderBy('id','asc')->get();
+        return ['nivel'=> $select];
+    }
 
     /**
      * Update the specified resource in storage.

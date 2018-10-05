@@ -17,12 +17,14 @@ class CreateGradosTable extends Migration
             $table->increments('id');
             $table->integer('idNivel')->unsigned();
             $table->integer('idSeccion')->unsigned();
+            $table->integer('idCarrera')->unsigned()->nullable();
             $table->string('nombre',20);
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idNivel')->references('id')->on('niveles')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idSeccion')->references('id')->on('secciones')->onUpdate('cascade')->onDelete('cascade');
-            
+            $table->foreign('idCarrera')->references('id')->on('carreras')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

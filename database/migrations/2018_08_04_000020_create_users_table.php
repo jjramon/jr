@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->foreign('idRol')->references('id')->on('rols')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('estado')->default('1');
+            $table->engine = 'InnoDB';
             $table->rememberToken();
             $table->timestamps();
         });

@@ -20,10 +20,10 @@ class CreateDetalleCalificacionesTable extends Migration
             $table->integer('zona');
             $table->integer('asistencia');
             $table->integer('examen');
-            $table->string('Observaciones', 150)->nullable();
-            $table->boolean('estado')->default(1);
+            $table->string('observaciones', 150)->nullable();
             $table->timestamps();
             $table->foreign('idCalificacion')->references('id')->on('calificaciones')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

@@ -545,7 +545,7 @@
             activar(id , idd){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
+                cancelButtonClass: 'btn btn-dark',
                 buttonsStyling: false,
                 })
 

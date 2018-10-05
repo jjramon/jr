@@ -18,6 +18,7 @@ class CreateBimestresTable extends Migration
             $table->string('nombre',10)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

@@ -18,6 +18,7 @@ class CreateTipoPersonasTable extends Migration
             $table->string('nombre',20);
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

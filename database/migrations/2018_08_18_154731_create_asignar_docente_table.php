@@ -16,11 +16,12 @@ class CreateAsignarDocenteTable extends Migration
         Schema::create('asignar_docente', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idMateria')->unsigned();
-            $table->integer('idMaestro')->unsigned();
+            $table->integer('idDocente')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idMaestro')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idDocente')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

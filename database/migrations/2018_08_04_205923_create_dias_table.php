@@ -18,6 +18,7 @@ class CreateDiasTable extends Migration
             $table->string('nombre',20)->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

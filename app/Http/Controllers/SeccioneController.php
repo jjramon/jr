@@ -19,10 +19,10 @@ class SeccioneController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $dias = Seccione::orderBy('id', 'desc')->paginate(8);
+            $dias = Seccione::orderBy('nombre', 'asc')->paginate(8);
         }
         else{
-            $dias = Seccione::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Seccione::where($criterio, 'like', '%'.$buscar.'%')->orderBy('nombre','asc')->paginate(3);
         }
         
         return [
@@ -57,7 +57,15 @@ class SeccioneController extends Controller
         $dia -> save();
     }
 
+    public function selectSeccion(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
 
+        $select = Seccione::where('estado','=','1')
+        ->select('id', 'nombre')
+        ->orderBy('id','asc')->get();
+        return ['seccion'=> $select];
+    }
     /**
      * Update the specified resource in storage.
      *

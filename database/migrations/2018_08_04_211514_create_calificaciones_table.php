@@ -17,7 +17,7 @@ class CreateCalificacionesTable extends Migration
             $table->increments('id');
             $table->integer('idMateria')->unsigned();
             $table->integer('idBimestre')->unsigned();
-            $table->integer('idAlumno')->unsigned();
+            $table->integer('idDocente')->unsigned();
             $table->integer('calificacion');
             $table->integer('idciclo')->unsigned();
             $table->integer('promedio');
@@ -26,8 +26,8 @@ class CreateCalificacionesTable extends Migration
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idBimestre')->references('id')->on('bimestres')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('idAlumno')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
-
+            $table->foreign('idDocente')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 

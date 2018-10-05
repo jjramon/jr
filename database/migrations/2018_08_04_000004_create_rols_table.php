@@ -19,6 +19,7 @@ class CreateRolsTable extends Migration
             $table->string('descripcion', 100);
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->engine = 'InnoDB';
         });
     }
 

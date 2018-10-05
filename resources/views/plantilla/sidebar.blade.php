@@ -15,7 +15,7 @@
                             
                         <!--Mantenimiento menu personas -->
                             <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> personas</a>
+                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> Personas</a>
                                 <ul class="nav-dropdown-items">
                                     <li @click="menu = 1" class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Generos</a>
@@ -28,7 +28,7 @@
 
                         <!--Mantenimiento menu usuario -->
                             <li class="nav-item nav-dropdown">
-                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> usuarios</a>
+                                <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> Usuarios</a>
                                 <ul class="nav-dropdown-items">
                                     <li @click="menu = 3" class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Roll</a>
@@ -68,6 +68,9 @@
                                     <li @click="menu = 11"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Nivel</a>
                                     </li> 
+                                    <li @click="menu = 23"class="nav-item">
+                                        <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Carrera</a>
+                                    </li>
                                     <li @click="menu = 12"class="nav-item">
                                         <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Grado</a>
                                     </li>
@@ -98,19 +101,19 @@
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-users"></i> Materias</a>
                     <ul class="nav-dropdown-items">
                         <li @click="menu = 16"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Materia</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Materia</a>
                         </li>
                         <li @click="menu = 17"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar grado</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar grado</a>
                         </li>
                         <li @click="menu = 18"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar docente</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar docente</a>
                         </li>
                         <li @click="menu = 19"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>asignar alumnos</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar alumnos</a>
                         </li>
                         <li @click="menu = 20"class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>ingresar calificación</a>
+                                <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Ingresar calificación</a>
                             </li>
                     </ul>
                 </li>

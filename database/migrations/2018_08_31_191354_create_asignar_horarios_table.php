@@ -20,6 +20,7 @@ class CreateAsignarHorariosTable extends Migration
             $table->timestamps();
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idHorario')->references('id')->on('horarios')->onUpdate('cascade')->onDelete('cascade');
+            $table->engine = 'InnoDB';
         });
     }
 
