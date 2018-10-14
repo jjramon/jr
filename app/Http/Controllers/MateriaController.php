@@ -56,7 +56,25 @@ class MateriaController extends Controller
         $insertar -> save();
     }
 
+    public function buscarMateria(Request $request)
+    {
+        //if (!$request->ajax()) return redirect('/');
+        $filtro = $request->filtro;
+       
+        $materia = Materia::join('asignar_materia','materias.id','=','asignar_materia.idMateria')
+        ->join('grados', 'asignar_materia.idGrado','=','grados.id')
+        ->join('secciones', 'secciones.id','=','grados.idSeccion')
+        ->join('niveles', 'niveles.id','=','grados.idNivel')
+        ->join('carreras', 'carreras.id','=','grados.idCarrera')
+        ->where('materias.nombre','like','%'.$filtro.'%')
+        ->where('materias.estado','=',"1")
+        ->select('materias.id as idMateria', 'materias.nombre as nombreMateria',
+        'grados.nombre as nombreGrado','secciones.nombre as nombreSeccion','carreras.nombre as nombreCarrera',
+        'niveles.nombre as nombreNivel')
+        ->orderBy('materias.nombre' , 'asc')->take(1)->get();
 
+        return ['materia' => $materia];
+    }
     /**
      * Update the specified resource in storage.
      *

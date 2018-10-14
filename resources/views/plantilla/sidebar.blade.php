@@ -99,18 +99,12 @@
                 <!--menu materias-->
                 <li class="nav-item nav-dropdown">
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-users"></i> Materias</a>
-                    <ul class="nav-dropdown-items">
-                        <li @click="menu = 16"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Materia</a>
-                        </li>
-                        <li @click="menu = 17"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar grado</a>
-                        </li>
+                    <ul class="nav-dropdown-items">    
                         <li @click="menu = 18"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar docente</a>
                         </li>
                         <li @click="menu = 19"class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar alumnos</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Asignar grado</a>
                         </li>
                         <li @click="menu = 20"class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Ingresar calificación</a>

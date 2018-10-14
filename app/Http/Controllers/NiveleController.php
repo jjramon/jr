@@ -60,12 +60,10 @@ class NiveleController extends Controller
 
     public function selectNivel(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        $nivel=Nivele::all();
 
-        $select = Nivele::where('estado','=','1')
-        ->select('id', 'nombre')
-        ->orderBy('id','asc')->get();
-        return ['nivel'=> $select];
+        return ['nivel' => $nivel];
+    
     }
 
     /**

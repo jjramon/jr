@@ -121,7 +121,7 @@
                                         <label class="col-md-3 form-control-label" for="text-input" >Carrera</label>
                                         <div class="col-md-6">
                                             <select class="form-control"  v-model="idCarrera">
-                                                <option value="1" disabled>Seleccione</option>
+                                                <option value="1" >Aun no tiene carrera</option>
                                                 <option v-for="carrera in arrayCarrera" :key="carrera.id" :value="carrera.id" v-text="carrera.nombre"></option>
                                             </select>
                                         </div>
@@ -235,7 +235,7 @@
                 this.selectNivel();
                 this.selectCarrera();
                 let me = this;           
-                var url = '/grado?page=' + page + '&criterio='+ criterio;
+                var url = '/grado?page=' + page +'&buscar='+ buscar +'&criterio='+ criterio;
                 
                 axios.get(url)
                 .then(function (response) {
@@ -431,7 +431,7 @@
                                 this.tituloModal='Registrar grado';
                                 this.tipoAccion = 1;
                                 this.nombreGrado = "";
-                                this.idCarrera = "";
+                                this.idCarrera = 1;
                                 this.idNivel = 0;
                                 this.idSeccion = 0;
                                 break;

@@ -77,26 +77,40 @@ class PersonaController extends Controller
             'persona'=>$personas
         ];
     }
-    
-    public function buscarPadre(Request $request)
+    public function buscarDocente(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $filtro = $request->filtro;
        
-        $padreF = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+        $docente = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
         ->where('personas.apellido','like','%'.$filtro.'%')
         ->orwhere('personas.nombre','like','%'.$filtro.'%')
         ->orwhere('personas.identificacion','like','%'.$filtro.'%')
         ->where('personas.estado','=',"1")
-        ->where('tipo_personas.nombre','=',"Padre de familia")
-        ->select('personas.id as idPadreF' , 'personas.nombre as nombrePadreF', 'personas.apellido as apellidoPadreF')
+        ->where('tipo_personas.nombre','=',"Docente")
+        ->select('personas.id as idDocente' , 'personas.nombre as nombreDocente', 'personas.apellido as apellidoDocente')
         ->orderBy('personas.nombre' , 'asc')->take(1)->get();
 
+        return ['docente' => $docente];
+    }
+    public function buscarPadre(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        
+        $busqueda = $request->filtro;
+        $padreF = Persona::join('tipo_personas', 'personas.idTipoPersona', '=' ,'tipo_personas.id')
+        ->where('tipo_personas.nombre','=', "Padre de familia")
+        ->where('personas.nombre', 'like', '%' . $busqueda . '%')
+        ->orwhere('personas.apellido', 'like', '%' . $busqueda . '%')
+        ->orwhere('personas.identificacion', 'like' , '%' . $busqueda . '%')
+        ->where('personas.estado','=',"1")
+        ->select('tipo_personas.nombre', 'personas.id as idPadreF' , DB::raw('CONCAT(personas.nombre, " ", personas.apellido) as nombrePadreF'))
+        ->orderBy('personas.nombre' , 'asc')->get();
         return ['padre' => $padreF];
     }
     public function buscarHijo(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
         $filtro = $request->filtro;
        
         $hijo = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
@@ -107,7 +121,7 @@ class PersonaController extends Controller
         ->where('personas.estado','=',"1")
         ->where('tipo_personas.nombre','=',"Alumno")
         ->select('alumnos.id as idHijo' , 'personas.nombre as nombreHijo', 'personas.apellido as apellidoHijo')
-        ->orderBy('personas.nombre' , 'asc')->take(1)->get();
+        ->orderBy('personas.nombre' , 'asc')->get();
 
         return ['hijo' => $hijo];
     }

@@ -15,12 +15,12 @@
     <!-- css -->
 
     <link href="css/plantilla.css" rel="stylesheet">
-
+    
 
 </head>
 
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
-    <div id="app">
+<body class="sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <div class="app header-fixed" id="app">
         <header class=" app-header navbar">
             <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
             <span class="navsuperior navbar-toggler-icon"></span>
@@ -61,14 +61,16 @@
             <!-- Contenido Principal -->
             @yield('contenido')
             <!-- /Fin del contenido principal -->
-        </div>
+        </div>   
     </div>
-    
 
+   
     <footer class="app-footer">
-        <span> &copy; 2018</span>
-        <span class="ml-auto">Desarrollado por Juan Ramón González Ramírez</a></span>
-    </footer>
+            <span> &copy; 2018</span>
+            <span class="ml-auto">Desarrollado por Juan Ramón González Ramírez</a></span>
+    </footer>     
+
+
 
 
     <!-- scripts -->

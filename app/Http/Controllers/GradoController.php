@@ -5,6 +5,7 @@ namespace colegioShaddai\Http\Controllers;
 use Illuminate\Http\Request;
 use colegioShaddai\Grado;
 
+
 class GradoController extends Controller
 {
     public function index(Request $request)
@@ -23,9 +24,18 @@ class GradoController extends Controller
             'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera', 'grados.estado as estadoGrado')
             ->orderBy('niveles.id', 'asc')->paginate(8);
         }
-        //else{
-        //    $select = Grado::where($criterio, 'like', 'grados.idNivel')->orderBy('id','asc')->paginate(3);
-        //}
+        else{
+            $select = Grado::join('niveles','grados.idNivel','=','niveles.id')
+            ->join('secciones','grados.idSeccion','=','secciones.id')
+            ->join('carreras','grados.idCarrera','=','carreras.id')
+            ->where('secciones.estado','=','1')
+            ->where('niveles.estado','=','1')
+            ->where('grados.idNivel', '=', $criterio)
+            ->select('grados.id as idGrado', 'carreras.id as idCarrera','niveles.id as idNivel',
+            'secciones.id as idSeccion','grados.nombre as nombreGrado','niveles.nombre as nombreNivel', 
+            'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera', 'grados.estado as estadoGrado')
+            ->orderBy('niveles.id', 'asc')->paginate(8);
+        }
         
         return [
             'pagination'=> [
@@ -39,7 +49,20 @@ class GradoController extends Controller
             'grado'=>$select
         ];
     }
-    
+    public function selectGrado(Request $request)
+    {
+       // if (!$request->ajax()) return redirect('/');
+        $filtro=$request->filtro;
+        $grado=Grado::join('secciones','grados.idSeccion','=','secciones.id')
+        ->join('carreras','grados.idCarrera', '=', 'carreras.id')
+        ->where('grados.estado','=','1')
+        ->where('grados.idNivel','=',$filtro)
+        ->select('grados.id as idGrado', 'carreras.id as idCarrera', 'secciones.id as idSeccion', 'grados.nombre as nombreGrado',
+        'carreras.nombre as nombreCarrera', 'secciones.nombre as nombreSeccion', 'grados.estado')
+        ->orderBy('grados.nombre' , 'asc')->get();
+
+        return ['grado' => $grado];
+    }
 
     /**
      * Store a newly created resource in storage.

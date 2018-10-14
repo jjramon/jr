@@ -61,43 +61,37 @@
                                     
                                         <th class="text-center" width="100 px">Opciones</th>
                                         <th class="text-center" width="350 px">Nombre</th>
-                                        <th class="text-center" >DPI</th>
-                                        <th class="text-center" width="400 px">Direccion</th>
-                                        <th class="text-center" width="100 px">Telefono</th>
-                                        <th class="text-center">Correo</th>
-                                        <th class="text-center">Usuario</th>
-                                        <th class="text-center">Rol</th>
-                                        <th class="text-center">Visualizar</th>
+                                        <th class="text-center">Codigo Unico</th>
+                                        <th class="texte-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="texte-center">Visualizar</th>
                                         <th class="text-center">Estado</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="persona in arrayPersona" :key="persona.idPersona" class="text-center table-sm"> 
+                                <tr v-for="persona in arrayPersona" :key="persona.idAlumno" class="text-center table-sm"> 
                                     <td class="align-midle ">
                                        
                                         <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
                                             <i class="icon-pencil"></i>
                                         </button>
                                             
-                                        <template v-if="persona.estadoPersona">
-                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idUsuario)">
+                                        <template v-if="persona.estado">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idAlumno)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idUsuario)">
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idAlumno)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
                                     </td>
-                                    <td  v-text="persona.nombrePersona + ' ' + persona.apellido" class="align-middle"></td>
+                                    <td  v-text="persona.nombre + ' ' + persona.apellido" class="align-middle"></td>
                                     <td  v-text="persona.identificacion" class="align-middle"></td>
-                                    <td  v-text="persona.direccion" class="align-middle"></td>
-                                    <td  v-text="persona.tel" class="align-middle"></td>
-                                    <td  v-text="persona.correo" class="align-middle"></td>
-                                    <td  v-text="persona.usuario" class="align-middle"></td>
-                                    <td  v-text="persona.nombreRol" class="align-middle"></td>
+                                    <td  v-text="persona.nombreNivel" class="align-middle"></td>
+                                    <td  v-text="persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
                                     <td>
                                         
                                         <template>
@@ -109,7 +103,7 @@
                                     </td>
                                     <td >
                                         
-                                        <div v-if="persona.estadoPersona && persona.usuarioEstado">
+                                        <div v-if="persona.estado">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -152,6 +146,34 @@
                             </div>
                             <div class="modal-body">
                                 <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                    
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Nivel</label>
+                                        <div class="col-md-6 input-group">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="idNivel">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
+                                            </select>
+                                            <button class="btn btn-success"  v-if="tipoAccion == 1 || tipoAccion == 2" @click="selectGrado(idNivel)"><i class="fa fa-search"></i></button>
+                                            <select class="form-control bg-white" v-if="tipoAccion == 3"   v-model="idNivel" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Grado</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="grado in arrayGrado" :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                            </select>
+                                            <select class="form-control bg-white" v-if="tipoAccion == 3"   v-model="idNivel" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Tipo de persona</label>
                                         <div class="col-md-6">
@@ -170,8 +192,8 @@
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
                                         <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="nombrePersona" class="form-control" placeholder="Ingrese nombre" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="nombrePersona" class="form-control bg-white" disabled>
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="nombre" class="form-control" placeholder="Ingrese nombre" required>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="nombre" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                     <div class="form-group row" >
@@ -183,18 +205,17 @@
                                         </div>
                                     </div>
                                     <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">DPI:</label>
+                                        <label class="col-md-3 form-control-label" for="text-input">Codigo Unico:</label>
                                         <div class="col-md-9">
                                             <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="identificacion" class="form-control" placeholder="Ingrese DPI" required>
                                             <input type="text" v-if="tipoAccion == 3" v-model="identificacion" class="form-control bg-white" disabled>
-                                        
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Dirección:</label>
+                                   <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Fecha de Nacimiento:</label>
                                         <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="direccion" class="form-control" placeholder="Ingrese dirección" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="direccion" class="form-control bg-white" disabled>
+                                            <input type="date" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="fechaNac" class="form-control" placeholder="Ingrese DPI" required>
+                                            <input type="date" v-if="tipoAccion == 3" v-model="fechaNac" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                     <div class="form-group row" >
@@ -211,62 +232,7 @@
                                             
                                         </div>
                                     </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Telefono:</label>
-                                        <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="tel" class="form-control" placeholder="Ingrese primer telefono" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="tel" class="form-control bg-white" disabled>
-                                        </div>
-                                    </div>
                                     
-                                    <div class="form-group row" >
-                                        <label class="col-md-3  form-control-label" for="text-input">Telefono 2:</label>
-                                        <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="tel2" class="form-control" placeholder="Ingrese segundo telefono">
-                                            <input type="text" v-if="tipoAccion == 3" v-model="tel2" class="form-control bg-white" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Correo electronico:</label>
-                                        <div class="col-md-9">
-                                            <input type="email" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="correo" class="form-control" placeholder="ejmplo@ejemplo.com">
-                                            <input type="email" v-if="tipoAccion == 3" v-model="correo" class="form-control bg-white" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Tipo de Rol:</label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idRol">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
-                                            </select>
-                                            <select class="form-control bg-white" v-if="tipoAccion == 3" v-model="idRol" disabled>
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="rols in arrayRol" :key="rols.id" :value="rols.id" v-text="rols.nombre"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Usuario:</label>
-                                        <div class="col-md-9">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" maxlength="20" v-model="usuario" class="form-control" placeholder="Ingrese el usuario" required>
-                                            <input type="text" v-if="tipoAccion == 3" maxlength="20" v-model="usuario" class="form-control bg-white" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row" v-if="tipoAccion == 1 || tipoAccion == 2">
-                                        <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
-                                        <div class="col-md-9">
-                                            <input type="password"  maxlength="20" v-model="password" class="form-control check-seguridad" placeholder="Ingrese una contraseña" required>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group row" v-if="tipoAccion == 1 || tipoAccion == 2">
-                                        <label class="col-md-3 form-control-label" for="text-input">Contraseña:</label>
-                                        <div class="col-md-9">
-                                            <input type="password"  maxlength="20" v-model="confirPassword" class="form-control" placeholder="Ingrese una contraseña" required>
-                                        </div>
-                                    </div>
                                     
                                     <div v-show="errorPersona" class="form-group row div-error">
                                         <div class="text-center text-error">
@@ -281,23 +247,7 @@
                             
                             <div class="modal-footer">
                                 
-                                <label for="text-input" v-if="tipoAccion == 3">Persona:</label>
-                                <button v-if="tipoAccion == 3 && estadoPersona == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(idPersona)">
-                                    <i class="icon-trash"></i>
-                                </button>
-                                <button v-if="tipoAccion == 3 && estadoPersona == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(idPersona)">
-                                    <i class="icon-check"></i>
-                                </button>
-                                
-                                <label for="text-input" v-if="tipoAccion == 3">Usuairo:</label>
-                                    
-                                <button v-if="tipoAccion == 3 && usuarioEstado == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarUsuario(idUsuario)">
-                                    <i class="icon-trash"></i>
-                                </button>
-                                <button v-if="tipoAccion == 3 && usuarioEstado == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarUsuario(idUsuario)">
-                                        <i class="icon-check"></i>
-                                </button>
-                                
+                                                                
                                 <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                                 <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
                                 <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
@@ -318,28 +268,30 @@
     export default {
         data (){
             return{
-                idPersona: 0,
+                idAlumno: 0,
+                idPersona:0,
                 idGenero: 0,
                 idTipoPersona: 0,
-                idRol:0,
-                nombreRol:'',
-                idUsuario:0,
-                usuario:'',
-                password:'',
-                confirPassword:'',
-                nombrePersona: '',
+                idGrado:0,
+                idNivel:0,
+                idNvl:0,
+                idSeccion:0,
+                nombre: '',
                 apellido:'',
-                direccion:'',
                 identificacion:'',
-                tel:'',
-                tel2:'',
-                correo:'',
+                fechaNac:'',
                 nombreTPersona:'',
                 nombreGenero:'',
                 arrayPersona : [],
-                arrayRol:[],
+                arrayGrado:[],
+                nombreGrado:'',
+                nombreNivel:'',
+                nombreSeccion:'',
+                nombreCarrera:'',
+                arrayNivel:[],
                 arrayTipo_persona : [],
                 arrayGenero : [],
+                arrayGrado:[],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -389,14 +341,15 @@
             listarPersona(page, buscar, criterio){
                 this.selectTypoPersona();
                 this.selectGenero();
-                this.selectRol();
+                this.selectNivel();
+
                 let me = this;           
-                var url = '/persona?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
+                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
                 
                 axios.get(url)
                 .then(function (response) {
                     var respuesta = response.data;
-                    me.arrayPersona = respuesta.persona.data;
+                    me.arrayPersona = respuesta.alumno.data;
                     me.pagination = respuesta.pagination;
                     
                 })
@@ -406,7 +359,7 @@
             },
             selectTypoPersona(){
                 let me = this;
-                var url = '/persona/selectTipoPersona'
+                var url = '/alumno/selectTipoPersona'
                 axios.get(url)
                 .then(function (response) {
                     
@@ -419,7 +372,7 @@
             },
             selectGenero(){
                 let me = this;
-                var url = '/persona/selectGenero'
+                var url = '/alumno/selectGenero';
                 axios.get(url)
                 .then(function (response) {
                     
@@ -430,14 +383,27 @@
                     console.log(error);
                 });
             },
-            selectRol(){
+           selectNivel(){
                 let me = this;
-                var url = '/persona/selectRol'
+                var url = '/grado/selectNivel'
                 axios.get(url)
                 .then(function (response) {
                     
                     var respuesta = response.data;
-                    me.arrayRol = respuesta.rols;
+                    me.arrayNivel = respuesta.nivel;
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
+            selectGrado(filtro){
+                let me = this;
+                var url = '/alumno/selectGrado?filtro='+filtro;
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayGrado = respuesta.grado;
                 })
                 .catch(function (error){
                     console.log(error);
@@ -452,20 +418,16 @@
                 if(this.validarPersona()){
                     return;
                 }
+                
                 let me = this;
-                axios.post('/persona/registrar',{
-                    'nombrePersona':this.nombrePersona,
+                axios.post('/alumno/registrar',{
+                    'nombre':this.nombre,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
-                    'direccion':this.direccion,
-                    'tel':this.tel,
-                    'tel2':this.tel2,
-                    'correo':this.correo,
+                    'fechaNac':this.fechaNac,
                     'idTipoPersona':this.idTipoPersona,
                     'idGenero':this.idGenero,
-                    'idRol':this.idRol,
-                    'usuario':this.usuario,
-                    'password':this.password
+                    'idGrado' :this.idGrado
                 }).then(function(response){
                     me.cerrarModal();
                     me.listarPersona(1,'','');
@@ -480,21 +442,16 @@
                 }                 
                 
                 let me = this;
-                axios.put('/persona/actualizar',{
+                axios.put('/alumno/actualizar',{
                     'idPersona':this.idPersona,
-                    'idUsuario':this.idUsuario,
-                    'idRol':this.idRol,
-                    'nombrePersona':this.nombrePersona,
+
+                    'nombre':this.nombre,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
-                    'direccion':this.direccion,
-                    'tel':this.tel,
-                    'tel2':this.tel2,
-                    'correo':this.correo,
+
                     'idTipoPersona':this.idTipoPersona,
                     'idGenero':this.idGenero,
-                    'usuario':this.usuario,
-                    'password':this.password,        
+     
                 }).then(function(response){
                     me.cerrarModal();
                     me.listarPersona(1,'','');
@@ -544,7 +501,7 @@
             activar(id , idd){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-dark',
+                cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false,
                 })
 
@@ -674,7 +631,7 @@
                     if (result.value) {
                         
                         let me = this;
-                        axios.put('/persona/desactivarUsuario',{
+                        axios.put('/alumno/desactivarUsuario',{
                             'idUsuario': id
                         }).then(function(response){
                             me.listarPersona(1,'','');
@@ -735,35 +692,28 @@
             validarPersona(){
                 this.errorPersona = 0;
                 this.errorMostrarMsPersona=[];
-                if(this.password != this.confirPassword)this.errorMostrarMsPersona.push("las contraseñas no coinciden");
                 if(this.idtipoPersona=='') this.errorMostrarMsPersona.push("Seleccione un tipo de persona");
                 if(this.idGenero=='') this.errorMostrarMsPersona.push("Seleccione un genero");
-                if(!this.nombrePersona) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
+                if(!this.nombre) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
                 if(!this.apellido) this.errorMostrarMsPersona.push("El apellido no puede estar vacio.");
-                if(!this.direccion) this.errorMostrarMsPersona.push("El dirección no puede estar vacio.");
-                if(!this.tel) this.errorMostrarMsPersona.push("El tel no puede estar vacio.");
-                if(!this.correo) this.errorMostrarMsPersona.push("El correo no puede estar vacio.");
+                
                 if(this.errorMostrarMsPersona.length)this.errorPersona = 1;
                 return this.errorPersona;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombrePersona;
+                this.nombre;
                 this.apellido;
                 this.identificacion;
-                this.direccion;
-                this.tel;
-                this.tel2;
-                this.correo;
-                this.idTipoPersona;   
-                this.idGenero;
-                this.usuario;
-                this.password;
-                this.idRol;
-                this.idUsuairo;
                 this.idPersona;
-                this.usuarioEstado;
+                this.idAlumno;
+                this.idNivel;
+                this.idSeccion;
+                this.idGrado;   
+                this.idCarrera;
+                this.estado;
+                this.fechaNac;
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
@@ -773,44 +723,35 @@
                             case 'registrar':
                             {
                                 this.modal=1;
-                                this.tituloModal='Registrar persona';
-                                this.nombrePersona = "";
+                                this.tituloModal='Registrar alumno';
+                                this.nombre = "";
                                 this.apellido = "";
                                 this.identificacion = "";
-                                this.direccion = "";
-                                this.tel = "";
-                                this.tel2 = "";
-                                this.correo = "";
-                                this.idTipoPersona = "";   
-                                this.idGnero = "";
-                                this.usuario = "";
-                                this.password = "";
-                                this.idRol = "";
-                                this.idUsuairo = "";
-                                this.idPersona = "";
+                                this.fechaNac = "";
+                                this.idGenero = "";
+                                this.idTipoPersona = "";
+                                this.idGrado="";
                                 this.tipoAccion=1;
                                 break;
                             }
                             case 'actualizar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = "Actualizar horario";
+                                this.tituloModal = "Actualizar alumno";
                                 this.tipoAccion = 2;
-                                this.nombrePersona = data['nombrePersona'];
+                                this.nombre = data['nombre'];
                                 this.apellido = data['apellido'];
                                 this.identificacion = data['identificacion'];
-                                this.direccion = data['direccion'];
-                                this.tel = data['tel'];
-                                this.tel2 = data['tel2'];
-                                this.correo = data['correo'];
+                                this.idGrado = data['idGrado'];
+                                this.idSeccion = data['idSeccion'];
+                                this.idCarrera = data['idCarrera'];
+                                this.idNivel = data['idNivel'];
                                 this.idTipoPersona = data['idTipoPersona'];
                                 this.idGenero = data['idGenero'];
                                 this.idPersona = data['idPersona'];
-                                this.idRol = data['idRol'];
-                                this.idUsuario = data['idUsuario'];
-                                this.usuario = data['usuario'];
-                                this.password = data['password'];  
-
+                                this.idAlumno = data['idAlumno'];
+                                this.fechaNac = data['fechaNac'];
+                                
                                 break;
                             }
                             case 'visualizar':
@@ -818,22 +759,18 @@
                                 this.modal = 1;
                                 this.tituloModal = "Visualizar datos";
                                 this.tipoAccion = 3;
-                                this.nombrePersona = data['nombrePersona'];
+                                this.nombre = data['nombre'];
                                 this.apellido = data['apellido'];
                                 this.identificacion = data['identificacion'];
-                                this.direccion = data['direccion'];
-                                this.tel = data['tel'];
-                                this.tel2 = data['tel2'];
-                                this.correo = data['correo'];
+                                this.idGrado = data['idGrado'];
+                                this.idSeccion = data['idSeccion'];
+                                this.idCarrera = data['idCarrera'];
+                                this.idNivel = data['idNivel'];
                                 this.idTipoPersona = data['idTipoPersona'];
                                 this.idGenero = data['idGenero'];
                                 this.idPersona = data['idPersona'];
-                                this.idRol = data['idRol'];
-                                this.idUsuario = data['idUsuario'];
-                                this.usuario = data['usuario'];
-                                this.password = data['password'];  
-                                this.usuarioEstado = data['usuarioEstado'];  
-                                this.estadoPersona = data['estadoPersona']; 
+                                this.idAlumno = data['idAlumno'];
+                                this.fechaNac = data['fechaNac'];
 
                                 break;
                             }                                                          

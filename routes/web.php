@@ -100,6 +100,7 @@ Route::put('/alumno/desactivar', 'AlumnoController@desactivar');
 Route::put('/alumno/activar', 'AlumnoController@activar');
 Route::get('/alumno/selectTipoPersona', 'AlumnoController@selectTipoPersona');
 Route::get('/alumno/selectGenero', 'AlumnoController@selectGenero');
+Route::get('/alumno/selectGrado', 'GradoController@selectGrado');
 
 Route::get('/user','UserController@index');
 Route::post('/user/registrar', 'UserController@store');
@@ -129,6 +130,22 @@ Route::get('/grado/selectSeccion', 'SeccioneController@selectSeccion');
 Route::put('/grado/actualizar', 'GradoController@update');
 Route::put('/grado/desactivar', 'GradoController@desactivar');
 Route::put('/grado/activar', 'GradoController@activar');
+
+Route::get('/asignarDocente','Asignar_docenteController@index');
+Route::get('/asignarDocente/selectDocente','PersonaController@buscarDocente');
+Route::get('/asignarDocente/selectMateria','MateriaController@buscarMateria');
+Route::post('/asignarDocente/registrar', 'Asignar_docenteController@store');
+Route::put('/asignarDocente/actualizar', 'Asignar_docenteController@update');
+
+Route::get('/asignarmateria','Asignar_MateriaController@index');
+Route::get('/asignarmateria/selectGrado','Asignar_MateriaController@selectGrado');
+Route::get('/asignarmateria/selectNivel','Asignar_MateriaController@selectNivel');
+Route::get('/asignarmateria/selectMateria','Asignar_MateriaController@selectMateria');
+Route::post('/asignarmateria/registrar', 'Asignar_MateriaController@store');
+Route::put('/asignarmateria/actualizar', 'Asignar_MateriaController@update');
+
+
+Route::get('/asignar-alumnos','Asignar_alumnoController@index');
 
 Route::get('/','Auth\LoginController@showLoginForm');
 Auth::routes();

@@ -74,20 +74,14 @@
             </template>
 
         <!---Maenu materias -->
-            <template v-if="menu==16">
-                <h1>Materia</h1>      
-            </template>
-            <template v-if="menu==17">
-                <h1>asignar grado</h1>      
-            </template>
             <template v-if="menu==18">
-                <h1>asignar docente</h1>      
+                <asignardocente></asignardocente>     
             </template>
             <template v-if="menu==19">
-                <h1>asignar alumno</h1>      
+                <asignargrado></asignargrado>      
             </template>
             <template v-if="menu==20">
-                <h1>ingresar calificaicones</h1>      
+                <asig-notas></asig-notas>     
             </template>
 
         <!---Maenu pagos -->
