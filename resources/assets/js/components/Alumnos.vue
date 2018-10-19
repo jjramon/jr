@@ -1,32 +1,4 @@
-<style>
 
-   .modal-content{
-        width: 100%;
-        height: 550px;
-        overflow-y: scroll;
-        overflow-x: unset;
-        position: absolute; 
-    }
-    .mostrar{
-        display: list-item !important;
-        opacity: 1 !important;
-        position:absolute !important;
-        background-color: #3c29297a !important;
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-    }
-    .text-error{
-        color:red !important;
-        font-weight:bold;
-    }
-    #selectPadre{
-        width: 100%;
-        margin: 1em auto;
-    }
-
-</style>
 <template>
     <main class="main">
             <!-- Breadcrumb -->
@@ -45,16 +17,23 @@
                             <div class="col-md-12">
                                 <div class="input-group" >
                                     
-                                        <label class="col-md-2 form-control-label" for="text-input">Tipo:</label>
-                                         <select class="form-control col-md-2" v-model="criterio">
-                                            <option value="" >Seleccione</option>
-                                            <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
-                                        </select>
-                                    
-                                    <label class="col-md-2 form-control-label" for="text-input">Buscar:</label>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">              
-                                    
-                                    <button type="submit" @click="listarPersona(1, buscar, criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                        <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"></label>
+                                          <select class="form-control"  v-model="criterio" v-on:click="selectGrado(criterio)">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
+                                            </select>
+                                        <label class="col-md-1 form-control-label" for="text-input" v-text="'Grado:'"></label>
+                                        <select class="form-control"   v-model="buscar" >
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                        </select>       
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
+                                        <select class="form-control"   v-model="std" >
+                                            <option value="0" disabled>Seleccione</option>
+                                            <option value="1" v-text="'Activo'"></option>
+                                            <option value="2" v-text="'Inactivo'"></option>
+                                        </select>   
+                                    <button type="submit" @click="listarPersona(1, buscar, criterio,std)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
                                 </div>
                             </div>
                         </div>
@@ -83,13 +62,15 @@
                                             <i class="icon-pencil"></i>
                                         </button>
                                             
-                                        <template v-if="persona.estado">
-                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idAlumno)">
+                                        <template v-if="persona.estadoPersona == 1 && persona.estadoAsigPadreAlumno == 1 && persona.estadoGrado == 1">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idAsignacionGrado,
+                                             persona.idAsigPadreAlumno,  buscar, criterio, std)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idAlumno)">
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idAsignacionGrado,
+                                             persona.idAsigPadreAlumno, buscar, criterio, std)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
@@ -111,7 +92,7 @@
                                     </td>
                                     <td >
                                         
-                                        <div v-if="persona.estado">
+                                        <div v-if="persona.estadoPersona == 1 && persona.estadoAsigPadreAlumno == 1 && persona.estadoGrado == 1">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else >
@@ -127,14 +108,14 @@
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)" >Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio, std)" >Ant</a>
                                 </li>
                                 <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio, std)" v-text="page"></a>
                                 </li>
 
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio, std)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -161,6 +142,7 @@
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
                                             </select>
+                                             <input type="text" v-if="tipoAccion == 3" v-model="nombreTPersona" class="form-control bg-white" disabled>
                                             </div>
                                     </div>
                                     <div class="form-group row" >
@@ -188,8 +170,8 @@
                                    <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Fecha de Nacimiento:</label>
                                         <div class="col-md-9">
-                                            <input type="date" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="fechaNacimiento" class="form-control" placeholder="Ingese fecha de nacimiento" required>
-                                            <input type="date" v-if="tipoAccion == 3" v-model="fechaNacimiento" class="form-control bg-white" disabled>
+                                            <input type="date" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="fechaNac" class="form-control" placeholder="Ingese fecha de nacimiento" required>
+                                            <input type="date" v-if="tipoAccion == 3" v-model="fechaNac" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                     <div class="form-group row" >
@@ -207,7 +189,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Nivel</label>
+                                        <label class="col-md-3 form-control-label" for="text-input">Nivel:</label>
                                         <div class="col-md-6 input-group">
                                             <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idNivel" v-on:click="selectGrado(idNivel)">
                                                 <option value="0" disabled>Seleccione</option>
@@ -217,7 +199,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Grado</label>
+                                        <label class="col-md-3 form-control-label" for="text-input">Grado:</label>
                                         <div class="col-md-6">
                                             <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
                                                 <option value="0" disabled>Seleccione</option>
@@ -227,17 +209,29 @@
                                         </div>
                                     </div>
                                     <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Encargado</label>
+                                        <label class="col-md-3 form-control-label" for="text-input">Encargado:</label>
+                                        
+                                        
+                                        <div class="col-md-9 input-group">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="filtro" @keyup.enter="selectPadre(filtro)" class="form-control col-md-4" >
+                                            <select class="form-control col-md-4" v-model="idPadre" v-if="tipoAccion==1 || tipoAccion ==2">
+                                            <option value="0" disabled v-text="'Seleccione'"></option>
+                                            <option v-for="padre in arrayPadre" :key="padre.idPadreF" :value="padre.idPadreF" v-text="padre.nombrePadreF"></option>
+                                            </select>
+                                            <input type="text" v-if="tipoAccion == 3" v-model="nombrePadre" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row" v-if="tipoAccion == 3">
+                                        <label class="col-md-3 form-control-label" for="text-input">Dirección:</label>
+                                        <div class="col-md-9 input-group">
+                                            <input type="text" v-model="direccionPadre" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                     <div class="form-group row" v-if="tipoAccion == 3">
+                                        <label class="col-md-3 form-control-label" for="text-input">Tel:</label>
                                         <div class="col-md-6 input-group">
-                                            <v-select v-if="tipoAccion == 1 || tipoAccion == 2" :on-search="selectPadre"
-                                            label="nombrePadreF"
-                                            :options="arrayPadre"
-                                            :onChange="getDatosPadre"
-                                            
-                                            id="selectPadre"
-                                            >
-                                            </v-select>
-                                            
+                                            <input type="text"  v-model="telPadre" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                     <div v-show="errorPersona" class="form-group row div-error">
@@ -321,8 +315,9 @@
                     'to': 0,   
                 },
                 offset : 3,
-                criterio :'',
-                buscar : '',
+                criterio :0,
+                buscar : 0,
+                std : 0,
                 tipoBusqueda:'',
                 filtro:'',
                 
@@ -356,13 +351,17 @@
             },       
         },
         methods : {
-            listarPersona(page, buscar, criterio){
+            listarPersona(page, buscar, criterio, std){
                 this.selectTypoPersona();
                 this.selectGenero();
                 this.selectNivel();
-
+                if(buscar==0 && criterio==0 && std==0)
+                {
+                    
+                }
+                else{
                 let me = this;           
-                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
+                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio + '&std='+std;
                 
                 axios.get(url)
                 .then(function (response) {
@@ -374,6 +373,7 @@
                 .catch(function (error){
                     console.log(error);
                 });
+                }
             },
             selectTypoPersona(){
                 let me = this;
@@ -383,7 +383,6 @@
                     
                     var respuesta = response.data;
                     me.arrayTipo_persona = respuesta.tipo_persona;
-                    console.log(arrayTipo_persona.id);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -402,8 +401,7 @@
                     console.log(error);
                 });
             },
-            
-           selectNivel(){
+            selectNivel(){
                 let me=this;
                 var url = '/grado/selectNivel'
                 axios.get(url)
@@ -417,13 +415,13 @@
                 console.log(error);
                 });
             },
-            selectPadre(search){
+            selectPadre(filtro){
                 let me=this;
-                var url = '/asignaralumno/buscarpadre?filtro='+search;
+                var url = '/asignaralumno/buscarpadre?filtro=' + filtro;
                 axios.get(url)
                 .then(function (response){
                     let respuesta = response.data;
-                    q:search
+                    
                     me.arrayPadre = respuesta.padre;
                 })
                 .catch(function (error){
@@ -447,18 +445,20 @@
                 console.log(error);
                 });
             },
-            cambiarPagina(page, buscar, criterio){
+            cambiarPagina(page, buscar, criterio, std){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPersona(page, buscar, criterio);
+                me.listarPersona(page, buscar, criterio, std);
             },
             registrarPersona(){
+                console.log(this.buscar, this.criterio, this.std)
                 if(this.validarPersona()){
                     return;
                 }
                 
                 let me = this;
                 axios.post('/alumno/registrar',{
+                    
                     'nombre':this.nombre,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
@@ -468,20 +468,34 @@
                     'idGrado' :this.idGrado,
                     'idPadre' :this.idPadre
                 }).then(function(response){
+                    me.correcto();
                     me.cerrarModal();
-                    me.listarPersona(1,'','');
+                    me.listarPersona(1, this.buscar, this.criterio, this.std);
+                    
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
+            correcto(){
+                swal({
+                        position: 'top-center',
+                        type: 'success',
+                        title: 'Proceso finalizado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+            },
             actualizarPersona(){
+                
                 if(this.validarPersona()){
                     return;
                 }                 
-                
+               
                 let me = this;
                 axios.put('/alumno/actualizar',{
+                    'idPersona':this.idPersona,
+                    'idAlumno':this.idAlumno,
                     'nombre':this.nombre,
                     'apellido':this.apellido,
                     'identificacion':this.identificacion,
@@ -494,15 +508,17 @@
                     'idAsigPadreAlumno' :this.idAsigPadreAlumno
      
                 }).then(function(response){
+                    me.correcto();
                     me.cerrarModal();
-                    me.listarPersona(1,'','');
+                    me.listarPersona(1,this.buscar, criterio, std);
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
             
-            desactivar(id, idd){
+            desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+                
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -519,11 +535,12 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/persona/desactivar',{
-                            'idPersona': id,
-                            'idUsuario': idd
+                        axios.put('/alumno/desactivar',{
+                            'idPersona': idPersona,
+                            'idAsigGrado': idAsigGrado,
+                            'idAsigPadreAlumno':idAsigPadreAlumno,
                         }).then(function(response){
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1, buscar, criterio, std);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -539,7 +556,7 @@
                         }
                 })
             },
-            activar(id , idd){
+            activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -556,89 +573,13 @@
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/persona/activar',{
-                            'idPersona': id,
-                            'idUsuario': idd
+                        axios.put('/alumno/activar',{
+                            'idPersona': idPersona,
+                            'idAsigGrado': idAsigGrado,
+                            'idAsigPadreAlumno':idAsigPadreAlumno,
                         }).then(function(response){
                             
-                            me.listarPersona(1,'','');
-                            swalWithBootstrapButtons(
-                                'Ativado!',
-                                'el registro se activado.'
-                            )                     
-                                  
-                        });
-                    } else if (result.dismiss === swal.DismissReason.cancel) {
-                            swalWithBootstrapButtons(
-                                'Cancelar',
-                                'el registro no sufrira ningun cambio :)',
-                                'error'
-                            )
-                        }
-                })
-            },
-            desactivarPersona(id){
-                const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                })
-
-                swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere desactivar la persona?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'desactivar',
-                cancelButtonText: 'cancelar',
-                reverseButtons: true
-                }).then((result) => {
-                    if (result.value) {
-                        
-                        let me = this;
-                        axios.put('/persona/desactivarPersona',{
-                            'idPersona': id
-                        }).then(function(response){
-                            me.cerrarModal();
-                            me.listarPersona(1,'','');
-                            swalWithBootstrapButtons(
-                                'Descativado!',
-                                'el registro se a desactivado.'
-                            )                     
-                                  
-                        });
-                    } else if (result.dismiss === swal.DismissReason.cancel) {
-                            swalWithBootstrapButtons(
-                                'Cancelar',
-                                'el registro no sufrira ningun cambio :)',
-                                'error'
-                            )
-                        }
-                })
-            },
-            activarPersona(id){
-                const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                })
-
-                swalWithBootstrapButtons({
-                title: '¿está seguro de que quiere activar la persona?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'activar',
-                cancelButtonText: 'cancelar',
-                reverseButtons: true
-                }).then((result) => {
-                    if (result.value) {
-                        
-                        let me = this;
-                        axios.put('/persona/activarPersona',{
-                            'idPersona': id
-                        }).then(function(response){
-                            
-                            me.listarPersona(1,'','');
-                            me.cerrarModal();
+                            me.listarPersona(1,  buscar, criterio, std);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -669,17 +610,23 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre;
-                this.apellido;
-                this.identificacion;
-                this.idPersona;
-                this.idAlumno;
-                this.idNivel;
-                this.idSeccion;
-                this.idGrado;   
-                this.idCarrera;
-                this.estado;
-                this.fechaNac;
+                this.nombre =""; 
+                this.apellido =""; 
+                this.identificacion =""; 
+                this.fechaNac =""; 
+                this.idGenero =0; 
+                this.idGrado =0; 
+                this.idPersona =0; 
+                this.idNivel=0;
+                this.idPadre =0; 
+                this.filtro="";
+                this.idAlumno =0; 
+                this.nombrePadre =""; 
+                this.identificacionPadre =""; 
+                this.idAsigGrado =0; 
+                this.idAsigPadreAlumno=0;
+
+                                
 
             },
             abrirModal(modelo, accion, data=[]){
@@ -695,9 +642,17 @@
                                 this.apellido = "";
                                 this.identificacion = "";
                                 this.fechaNac = "";
-                                this.idGenero = "";
-                                this.idGrado="";
+                                this.idGenero = 0;
+                                this.idGrado=0;
+                                this.idNivel=0;
+                                this.idTipoPersona=0;
+                                this.fechaNac="";
+                                this.identificacionPadre="";
+                                this.nombrePadre="";
+                                this.idPadre=0;
+                                this.telPadre="";
                                 this.tipoAccion=1;
+                                this.filtro="";
                                 break;
                             }
                             case 'actualizar':
@@ -708,12 +663,18 @@
                                 this.nombre = data['nombre'];
                                 this.apellido = data['apellido'];
                                 this.identificacion = data['identificacion'];
-                                this.fechaNacimiento = data['fechaNac'];
+                                this.fechaNac = data['fechaNac'];
+                                this.idTipoPersona = data['idTipoPersona']
                                 this.idGenero = data['idGenero'];
+                                this.idNivel=data['idNivel']
+                                this.selectGrado(this.idNivel);
                                 this.idGrado = data['idGrado'];
                                 this.idPersona = data['idPersona'];
+                                this.filtro=data['nombrePadre'];
+                                this.selectPadre(this.filtro);
+                                this.idPadre=data['idPadre'];
                                 this.idAlumno = data['idAlumno'];
-                                this.nombrePadre = data['nombrePadre'];+' '+data['apellidoPadre'];
+                                this.nombrePadre = data['nombrePadre']+' '+data['apellidoPadre'];
                                 this.identificacionPadre = data['identificacionPadre'];
                                 this.idAsigGrado = data['idAsignacionGrado'];
                                 this.idAsigPadreAlumno=data['idAsigPadreAlumno'];
@@ -722,6 +683,7 @@
                             }
                             case 'visualizar':
                             {
+                                
                                 this.modal = 1;
                                 this.tituloModal = "Visualizar datos";
                                 this.tipoAccion = 3;
@@ -731,14 +693,12 @@
                                 this.nombreNivel = data['nombreNivel'];
                                 this.nombreGrado = data['nombreGrado']+'/'+data['nombreSeccion']+'/'+data['nombreCarrera'];
                                 this.idGenero = data['idGenero'];
-                                this.idPersona = data['idPersona'];
-                                this.idAlumno = data['idAlumno'];
-                                this.fechaNacimiento = data['fechaNac'];
-                                this.idPadre = data['idPadre'];
-                                this.nombrePadre = data['nombrePadre'];+' '+data['apellidoPadre'];
+                                this.nombreTPersona = data['nombreTipoPersona'];
+                                this.fechaNac = data['fechaNac'];
+                                this.nombrePadre = data['nombrePadre']+' '+data['apellidoPadre'];
                                 this.identificacionPadre = data['identificacionPadre'];
-                                this.idAsigGrado = data['idAsignacionGrado'];
-                                this.idAsigPadreAlumno=data['idAsigPadreAlumno'];
+                                this.direccionPadre = data['direccionPadre'];
+                                this.telPadre=data['telPadre'];
 
                                 break;
                             }                                                          
@@ -749,7 +709,36 @@
             }
         },
         mounted() {
-            this.listarPersona(1, this.buscar, this.criterio);
+            this.listarPersona(1, this.buscar, this.criterio,this.std);
         }
     }
 </script>
+<style>
+
+   .modal-content{
+        width: 100%;
+        height: 550px;
+        overflow-y: scroll;
+        overflow-x: unset;
+        position: absolute; 
+    }
+    .mostrar{
+        display: list-item !important;
+        opacity: 1 !important;
+        position:absolute !important;
+        background-color: #3c29297a !important;
+    }
+    .div-error{
+        display: flex;
+        justify-content: center;
+    }
+    .text-error{
+        color:red !important;
+        font-weight:bold;
+    }
+    #selectPadre{
+        width: 100%;
+        margin: 1em auto;
+    }
+
+</style>

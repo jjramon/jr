@@ -1,28 +1,4 @@
-<style>
 
-   .modal-content{
-        width: 100%;
-        height: 550px;
-        overflow-y: scroll;
-        overflow-x: unset;
-        position: absolute; 
-    }
-    .mostrar{
-        display: list-item !important;
-        opacity: 1 !important;
-        position:absolute !important;
-        background-color: #3c29297a !important;
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-    }
-    .text-error{
-        color:red !important;
-        font-weight:bold;
-    }
-
-</style>
 <template>
     <main class="main">
             <!-- Breadcrumb -->
@@ -41,16 +17,23 @@
                             <div class="col-md-12">
                                 <div class="input-group" >
                                     
-                                        <label class="col-md-2 form-control-label" for="text-input">Tipo:</label>
-                                         <select class="form-control col-md-2" v-model="criterio">
-                                            <option value="" >Seleccione</option>
-                                            <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
-                                        </select>
+                                    <label class="col-md-1 form-control-label" for="text-input">Tipo:</label>
+                                    <select class="form-control col-md-2" v-model="criterio">
+                                        <option value="" >Seleccione</option>
+                                        <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
+                                    </select>
                                     
-                                    <label class="col-md-2 form-control-label" for="text-input">Buscar:</label>
+                                    <label class=" form-control-label input-group col-md-1" v-if="buscar=='' || buscar==0" v-text="'Estado:'"></label>
+                                    <select class="form-control input-group col-md-2" v-if="buscar=='' || buscar==0" v-model="std" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option value="1" v-text="'Activo'"></option>
+                                        <option value="2" v-text="'Inactivo'"></option>
+                                    </select> 
+
+                                    <label class="col-md-1 form-control-label" for="text-input">Buscar:</label>
                                     <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">              
-                                    
-                                    <button type="submit" @click="listarPersona(1, buscar, criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                     
+                                    <button type="submit" @click="listarPersona(1, buscar, criterio, std)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
                                 </div>
                             </div>
                         </div>
@@ -81,12 +64,12 @@
                                         </button>
                                             
                                         <template v-if="persona.estadoPersona">
-                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idUsuario)">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idUsuario , criterio, std)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idUsuario)">
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idUsuario, criterio, std)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
@@ -282,19 +265,19 @@
                             <div class="modal-footer">
                                 
                                 <label for="text-input" v-if="tipoAccion == 3">Persona:</label>
-                                <button v-if="tipoAccion == 3 && estadoPersona == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(idPersona)">
+                                <button v-if="tipoAccion == 3 && estadoPersona == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarPersona(idPersona, criterio, std)">
                                     <i class="icon-trash"></i>
                                 </button>
-                                <button v-if="tipoAccion == 3 && estadoPersona == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(idPersona)">
+                                <button v-if="tipoAccion == 3 && estadoPersona == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarPersona(idPersona, criterio, std)">
                                     <i class="icon-check"></i>
                                 </button>
                                 
                                 <label for="text-input" v-if="tipoAccion == 3">Usuairo:</label>
                                     
-                                <button v-if="tipoAccion == 3 && usuarioEstado == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarUsuario(idUsuario)">
+                                <button v-if="tipoAccion == 3 && usuarioEstado == 1" type="button" class="btn btn-warning btn-sm align-center row" @click="desactivarUsuario(idUsuario, criterio, std)">
                                     <i class="icon-trash"></i>
                                 </button>
-                                <button v-if="tipoAccion == 3 && usuarioEstado == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarUsuario(idUsuario)">
+                                <button v-if="tipoAccion == 3 && usuarioEstado == 0" type="button" class="btn btn-success btn-sm align-center row" @click="activarUsuario(idUsuario, criterio, std)">
                                         <i class="icon-check"></i>
                                 </button>
                                 
@@ -357,6 +340,7 @@
                 criterio :'',
                 buscar : '',
                 tipoBusqueda:'',
+                std:'',
                 
             }
         },
@@ -386,23 +370,25 @@
             },       
         },
         methods : {
-            listarPersona(page, buscar, criterio){
+                listarPersona(page, buscar, criterio,std){
                 this.selectTypoPersona();
                 this.selectGenero();
                 this.selectRol();
-                let me = this;           
-                var url = '/persona?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
-                
-                axios.get(url)
-                .then(function (response) {
-                    var respuesta = response.data;
-                    me.arrayPersona = respuesta.persona.data;
-                    me.pagination = respuesta.pagination;
+                if(criterio!=0 || criterio!=""){    
+                    let me = this;           
+                    var url = '/persona?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio + '&std='+std;
                     
-                })
-                .catch(function (error){
-                    console.log(error);
-                });
+                    axios.get(url)
+                    .then(function (response) {
+                        var respuesta = response.data;
+                        me.arrayPersona = respuesta.persona.data;
+                        me.pagination = respuesta.pagination;
+                        
+                    })
+                    .catch(function (error){
+                        console.log(error);
+                    });
+                }
             },
             selectTypoPersona(){
                 let me = this;
@@ -443,10 +429,19 @@
                     console.log(error);
                 });
             },
-            cambiarPagina(page, buscar, criterio){
+            cambiarPagina(page, buscar, criterio, std){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPersona(page, buscar, criterio);
+                me.listarPersona(page, buscar, criterio, std);
+            },
+            correcto(){
+                swal({
+                        position: 'top-center',
+                        type: 'success',
+                        title: 'Proceso finalizado correctamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
             },
             registrarPersona(){
                 if(this.validarPersona()){
@@ -468,7 +463,8 @@
                     'password':this.password
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarPersona(1,'','');
+                    me.correcto();
+                    me.listarPersona(1,'',this.criterio, this.std);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -497,14 +493,15 @@
                     'password':this.password,        
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarPersona(1,'','');
+                    me.correcto();
+                    me.listarPersona(1,'',this.criterio,this.std);
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
             
-            desactivar(id, idd){
+            desactivar(id, idd, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -525,7 +522,7 @@
                             'idPersona': id,
                             'idUsuario': idd
                         }).then(function(response){
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio,std);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -541,7 +538,7 @@
                         }
                 })
             },
-            activar(id , idd){
+            activar(id , idd, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-dark',
@@ -563,7 +560,7 @@
                             'idUsuario': idd
                         }).then(function(response){
                             
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio, std);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -579,7 +576,7 @@
                         }
                 })
             },
-            desactivarPersona(id){
+            desactivarPersona(id,criterio,std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -601,7 +598,7 @@
                             'idPersona': id
                         }).then(function(response){
                             me.cerrarModal();
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio, std);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -617,7 +614,7 @@
                         }
                 })
             },
-            activarPersona(id){
+            activarPersona(id, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -639,7 +636,7 @@
                             'idPersona': id
                         }).then(function(response){
                             
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio, std);
                             me.cerrarModal();
                             swalWithBootstrapButtons(
                                 'Ativado!',
@@ -656,7 +653,7 @@
                         }
                 })
             },
-            desactivarUsuario(id){
+            desactivarUsuario(id, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -677,7 +674,7 @@
                         axios.put('/persona/desactivarUsuario',{
                             'idUsuario': id
                         }).then(function(response){
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio, std);
                             me.cerrarModal();
                             swalWithBootstrapButtons(
                                 'Descativado!',
@@ -694,7 +691,7 @@
                         }
                 })
             },
-            activarUsuario(id){
+            activarUsuario(id, criterio, std){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -716,7 +713,7 @@
                             'idUsuario': id
                         }).then(function(response){
                             me.cerrarModal();
-                            me.listarPersona(1,'','');
+                            me.listarPersona(1,'',criterio, std);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -810,7 +807,6 @@
                                 this.idUsuario = data['idUsuario'];
                                 this.usuario = data['usuario'];
                                 this.password = data['password'];  
-
                                 break;
                             }
                             case 'visualizar':
@@ -844,7 +840,32 @@
             }
         },
         mounted() {
-            this.listarPersona(1, this.buscar, this.criterio);
+            this.listarPersona(1, this.buscar, this.criterio, this.std);
         }
     }
 </script>
+<style>
+
+   .modal-content{
+        width: 100%;
+        height: 550px;
+        overflow-y: scroll;
+        overflow-x: unset;
+        position: absolute; 
+    }
+    .mostrar{
+        display: list-item !important;
+        opacity: 1 !important;
+        position:absolute !important;
+        background-color: #3c29297a !important;
+    }
+    .div-error{
+        display: flex;
+        justify-content: center;
+    }
+    .text-error{
+        color:red !important;
+        font-weight:bold;
+    }
+
+</style>

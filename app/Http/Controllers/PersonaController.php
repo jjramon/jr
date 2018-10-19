@@ -16,11 +16,9 @@ class PersonaController extends Controller
         if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
+        $std = $request->std;
         
-        
-
-      
-        if($buscar == '' && $criterio=='')
+        if($criterio != '' && $buscar == '' && $std == 1)
             {
                 $personas = Persona::join('users', 'personas.id', '=', 'users.idPersona')
                 ->join('rols','users.idRol', '=', 'rols.id')
@@ -28,12 +26,13 @@ class PersonaController extends Controller
                 ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
                 ->where('rols.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')  
-                ->where('tipo_personas.nombre','!=', "Alumno")         
+                ->where('generos.estado','=', '1')     
+                ->where('personas.estado', '=', '1') 
+                ->where('tipo_personas.id','=', $criterio)         
                 ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
-                ->orderBy('personas.nombre', 'asc')->paginate(10);   
-            }
-        if($criterio != '' && $buscar == '')
+                ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
+            } 
+            if($criterio != '' && $buscar == '' && $std == 2)
             {
                 $personas = Persona::join('users', 'personas.id', '=', 'users.idPersona')
                 ->join('rols','users.idRol', '=', 'rols.id')
@@ -41,7 +40,8 @@ class PersonaController extends Controller
                 ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
                 ->where('rols.estado','=', '1')
                 ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')      
+                ->where('generos.estado','=', '1')     
+                ->where('personas.estado', '=', '0') 
                 ->where('tipo_personas.id','=', $criterio)         
                 ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
@@ -102,15 +102,14 @@ class PersonaController extends Controller
         ->where('tipo_personas.nombre','=', "Padre de familia")
         ->where('personas.nombre', 'like', '%' . $busqueda . '%')
         ->orwhere('personas.apellido', 'like', '%' . $busqueda . '%')
-        ->orwhere('personas.identificacion', 'like' , '%' . $busqueda . '%')
         ->where('personas.estado','=',"1")
-        ->select('tipo_personas.nombre', 'personas.id as idPadreF' , DB::raw('CONCAT(personas.nombre, " ", personas.apellido) as nombrePadreF'))
+        ->select('tipo_personas.nombre', 'personas.id as idPadreF' , DB::raw('CONCAT(personas.nombre, " ", personas.apellido, "/", personas.identificacion) as nombrePadreF'))
         ->orderBy('personas.nombre' , 'asc')->get();
         return ['padre' => $padreF];
     }
     public function buscarHijo(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $filtro = $request->filtro;
        
         $hijo = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
