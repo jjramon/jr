@@ -19,7 +19,7 @@ class CreateCalificacionesTable extends Migration
             $table->integer('idBimestre')->unsigned();
             $table->integer('idDocente')->unsigned();
             $table->integer('calificacion');
-            $table->integer('idciclo')->unsigned();
+            $table->integer('idCiclo')->unsigned();
             $table->integer('promedio');
             $table->boolean('estado')->default(1);
             $table->timestamps();

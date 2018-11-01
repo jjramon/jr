@@ -1,4 +1,3 @@
-
 <template>
     <main class="main">
             <!-- Breadcrumb -->
@@ -46,6 +45,7 @@
                                         <th class="text-center" width="350 px">Nombre</th>
                                         <th class="text-center">Codigo Unico</th>
                                         <th class="text-center">Grado</th>
+                                        <th class="text-center">Año</th>
                                         <th class="text-center">Encargado</th>
                                         <th class="text-center">DPI</th>
                                         <th class="text-center">Telefono</th>
@@ -78,6 +78,7 @@
                                     <td v-text="persona.nombre + ' ' + persona.apellido" class="align-middle"></td>
                                     <td v-text="persona.identificacion" class="align-middle"></td>
                                     <td v-text="persona.nombreNivel+ '/' +persona.nombreCarrera+' '+persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
+                                    <td v-text="persona.anio"></td>
                                     <td v-text="persona.nombrePadre + ' '+persona.apellidoPadre"></td>
                                     <td v-text="persona.identificacionPadre"></td>
                                     <td v-text="persona.direccionPadre" ></td>
@@ -299,7 +300,6 @@
                 arrayNivel:[],
                 arrayTipo_persona : [],
                 arrayGenero : [],
-                arrayGrado:[],
                 arrayPadre:[],
                 modal : 0,
                 tituloModal : '',
@@ -428,9 +428,7 @@
                 console.log(error);
                 });
             },
-            getDatosPadre(val1){
-                this.idPadre = val1.idPadreF;
-            },
+
             selectGrado(id){
                 let me = this;   
                 var url = '/alumno/selectGrado?filtro='+id;
@@ -510,7 +508,7 @@
                 }).then(function(response){
                     me.correcto();
                     me.cerrarModal();
-                    me.listarPersona(1,this.buscar, criterio, std);
+                    me.listarPersona(1,this.buscar, this.criterio, this.std);
                 })
                 .catch(function (error){
                     console.log(error);

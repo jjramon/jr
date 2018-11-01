@@ -10,6 +10,7 @@ use colegioShaddai\Genero;
 use colegioShaddai\Asignar_alumno;
 use colegioShaddai\Asignar_padre_alumno;
 use Illuminate\Support\Facades\DB;
+use  Jenssegers \ Date \ Date ;
 
 class AlumnoController extends Controller
 {
@@ -44,12 +45,12 @@ class AlumnoController extends Controller
                 ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','carreras.id as idCarrera','niveles.id as idNivel','grados.id as idGrado',
                 'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
                 'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
-                'padres.identificacion as identificacionPadre', 'padres.direccion as direccionPadre', 'padres.tel as telPadre',
+                'padres.identificacion as identificacionPadre', 'alumnos.anio', 'padres.direccion as direccionPadre', 'padres.tel as telPadre',
                 'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
                 'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
                 'carreras.nombre as nombreCarrera','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
                 'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
-                ->orderBy('personas.apellido', 'asc')->paginate(10);  
+                ->orderBy('personas.apellido', 'asc')->paginate(15);  
 
             }
         if($std == 2)
@@ -76,11 +77,11 @@ class AlumnoController extends Controller
                 'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
                 'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
                 'padres.identificacion as identificacionPadre', 'padres.direccion as direccionPadre', 'padres.tel as telPadre',
-                'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
+                'personas.nombre', 'personas.apellido', 'alumnos.anio', 'generos.genero as nombreGenero', 'personas.identificacion', 
                 'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
                 'carreras.nombre as nombreCarrera','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
                 'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
-                ->orderBy('personas.apellido', 'asc')->paginate(10);         
+                ->orderBy('personas.apellido', 'asc')->paginate(15);         
             }       
       
         return [
@@ -118,6 +119,7 @@ class AlumnoController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
+            $date = new Date();
             $persona = new Persona();
             $persona -> idGenero = $request->idGenero;
             $persona -> idTipoPersona = $request->idTipoPersona;
@@ -129,6 +131,7 @@ class AlumnoController extends Controller
             $alumno = new Alumno();
             $alumno -> idPersona = $persona->id;
             $alumno -> fechaNacimiento = $request->fechaNac;
+            $alumno -> anio = $date->year;
             $alumno -> save();
 
             $asignar = new Asignar_alumno();
@@ -157,6 +160,7 @@ class AlumnoController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
+            $date = new Date();
             $actualizar = Persona::findOrFail($request->idPersona);
             $actualizar -> idGenero = $request->idGenero;
             $actualizar -> idTipoPersona = $request->idTipoPersona;
@@ -168,6 +172,7 @@ class AlumnoController extends Controller
 
             $actualiza = Alumno::findOrFail($request->idAlumno);
             $actualiza -> fechaNacimiento = $request->fechaNac;
+            $actualiza -> anio = $date->year;
             $actualiza -> save();
 
             $actualAsignar = Asignar_alumno::findOrFail($request->idAsigAlumnoGrado);

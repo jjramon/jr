@@ -17,8 +17,10 @@ class CreateAsignarAlumnosTable extends Migration
             $table->increments('id');
             $table->integer('idGrado')->unsigned();
             $table->integer('idAlumno')->unsigned();
+            $table->integer('idCiclo')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->foreign('idCiclo')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';

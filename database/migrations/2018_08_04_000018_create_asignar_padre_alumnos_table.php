@@ -17,10 +17,12 @@ class CreateAsignarPadreAlumnosTable extends Migration
             $table->increments('id');
             $table->integer('idAlumno')->unsigned();
             $table->integer('idPersona')->unsigned();
+            $table->integer('idCiclo')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idCiclo')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';
         });
     }

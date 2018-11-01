@@ -7,178 +7,195 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i>Asignar materia a grado
-                        <button type="button" @click="desactivarListado()" class="btn btn-success" >
+                        <i class="fa fa-align-justify"></i>Alumnos
+                        <button type="button" @click="abrirModal('AsignarMateria','registrar')" class="btn btn-success" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
-                    <template v-if='listado == 1'>
-                        <div class="card-body">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="input-group" >
+                                    
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"></label>
+                                    <select class="form-control"  v-model="criterio" v-on:click="selectGrado(criterio)">
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
+                                    </select>
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Grado:'"></label>
+                                    <select class="form-control"   v-model="buscar" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                    </select>       
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
+                                    <select class="form-control"   v-model="std" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option value="1" v-text="'Activo'"></option>
+                                        <option value="2" v-text="'Inactivo'"></option>
+                                    </select>   
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
+                                    <select class="form-control"   v-model="ciclo" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option  v-for="ciclo in arrayGrado " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                    </select>  
+                                    <button type="submit" @click="listarPersona(1, criterio, buscar, std, ciclo)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
+                                </div>
+                            </div>
+                        </div>
 
-                            <table class="table table-bordered table-striped table-responsive-lg">
-                                <thead>
-                                <tr class="table-primary">
-                                        
-                                            <th class="text-center" width="100 px">Opciones</th>
-                                            <th class="text-center" >Grado</th>
-                                            <th class="text-center" >Nivel</th>
-                                            <th class="text-center" >Materia</th>                         
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="asigMateria in arrayAsigMateria" :key="asigMateria.idAsignacion" class="text-center table-sm"> 
-                                        <td class="text-center ">
-                                             <button type="button" @click="editarAsignacion()" class="btn btn-info btn-sm" >
-                                            <i class="icon-pencil"></i>
-                                            </button>
+                        <table class="table table-bordered table-striped table-responsive-lg">
+                            <thead>
+                                
+                               <tr class="table-primary">
+                                    
+                                        <th class="text-center" width="100 px">Opciones</th>
+                                        <th class="text-center" width="350 px">Materias</th>
+                                        <th class="text-center" >Estado</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="asigMateria in arrayAsigMateria" :key="asigMateria.id" class="text-center table-sm"> 
+                                    <td class="align-midle ">
                                             
-                                        </td>
-                                        <td  v-text="asigMateria.nombreGrado + ' / ' + asigMateria.nombreSeccion" class="align-middle" ></td>
-                                        <td  v-text="asigMateria.nombreNivel + ' / ' + asigMateria.nombreCarrera" class="align-middle"></td>
-                                        <td  v-text="asigMateria.nombreMateria" class="align-middle"></td>
-                                                                                
-                                    </tr>   
-                                </tbody>
-                            </table>
-                            
-                            <nav>
-                                <ul class="pagination">
-                                    <li class="page-item" v-if="pagination.current_page > 1">
-                                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)" >Ant</a>
-                                    </li>
-                                    <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
-                                        <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
-                                    </li>
+                                        <button type="button" @click= "abrirModal('AsignarMateria','actualizar',asigMateria)" class="btn btn-info btn-sm " >
+                                            <i class="icon-pencil"></i>
+                                        </button>
+                                                    
+                                        <template v-if="asigMateria.estado == 1 ">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar()">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar()">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
+                                    </td>
+                                     <td v-text="asigMateria.nombreMateria"></td>
+                                    <td >
+                                        <div v-if="asigMateria.estado == 1 ">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else >
+                                            <span class="badge badge-dark">Inactivo</span>
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio, std)" >Ant</a>
+                                </li>
+                                <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio, std)" v-text="page"></a>
+                                </li>
 
-                                    <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>   
-                    </template>
-                    <!-- Fin ejemplo de tabla Listado -->
-                    <!-- asigancion -->
-                    <template v-if='listado == 2'>
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="">Nivel:</label> 
-                                        <div class="input-group">
-                                             <select class="form-control"   v-model="filtro" @keyup.enter="buscarPadre()">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="nivel in arrayNivel" :key="nivel.idNivel" :value="nivel.idNivel" v-text="nivel.nombreNivel" @click="buscarPadre()"></option>
-                                            </select>
-                                            <button class="input-group-text btn btn-primary btn-sm" @click="buscarPadre()"><span class="fa fa-navicon"></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="">Grado:</label> 
-                                        <div class="input-group">
-                                            <select class="form-control"   v-model="idGrado" >
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="grado in arrayGrado" :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion+'/'+grado.nombreCarrera" ></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Materia:</label> 
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" v-model="filtro2" @keyup.enter="buscarHijo()" placeholder="nombre de la materia" required>
-                                            <button class="input-group-text btn btn-primary btn-sm"><span class="fa fa-navicon"></span></button>
-                                            <input type="text" readonly class="form-control" v-model='nombreMateria'>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 ">
-                                    <div class="form-group">
-                                        <label for="">Agregar</label> 
-                                        <div class="input-group">
-                                            <button class="btn btn-success" @click="registrarPersona()"><span class="icon-plus"> </span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-danger" @click="activarListado()"><span class="fa fa-close" ></span></button>
-                            </div>
-                        </div>
-                           
-                    </template>
-                    <!--Fin asigancion -->
-                    <!--Actualizar asigancion -->
-                    <template v-if='listado == 3'>
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Nivel:</label> 
-                                        <div class="input-group">
-                                             <select class="form-control"   v-model="filtro" @keyup.enter="buscarPadre()">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="nivel in arrayNivel" :key="nivel.idNivel" :value="nivel.idNivel" v-text="nivel.nombreNivel" @click="buscarPadre()"></option>
-                                            </select>
-                                            <button class="btn btn-success"  v-if="tipoAccion == 1 || tipoAccion == 2" @click="buscarPadre()"><i class="fa fa-search"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Grado:</label> 
-                                        <div class="input-group">
-                                            <select class="form-control"   v-model="idGrado" >
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="grado in arrayGrado" :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion+'/'+grado.nombreCarrera" ></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                            
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="">Materia:</label> 
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" v-model="filtro2" @keyup.enter="buscarHijo()" placeholder="nombre de la materia" required>
-                                            <button class="input-group-text btn btn-primary btn-sm"><span class="fa fa-navicon"></span></button>
-                                            <input type="text" readonly class="form-control" v-model='nombreMateria'>
-                                        </div>
-                                    </div>
-                                </div>
-                           
-                            
-                                <div class="col-md-6 ">
-                                    <div class="form-group">
-                                        <label for="">Actualizar</label> 
-                                        <div class="input-group">
-                                            <button class="btn btn-success" @click="actualizarPersona()"><span class="fa fa-refresh"> </span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-danger" @click="activarListado()"><span class="fa fa-close" ></span></button>
-                            </div>
-                        </div>
-                           
-                    </template>
-                    
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio, std)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-                <!-- Fin  Actualizar asignacion -->
+                <!-- Fin ejemplo de tabla Listado -->
             
-               
+                <!--Inicio del modal agregar/actualizar-->
+                <div class="modal fullscreen-modal fade "  tabindex="-1" :class="{'mostrar':modal}"  role="dialog" aria-labelledby="myModalLabel" style="display: none;" >
+                    <div class="modal-dialog modal-primary modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" v-text="tituloModal"></h4>
+                                <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+ 
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Nivel:</label>
+                                        <div class="col-md-6 input-group">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idNivel" v-on:click="selectGrado(idNivel)">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Grado:</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                            </select>
+                                          <input type="text" v-if="tipoAccion == 3" v-model="nombreGrado" class="form-control bg-white" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Materia:</label>
+
+                                        <div class="col-md-6 input-group">
+                                            <v-select v-if="tipoAccion == 1" 
+                                            label="nombre"
+                                            :options="arrayMateria"
+                                            
+                                            :selected="idMateria + arrayMateria['id']"
+                                            multiple
+                                            v-model="idMateria"
+                                            id="v-select"
+                                            >
+                                            </v-select>
+                                            <v-select v-if="tipoAccion == 2" 
+                                            label="nombre"
+                                            :options="arrayMateria"
+                                            :selected="arrayMateria"
+                                            v-model="idMateria"
+                                            id="selectt"
+                                            >
+                                            </v-select>
+                                        </div>
+                                    </div>
+                                    <div v-show="errorPersona" class="form-group row div-error">
+                                        <div class="text-center text-error">
+                                            <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            
+                               
+                            
+                            <div class="modal-footer">
+                                
+                                                                
+                                <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!--Fin del modal-->
         </div>
             
     </main>
 </template>
 
 <script>
+import vSelect from 'vue-select';
     export default {
         data (){
+
             return{
                 idAsignacion: 0,
                 idGrado:0,
@@ -212,10 +229,18 @@
                 listado:1,
                 filtro:'',
                 filtro2:'',
+                std:0,
                 idAsig:'',
+                arrayGrd:[],
+                arrayMtr:"",
+                ideMtr:'',
+                ciclo:'',
+                arrayCiclo:[],
             }
         },
-
+        components:{
+            vSelect
+        },
         computed : {
                 isActived: function(){
                     return this.pagination.current_page;
@@ -241,138 +266,298 @@
             },       
         },
         methods : {
-            listarPersona(page, buscar, criterio){
+            listarPersona(page, criterio, buscar, std){
                 this.selectNivel();
-                let me = this;           
-                var url = '/asignarmateria?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio;
+                this.selectMateria();
                 
-                axios.get(url)
-                .then(function (response) {
-                    var respuesta = response.data;
-                    me.arrayAsigMateria = respuesta.asigMateria.data;
-                    me.pagination = respuesta.pagination;
                     
-                })
-                .catch(function (error){
-                    console.log(error);
-                });
+                if(criterio!=0 && criterio!='' || buscar != 0 && buscar != ''){
+                    let me = this;           
+                    var url = '/asignarmateria?page=' + page + '&criterio='+ criterio + '&buscar=' + buscar + '&std='+ std;
+                    
+                    axios.get(url)
+                    .then(function (response) {
+                        var respuesta = response.data;
+                        me.arrayAsigMateria = respuesta.asigMateria.data;
+                        me.arrayGrd = respuesta.grados;
+                        me.pagination = respuesta.pagination;
+                        if(me.arrayAsigMateria.length<1)
+                        {
+                            me.sinRegistro();
+                        }
+                    })
+                    .catch(function (error){
+                        console.log(error);
+                    });
+                }
             },
             
 
-            cambiarPagina(page, buscar, criterio){
+            cambiarPagina(page, buscar, criterio, std){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPersona(page, buscar, criterio);
+                me.listarPersona(page, buscar, criterio, std);
             },
             selectNivel(){
-                let me = this;
-                var url = '/asignarmateria/selectNivel'
+                let me=this;
+                var url = '/grado/selectNivel'
+                axios.get(url)
+                .then(function (response) {
+                    
+                    let respuesta = response.data;
+                    me.arrayNivel = respuesta.nivel;
+                    
+                })
+                .catch(function (error){
+                console.log(error);
+                });
+            },
+            selectGrado(id){
+                let me = this;   
+                var url = '/alumno/selectGrado?filtro='+id;
                 axios.get(url)
                 .then(function (response) {
                     
                     var respuesta = response.data;
-                    me.arrayNivel = respuesta.nivel;
+                    me.arrayGrado = respuesta.grado;
+                    
                 })
                 .catch(function (error){
-                    console.log(error);
+                console.log(error);
                 });
             },
-            buscarPadre(){
+            selectMateria(){
                 let me = this;
-                var url='/asignarmateria/selectGrado?filtro=' + me.filtro;
-
-                axios.get(url)
-                .then(function (response){
-                    var respuesta=response.data;
-                    me.arrayGrado= respuesta.grado;
-                })
-                
-                .catch(function (error){
-                    console.log(error);
-                });
-            },
-            buscarHijo(){
-                let me = this;
-                var url='/asignarmateria/selectMateria?filtro=' + me.filtro2;
+                var url='/asignarmateria/selectMateria';
 
                 axios.get(url).then(function (response){
                     var respuesta=response.data;
                     me.arrayMateria = respuesta.materia;
-                    
-                    if(me.arrayMateria.length > 0){
-                        me.nombreMateria=me.arrayMateria[0]['nombreMateria'];
-                        me.idMateria = me.arrayMateria[0]['idMateria'];
-                    }
-                    else{
-                        me.nombreMateriaF='No existe una materia con ese nombre';
-                        me.idMateria='0';
-                    }
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
+            getDatosMateria(materia){
+                this.idMateria = materia.idMateria;
+                    
+            },
             registrarPersona(){
-                console.log(this.idMateria, this.idGrado);
+                for (var i = 0; i < this.idMateria.length; i++){
+                    this.idMtr=this.idMateria[i]['id'];
+                
                 let me = this;  
                 axios.post('/asignarmateria/registrar',{
                     'idGrado':this.idGrado,
-                    'idMateria':this.idMateria
+                    'idMateria':this.idMtr
                 }).then(function(response){
+                    me.cerrarModal();
                     me.listarPersona(1,'','');
-                    me.activarListado();
+                    me.correcto();
+                    
                 })
                 .catch(function (error){
                     console.log(error);
                 });
+                }
+            },
+          
+            correcto(){
+                swal({
+                    position: 'top-center',
+                    type: 'success',
+                    title: 'Proceso finalizado correctamente',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
+            sinRegistro(){
+                swal({
+                    position: 'top-center',
+                    type: 'success',
+                    title: 'no se encuentran registros',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             },
             actualizarPersona(){
-                let me = this;                
-                axios.put('/asignarDocente/actualizar',{
-                    'idAsignacion':this.idAsig,
-                    'idDocente':this.idDocente,
-                    'idMateria':this.idMateria
+                this.ideMtr = this.idMateria['id'];
+                let me = this;  
+                axios.put('/asignarmateria/actualizar',{
+                    'id':this.idAsignacion,
+                    'idGrado':this.idGrado,
+                    'idMateria':this.ideMtr
                 }).then(function(response){
-                    me.listarPersona(1,'','');
-                    me.activarListado();
+                    me.cerrarModal();
+                    
+                    me.correcto();
+                    
                 })
                 .catch(function (error){
                     console.log(error);
                 });
-            },
-            
-            activarListado(){
-                this.listado=1;
-            },
-            desactivarListado(){
-                this.listado=2;
-                this.idPadreF='';
-                this.nombrePadreF='';
-                this.idHijo='';
-                this.nombreHijo='';
-                this.filtro='';
-                this.filtro2='';
                 
+
+
             },
-            editarAsignacion(){
-                this.listado=3;
-                this.idGrado=data['idGrado'];
-                this.idMateria=data['idMateria'];
-                this.idAsignacion=data['idAsignacion'];
-                                  
-            }
             
+            desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+                
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere desactivar la persona?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'desactivar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        let me = this;
+                        axios.put('/alumno/desactivar',{
+                            'idPersona': idPersona,
+                            'idAsigGrado': idAsigGrado,
+                            'idAsigPadreAlumno':idAsigPadreAlumno,
+                        }).then(function(response){
+                            me.listarPersona(1, buscar, criterio, std);
+                            swalWithBootstrapButtons(
+                                'Descativado!',
+                                'el registro se a desactivado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+            activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+                const swalWithBootstrapButtons = swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: '¿está seguro de que quiere activar la persona?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'activar',
+                cancelButtonText: 'cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        let me = this;
+                        axios.put('/alumno/activar',{
+                            'idPersona': idPersona,
+                            'idAsigGrado': idAsigGrado,
+                            'idAsigPadreAlumno':idAsigPadreAlumno,
+                        }).then(function(response){
+                            
+                            me.listarPersona(1,  buscar, criterio, std);
+                            swalWithBootstrapButtons(
+                                'Ativado!',
+                                'el registro se activado.'
+                            )                     
+                                  
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons(
+                                'Cancelar',
+                                'el registro no sufrira ningun cambio :)',
+                                'error'
+                            )
+                        }
+                })
+            },
+
+            validarPersona(){
+                this.errorPersona = 0;
+                this.errorMostrarMsPersona=[];
+                if(this.idtipoPersona=='') this.errorMostrarMsPersona.push("Seleccione un tipo de persona");
+                if(this.idGenero=='') this.errorMostrarMsPersona.push("Seleccione un genero");
+                if(!this.nombre) this.errorMostrarMsPersona.push("El nombre no puede estar vacio.");
+                if(!this.apellido) this.errorMostrarMsPersona.push("El apellido no puede estar vacio.");
+                
+                if(this.errorMostrarMsPersona.length)this.errorPersona = 1;
+                return this.errorPersona;
+            },
+            cerrarModal(){
+                this.modal=0;
+                this.tituloModal='';
+                this.idGrado =0; 
+                this.idPersona =0; 
+                this.idNivel=0;
+                this.filtro="";
+                this.idMateria=[];
+                this.idMtr=[];
+
+                                
+
+            },
+            abrirModal(modelo, accion, data=[]){
+                switch(modelo){
+                    case "AsignarMateria":
+                    {
+                        switch(accion){
+                            case 'registrar':
+                            {
+                                this.modal=1;
+                                this.tituloModal='Registrar alumno';
+                                this.idGrado=0;
+                                this.idNivel=0;
+                                this.idMateria = '';
+                                this.tipoAccion=1;
+                                this.filtro="";
+                                break;
+                            }
+                            case 'actualizar':
+                            {
+                                this.modal = 1;
+                                this.tituloModal = "Actualizar asignación";
+                                this.tipoAccion = 2;
+                                this.idAsignacion=data['id'];
+                                this.idNivel=data['idNivel'];
+                                this.idGrado = data['idGrado'];
+                                this.idMateria = data['nombreMateria'];
+                                
+                                break;
+                            }
+                                                         
+                        }
+                    }
+                }
+                
+            }
         },
         mounted() {
-            this.listarPersona(1, this.buscar, this.criterio);
+            this.listarPersona(1, this.buscar, this.criterio,this.std);
         }
     }
 </script>
 <style>
+    #v-select{
+        width:100%;
 
+    }
+    #selectt{
+        width:100%;
+
+    }
    .modal-content{
         width: 100%;
-      
+        height: 550px;
+        overflow-y: scroll;
+        overflow-x: unset;
         position: absolute; 
     }
     .mostrar{
@@ -388,6 +573,10 @@
     .text-error{
         color:red !important;
         font-weight:bold;
+    }
+    #selectPadre{
+        width: 100%;
+        margin: 1em auto;
     }
 
 </style>

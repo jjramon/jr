@@ -7,42 +7,47 @@ use colegioShaddai\Materia;
 use colegioShaddai\Grado;
 use colegioShaddai\Nivele;
 use colegioShaddai\Asignar_materia;
+use Illuminate\Support\Facades\DB;
 class Asignar_materiaController extends Controller
 {
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-        
-        
+        $std = $request->std;
+        $cilco= $request->ciclo;
 
-      
-        if($buscar == '' && $criterio=='')
-            {
+        
+            if($std == 1 ){
+
                 $materia = Asignar_materia::join('materias','idMateria','=','materias.id')
                 ->join('grados','asignar_materia.idGrado','=','grados.id')
                 ->join('niveles','niveles.id','=','grados.idNivel')
-                ->join('carreras','carreras.id','=','grados.idCarrera')
-                ->join('secciones','secciones.id','=','grados.idSeccion')
+                ->join('ciclos', 'ciclos.id', '=', 'asignar_materia.idCiclo')
                 ->where('grados.estado','=','1')
                 ->where('materias.estado','=','1')
-                ->select('asignar_materia.id as idAsignacion','materias.id as idMateria', 'grados.id as idGrado', 'materias.nombre as nombreMateria',
-                'grados.nombre as nombreGrado', 'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera','niveles.nombre as nombreNivel')
-                ->orderBy('materias.nombre', 'asc')->paginate(10);
+                ->where('niveles.id','=', $criterio)
+                ->where('grados.id', '=', $buscar)
+                ->where('asignar_materia.estado', '=', '1')
+                ->select('asignar_materia.id as id', 'asignar_materia.idMateria as idMateria', 'niveles.id as idNivel',
+                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado')
+                ->orderby('nombreMateria')->paginate(10);
 
-
-                
             }
-        if($criterio != '' && $buscar == '')
-            {
-                
-            } 
-        if($criterio != '' && $buscar != '')
-        {
-         
-        }
-
+            if($std ==2 ){
+                $materia = Asignar_materia::join('materias','idMateria','=','materias.id')
+                ->join('grados','asignar_materia.idGrado','=','grados.id')
+                ->join('niveles','niveles.id','=','grados.idNivel')
+                ->where('grados.estado','=','1')
+                ->where('materias.estado','=','1')
+                ->where('niveles.id','=', $criterio)
+                ->where('grados.id', '=', $buscar)
+                ->where('asignar_materia.estado', '=', '0')
+                ->select('asignar_materia.id as id', 'asignar_materia.idMateria as idMateria', 'niveles.id as idNivel',
+                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado')
+                ->orderby('nombreMateria')->paginate(10);
+            }
         return [
             
             'pagination'=> [
@@ -51,20 +56,18 @@ class Asignar_materiaController extends Controller
                 'per_page'      =>  $materia ->perPage(),
                 'last_page'     =>  $materia ->lastPage(),
                 'from'          =>  $materia ->firstItem(),
-                'to'            =>  $materia ->lastItem(),
+                'to'            =>  $materia ->lastItem()
             ],
             
-            'asigMateria'=> $materia
+            'asigMateria'=> $materia           
         ];
     }
     
 
     public function SelectMateria(Request $request)
     {
-        $filtro=$request->filtro;
         $select=Materia::where('estado','=','1')
-        ->where('nombre','like', '%'.$filtro.'%')
-        ->select('nombre as nombreMateria', 'id as idMateria')->take(1)->get();
+        ->select('nombre', 'id')->get();
         return ['materia' => $select];
     }
     public function SelectNivel(Request $request)
@@ -88,23 +91,40 @@ class Asignar_materiaController extends Controller
 
     public function store(Request $request)
     {
-                $insertar = new Asignar_materia();
-                $insertar -> idGrado = $request->idGrado;
-                $insertar -> idMateria = $request->idMateria;
-                $insertar -> save();
+        $insertar = new Asignar_materia();
+        $insertar -> idGrado = $request->idGrado;
+        $insertar -> idMateria = $request->idMateria;
+        $insertar -> save();
             
     }
     
-  
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        
-            $actualizar = Asignar_materia::findOrFail($request->idAsignacion); 
+  
+            $actualizar = Asignar_materia::findOrFail($request->id); 
             $actualizar -> idGrado = $request->idGrado;
             $actualizar -> idMateria = $request->idMateria;
+            $actualizar -> estado = '1';
             $actualizar -> save();
-        
     }
 
+    public function desactivar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $desactivar=  Asignar_padre_alumno::findOrFail($request->idAsig);
+            $desactivar-> estado = '0';
+            $desactivar-> save();
+
+            
+    }
+    
+    public function activar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+            $activar =  Asignar_padre_alumno::findOrFail($request->idAsig);
+            $activar -> estado = '1';
+            $activar -> save();
+
+    }
 }

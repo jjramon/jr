@@ -29,7 +29,10 @@ class PersonaController extends Controller
                 ->where('generos.estado','=', '1')     
                 ->where('personas.estado', '=', '1') 
                 ->where('tipo_personas.id','=', $criterio)         
-                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
+                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado',
+                'rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 
+                'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 
+                'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
             } 
             if($criterio != '' && $buscar == '' && $std == 2)
@@ -43,7 +46,13 @@ class PersonaController extends Controller
                 ->where('generos.estado','=', '1')     
                 ->where('personas.estado', '=', '0') 
                 ->where('tipo_personas.id','=', $criterio)         
-                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
+                ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 
+                'users.password','users.estado as usuarioEstado','rols.id as idRol',
+                'rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 
+                'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion',
+                'tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 
+                'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 
+                'personas.estado as estadoPersona')
                 ->orderBy('tipo_personas.id', 'asc')->paginate(10);         
             } 
         if($criterio != '' && $buscar != '')
@@ -60,7 +69,13 @@ class PersonaController extends Controller
             ->where('tipo_personas.id','=', $criterio)
             ->where('personas.apellido','like','%'.$buscar.'%')
             ->orwhere('personas.nombre','like','%'.$buscar.'%')
-            ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 'users.password','users.estado as usuarioEstado','rols.id as idRol','rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion','tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 'personas.estado as estadoPersona')
+            ->select('personas.id as idPersona', 'users.id as idUsuario','users.usuario', 
+            'users.password','users.estado as usuarioEstado','rols.id as idRol',
+            'rols.nombre as nombreRol','personas.nombre as nombrePersona', 'personas.apellido',
+            'generos.genero as nombreGenero', 'generos.id as idGenero', 'personas.identificacion',
+            'tipo_personas.id as idTipoPersona', 'tipo_personas.nombre as nombreTPersona', 
+            'personas.direccion', 'personas.tel', 'personas.tel2', 'personas.correo', 
+            'personas.estado as estadoPersona')
             ->orderBy('personas.nombre', 'asc')->paginate(10);
             
         }

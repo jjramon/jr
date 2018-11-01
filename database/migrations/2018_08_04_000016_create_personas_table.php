@@ -22,7 +22,7 @@ class CreatePersonasTable extends Migration
             $table->string('tel', 15)->nullable();
             $table->string('tel2', 15)->nullable();
             $table->string('direccion', 80)->nullable();
-            $table->string('identificacion', 30)->nullable();
+            $table->string('identificacion', 30)->nullable()->unique();
             $table->string('correo', 80)->nullable()->unique();
             $table->boolean('estado')->default(1);
             $table->timestamps();

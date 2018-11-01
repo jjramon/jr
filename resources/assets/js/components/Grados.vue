@@ -176,7 +176,7 @@
                 estadoGrado:'',
                 idCarrera:'',
                 nombreCarrera:'',
-                idNivel:'',
+                idNivel:0,
                 nombreNivel:'',
                 idSeccion:'',
                 nombreSeccion:'',

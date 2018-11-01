@@ -17,7 +17,10 @@ class CreateAsignarHorariosTable extends Migration
             $table->increments('id');
             $table->integer('idMateria')->unsigned();
             $table->integer('idHorario')->unsigned();
+            $table->integer('idCiclo')->unsigned();
+            $table->boolean('estado')->default(1);
             $table->timestamps();
+            $table->foreign('idCiclo')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idHorario')->references('id')->on('horarios')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';
