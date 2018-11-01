@@ -8,7 +8,7 @@ class Asignar_docente extends Model
 {
     //
     protected $table = 'asignar_docente';
-    protected $filelable = ['id', 'idDocente','idMateria'];
+    protected $filelable = ['id', 'idDocente','idMateria', 'idCiclo', 'estado'];
     public function persona(){
         return $this->belongsTo('colegioShaddai\Persona');
     }

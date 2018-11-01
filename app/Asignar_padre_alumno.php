@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Asignar_padre_alumno extends Model
 {
     //
-    protected $filelable = ['id', 'idAlumno', 'idPersona', 'estado'];
+    protected $filelable = ['id', 'idAlumno', 'idPersona', 'idCiclo', 'estado'];
     
     public function Personas(){
         return $this->belongsTo('colegioShaddai\Persona');
