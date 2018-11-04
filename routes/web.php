@@ -92,6 +92,7 @@ Route::put('/persona/activarUsuario', 'PersonaController@activarUsuario');
 Route::get('/persona/selectRol', 'RolController@selectRol');
 Route::get('/persona/selectTipoPersona', 'Tipo_personaController@selectTipoPersona');
 Route::get('/persona/selectGenero', 'GeneroController@selectGenero');
+Route::get('/persona/personaPdf/{id}/{pass}','PersonaController@pdfPersonal')->name('personal_pdf');
 
 Route::get('/alumno','AlumnoController@index');
 Route::post('/alumno/registrar', 'AlumnoController@store');
@@ -101,6 +102,7 @@ Route::put('/alumno/activar', 'AlumnoController@activar');
 Route::get('/alumno/selectTipoPersona', 'AlumnoController@selectTipoPersona');
 Route::get('/alumno/selectGenero', 'AlumnoController@selectGenero');
 Route::get('/alumno/selectGrado', 'GradoController@selectGrado');
+Route::get('/alumno/selectCiclo', 'CicloController@selectCiclo');
 
 Route::get('/user','UserController@index');
 Route::post('/user/registrar', 'UserController@store');

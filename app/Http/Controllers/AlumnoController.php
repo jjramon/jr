@@ -16,41 +16,48 @@ class AlumnoController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $std = $request->std;
+        $idCiclo = $request->idCiclo;
               
         if($std ==1)
             {
+                if($criterio != 4)
+                {
+                    $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
+                    ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
+                    ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                    ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
+                    ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
+                    ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
+                    ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
+                    ->join('niveles', 'niveles.id','=','grados.idNivel')
+                    ->join('secciones', 'secciones.id','=','grados.idSeccion')
+                    ->join('ciclos', 'ciclos.id','=','asignar_padre_alumnos.idCiclo')
+                    ->join('ciclos as ciclo', 'ciclo.id','=','asignar_alumnos.idCiclo')
+                    ->where('tipo_personas.estado','=', '1')
+                    ->where('generos.estado','=', '1')
+                    ->where('grados.estado','=','1')
+                    ->where('personas.estado', '=','1')
+                    ->where('asignar_padre_alumnos.estado','=','1')
+                    ->where('asignar_alumnos.estado','=','1')
+                    ->where('grados.id', '=', $buscar)
+                    ->where('niveles.id', '=', $criterio)
+                    ->where('ciclos.id', '=', $idCiclo)
+                    ->where('ciclo.id','=', $idCiclo)
+                    ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','ciclos.id as idCiclo','niveles.id as idNivel','grados.id as idGrado',
+                    'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
+                    'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
+                    'padres.identificacion as identificacionPadre',  'padres.direccion as direccionPadre', 'padres.tel as telPadre',
+                    'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
+                    'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
+                    'ciclos.nombre as nombreCiclo','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
+                    'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
+                    ->orderBy('personas.apellido', 'asc')->paginate(15);  
+                }
                 
-                $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
-                ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
-                ->join('generos', 'personas.idGenero', '=', 'generos.id')
-                ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
-                ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
-                ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
-                ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
-                ->join('niveles', 'niveles.id','=','grados.idNivel')
-                ->join('secciones', 'secciones.id','=','grados.idSeccion')
-                ->join('carreras', 'carreras.id','=','grados.idCarrera')
-                ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')
-                ->where('grados.estado','=','1')
-                ->where('personas.estado', '=','1')
-                ->where('asignar_padre_alumnos.estado','=','1')
-                ->where('asignar_alumnos.estado','=','1')
-                ->where('grados.id', '=', $buscar)
-                ->where('niveles.id', '=', $criterio)
-                ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','carreras.id as idCarrera','niveles.id as idNivel','grados.id as idGrado',
-                'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
-                'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
-                'padres.identificacion as identificacionPadre', 'alumnos.anio', 'padres.direccion as direccionPadre', 'padres.tel as telPadre',
-                'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
-                'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
-                'carreras.nombre as nombreCarrera','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
-                'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
-                ->orderBy('personas.apellido', 'asc')->paginate(15);  
 
             }
         if($std == 2)
@@ -119,7 +126,7 @@ class AlumnoController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
-            $date = new Date();
+
             $persona = new Persona();
             $persona -> idGenero = $request->idGenero;
             $persona -> idTipoPersona = $request->idTipoPersona;
@@ -131,19 +138,21 @@ class AlumnoController extends Controller
             $alumno = new Alumno();
             $alumno -> idPersona = $persona->id;
             $alumno -> fechaNacimiento = $request->fechaNac;
-            $alumno -> anio = $date->year;
             $alumno -> save();
 
             $asignar = new Asignar_alumno();
             $asignar -> idAlumno = $alumno ->id;
             $asignar -> idGrado = $request->idGrado;
+            $asignar -> idCiclo = $request->idCiclo;
             $asignar -> estado = '1';
             $asignar-> save();
 
             $asigPadre = new Asignar_padre_alumno();
             $asigPadre -> idAlumno = $alumno->id;
             $asigPadre -> idPersona = $request->idPadre;
+            $asigPadre -> idCiclo = $request->idCiclo;
             $asigPadre -> save();
+
             DB::commit();
 
         }
@@ -160,7 +169,7 @@ class AlumnoController extends Controller
         if (!$request->ajax()) return redirect('/');
         try{
             DB::beginTransaction();
-            $date = new Date();
+    
             $actualizar = Persona::findOrFail($request->idPersona);
             $actualizar -> idGenero = $request->idGenero;
             $actualizar -> idTipoPersona = $request->idTipoPersona;
@@ -172,18 +181,20 @@ class AlumnoController extends Controller
 
             $actualiza = Alumno::findOrFail($request->idAlumno);
             $actualiza -> fechaNacimiento = $request->fechaNac;
-            $actualiza -> anio = $date->year;
+  
             $actualiza -> save();
 
             $actualAsignar = Asignar_alumno::findOrFail($request->idAsigAlumnoGrado);
             $actualAsignar -> idAlumno = $request->idAlumno;
             $actualAsignar -> idGrado = $request->idGrado;
+            $actualAsignar -> idCiclo = $request->idCiclo;
             $actualAsignar -> estado = '1';
             $actualAsignar-> save();
 
             $actualizarAsigPadre = Asignar_padre_alumno::findOrFail($request->idAsigPadreAlumno);
             $actualizarAsigPadre -> idAlumno = $request->idAlumno;
             $actualizarAsigPadre -> idPersona = $request->idPadre;
+            $actualizarAsigPadre -> idCiclo = $request->idCiclo;
             $actualizarAsigPadre -> save();
 
             DB::commit();

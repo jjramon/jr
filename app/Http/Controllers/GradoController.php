@@ -13,16 +13,17 @@ class GradoController extends Controller
         //
         //if (!$request->ajax()) return redirect('/');
         $criterio = $request->criterio;
-        if ($criterio ==''){
+        $buscar = $request->buscar;
+        if ($criterio != 4){
             $select = Grado::join('niveles','grados.idNivel','=','niveles.id')
             ->join('secciones','grados.idSeccion','=','secciones.id')
-            ->join('carreras','grados.idCarrera','=','carreras.id')
             ->where('secciones.estado','=','1')
             ->where('niveles.estado','=','1')
-            ->select('grados.id as idGrado', 'carreras.id as idCarrera','niveles.id as idNivel',
+            ->where('grados.idNivel', '=', $criterio)
+            ->select('grados.id as idGrado', 'niveles.id as idNivel',
             'secciones.id as idSeccion','grados.nombre as nombreGrado','niveles.nombre as nombreNivel', 
-            'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera', 'grados.estado as estadoGrado')
-            ->orderBy('niveles.id', 'asc')->paginate(8);
+            'secciones.nombre as nombreSeccion',  'grados.estado as estadoGrado')
+            ->orderBy('grados.id', 'asc')->paginate(8);
         }
         else{
             $select = Grado::join('niveles','grados.idNivel','=','niveles.id')
@@ -31,6 +32,7 @@ class GradoController extends Controller
             ->where('secciones.estado','=','1')
             ->where('niveles.estado','=','1')
             ->where('grados.idNivel', '=', $criterio)
+            ->where('carreras.id', '=', $buscar)
             ->select('grados.id as idGrado', 'carreras.id as idCarrera','niveles.id as idNivel',
             'secciones.id as idSeccion','grados.nombre as nombreGrado','niveles.nombre as nombreNivel', 
             'secciones.nombre as nombreSeccion', 'carreras.nombre as nombreCarrera', 'grados.estado as estadoGrado')
@@ -53,14 +55,25 @@ class GradoController extends Controller
     {
        // if (!$request->ajax()) return redirect('/');
         $filtro=$request->filtro;
-        $grado=Grado::join('secciones','grados.idSeccion','=','secciones.id')
-        ->join('carreras','grados.idCarrera', '=', 'carreras.id')
-        ->where('grados.estado','=','1')
-        ->where('grados.idNivel','=',$filtro)
-        ->select('grados.id as idGrado', 'carreras.id as idCarrera', 'secciones.id as idSeccion', 'grados.nombre as nombreGrado',
-        'carreras.nombre as nombreCarrera', 'secciones.nombre as nombreSeccion', 'grados.estado')
-        ->orderBy('grados.nombre' , 'asc')->get();
-
+        if($filtro != 4)
+        {
+            $grado=Grado::join('secciones','grados.idSeccion','=','secciones.id')
+            
+            ->where('grados.estado','=','1')
+            ->where('grados.idNivel','=',$filtro)
+            ->select('grados.id as idGrado', 'secciones.id as idSeccion', 'grados.nombre as nombreGrado',
+            'secciones.nombre as nombreSeccion', 'grados.estado')
+            ->orderBy('grados.id' , 'asc')->get();
+        }
+        else{
+            $grado=Grado::join('secciones','grados.idSeccion','=','secciones.id')
+            ->join('carreras','grados.idCarrera', '=', 'carreras.id')
+            ->where('grados.estado','=','1')
+            ->where('grados.idNivel','=',$filtro)
+            ->select('grados.id as idGrado', 'carreras.id as idCarrera', 'secciones.id as idSeccion', 'grados.nombre as nombreGrado',
+            'carreras.nombre as nombreCarrera', 'secciones.nombre as nombreSeccion', 'grados.estado')
+            ->orderBy('grados.id' , 'asc')->get();
+        }
         return ['grado' => $grado];
     }
 

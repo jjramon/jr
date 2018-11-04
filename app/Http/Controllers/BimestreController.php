@@ -19,10 +19,10 @@ class BimestreController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         if ($buscar ==''){
-            $dias = Bimestre::orderBy('id', 'desc')->paginate(8);
+            $dias = Bimestre::orderBy('id', 'asc')->paginate(8);
         }
         else{
-            $dias = Bimestre::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','desc')->paginate(3);
+            $dias = Bimestre::where($criterio, 'like', '%'.$buscar.'%')->orderBy('id','asc')->paginate(3);
         }
         
         return [

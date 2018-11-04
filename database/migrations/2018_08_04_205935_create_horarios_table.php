@@ -18,7 +18,6 @@ class CreateHorariosTable extends Migration
             $table->time('horario');
             $table->time('horario_salida');
             $table->integer('idDia')->unsigned();
-            $table->integer('idMateria')->unsigned();
             $table->timestamps();
             $table->boolean('estado')->default(1);
             $table->foreign('idDia')->references('id')->on('dias')->onUpdate('cascade')->onDelete('cascade');

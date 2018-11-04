@@ -12,17 +12,7 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <select class="form-control col-md-4" v-model="criterio">
-                                        <option value="nombre">Bimestre:</option>
-                                    </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarDia(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarDia(1,buscar,criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <table class="table table-bordered table-striped table-responsive-md">
                             <thead>

@@ -38,6 +38,11 @@ class CicloController extends Controller
         ];
     }
 
+    public function selectCiclo(Request $request)
+    {
+        $select = Ciclo::orderBy('id', 'asc')->get();
+        return ['ciclo'=> $select];
+    }
 
     /**
      * Store a newly created resource in storage.

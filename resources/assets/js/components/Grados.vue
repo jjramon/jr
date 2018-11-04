@@ -16,12 +16,19 @@
                             <div class="col-md-12">
                                 <div class="input-group" >
                                     
-                                        <label class="col-md-2 form-control-label" for="text-input">Tipo:</label>
-                                         <select class="form-control col-md-2" v-model="criterio">
-                                            <option value="" >Seleccione</option>
-                                            <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
-                                        </select>                                 
-                                    <button type="submit" @click="listar('', '', criterio)"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <label class="col-md-1 form-control-label" for="text-input">Nivel:</label>
+                                        <select class="form-control col-md-2" v-model="criterio">
+                                        <option value="" >Seleccione</option>
+                                        <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
+                                    </select>  
+                                    <div  class="col-md-6 form-control" v-if="criterio == 4">
+                                    <label class="form-control-label col-md-5" for="text-input">Carrera:</label>
+                                        <select class="form-control col-md-6" v-model="buscar">
+                                        <option value="" >Seleccione</option>
+                                        <option v-for="carrera in arrayCarrera" :key="carrera.id" :value="carrera.id" v-text="carrera.nombre"></option>
+                                    </select>
+                                    </div>
+                                    <button type="submit" @click="listar('', buscar, criterio)" class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
                                 </div>
                             </div>
                         </div>
@@ -32,9 +39,7 @@
                                     
                                         <th class="text-center" width="100 px">Opciones</th>
                                         <th class="text-center">Grado</th>
-                                        <th class="text-center" width="100 px">Sección</th>
-                                        <th class="text-center">Nivel</th>
-                                        <th class="text-center">Carrera</th>
+                                        <th class="text-center" width="100 px">Sección</th>                
                                         <th class="text-center">Estado</th>
                                     
                                 </tr>
@@ -60,8 +65,8 @@
                                     </td>
                                     <td  v-text="grado.nombreGrado" class="align-middle"></td>
                                     <td  v-text="grado.nombreSeccion" class="align-middle"></td>
-                                    <td  v-text="grado.nombreNivel" class="align-middle"></td>
-                                    <td  v-text="grado.nombreCarrera"  class="align-middle"></td>
+                                    
+                                    
                                     <td >
                                         
                                         <div v-if="grado.estadoGrado">
@@ -117,11 +122,11 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="form-group row" >
+                                    <div class="form-group row" v-if="idNivel == 4">
                                         <label class="col-md-3 form-control-label" for="text-input" >Carrera</label>
                                         <div class="col-md-6">
                                             <select class="form-control"  v-model="idCarrera">
-                                                <option value="1" >Aun no tiene carrera</option>
+                                                <option value="1" >Seleccione una carrera</option>
                                                 <option v-for="carrera in arrayCarrera" :key="carrera.id" :value="carrera.id" v-text="carrera.nombre"></option>
                                             </select>
                                         </div>
@@ -234,19 +239,47 @@
                 this.selectSeccion();
                 this.selectNivel();
                 this.selectCarrera();
-                let me = this;           
-                var url = '/grado?page=' + page +'&buscar='+ buscar +'&criterio='+ criterio;
-                
-                axios.get(url)
-                .then(function (response) {
-                    var respuesta = response.data;
-                    me.arrayGrado = respuesta.grado.data;
-                    me.pagination = respuesta.pagination;
+                if(this.criterio != ''){
                     
+                    let me = this;           
+                    var url = '/grado?page=' + page +'&buscar='+ buscar +'&criterio='+ criterio;
+                    
+                    axios.get(url)
+                    .then(function (response) {
+                        var respuesta = response.data;
+                        me.arrayGrado = respuesta.grado.data;
+                        me.pagination = respuesta.pagination;
+                      
+                      if(me.arrayGrado.length <1)
+                        {
+                            me.sinRegistro();
+                        }
+                    })
+                    .catch(function (error){
+                        console.log(error);
+                    });
+                }
+                else {
+                    
+                }
+            },
+            correcto(){
+                swal({
+                    position: 'top-center',
+                    type: 'success',
+                    title: 'Proceso finalizado correctamente',
+                    showConfirmButton: false,
+                    timer: 1500
                 })
-                .catch(function (error){
-                    console.log(error);
-                });
+            },
+            sinRegistro(){
+                swal({
+                    position: 'top-center',
+                    type: 'success',
+                    title: 'no se encuentran registros',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             },
             selectNivel(){
                 let me = this;
@@ -296,7 +329,10 @@
                 if(this.validar()){
                     return;
                 }
-                
+                if(this.idCarrera == 0)
+                {
+                    this.idCarrera = '';
+                }
                 let me = this;
                 axios.post('/grado/registrar',{
                     'nombre':this.nombreGrado,
@@ -414,11 +450,11 @@
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.idGrado;
-                this.idCarrera;
-                this.idNivel;
-                this.idSeccion;
-                this.nombreGrado;
+                this.idGrado=0;
+                this.idCarrera=0;
+                this.idNivel=0;
+                this.idSeccion=0;
+                this.nombreGrado='';
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
@@ -431,7 +467,7 @@
                                 this.tituloModal='Registrar grado';
                                 this.tipoAccion = 1;
                                 this.nombreGrado = "";
-                                this.idCarrera = 1;
+                                this.idCarrera = 0;
                                 this.idNivel = 0;
                                 this.idSeccion = 0;
                                 break;

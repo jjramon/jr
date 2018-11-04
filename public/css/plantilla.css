@@ -8906,10 +8906,10 @@ base-chart.chart {
 @media (min-width: 992px) {
   .brand-minimized .app-header.navbar .navbar-brand {
     width: 50px;
-    background-color: #fff;
+    background-color: #B22222;
     background-image: url("../img/logo-symbol.png");
-    background-size: 24px;
-    border-bottom: 1px solid #c2cfd6; } }
+    background-size: 50px;
+    border-bottom: 1px solid #B22222; } }
 
 .progress-xs {
   height: 4px; }

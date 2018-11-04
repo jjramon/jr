@@ -59,7 +59,7 @@
                                 <tr v-for="persona in arrayPersona" :key="persona.idPersona" class="text-center table-sm"> 
                                     <td class="align-midle ">
                                        
-                                        <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
+                                        <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
                                             <i class="icon-pencil"></i>
                                         </button>
                                             
@@ -462,6 +462,8 @@
                     'usuario':this.usuario,
                     'password':this.password
                 }).then(function(response){
+                    console.log(response.data.id);
+                    windows.open('http://localhost:8000/persona/personaPdf/' + response.data.id +'/'+ this.password+','+'_blank');
                     me.cerrarModal();
                     me.correcto();
                     me.listarPersona(1,'',this.criterio, this.std);
@@ -469,6 +471,10 @@
                 .catch(function (error){
                     console.log(error);
                 });
+            },
+            cargarPdf(id, pass){
+                console.log(id, pass);
+                windows.open('http://localhost:8000/persona/personaPdf/' + id+ pass);
             },
             actualizarPersona(){
                 if(this.validarPersona()){

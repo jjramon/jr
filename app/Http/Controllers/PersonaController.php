@@ -92,6 +92,28 @@ class PersonaController extends Controller
             'persona'=>$personas
         ];
     }
+    public function pdfPersonal($id,$pass)
+    {   
+        
+        $persona= Persona::join('users', 'personas.id', '=', 'users.idPersona')
+        ->join('rols','users.idRol', '=', 'rols.id')
+        ->join('generos', 'personas.idGenero', '=', 'generos.id')
+        ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
+        ->where('personas.id','=', $id)        
+        ->select('users.usuario', $pass,'personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 
+        'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 
+        'personas.tel', 'personas.tel2', 'personas.correo')
+        ->get();
+        $password= descript($persona[0]->password);
+        dd($password);
+        $nombre= Persona::where('personas.id','=', $id)
+        ->select( DB::raw('CONCAT(personas.nombre, " ", personas.apellido) as nombrePersona'))->get();
+        $pdf = \PDF::loadView('pdf.personalPdf', [
+            'persona' => $persona, 
+        ]);
+        return $pdf->download($nombre[0]->nombrePersona.'.pdf');
+      
+    }
     public function buscarDocente(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -167,6 +189,9 @@ class PersonaController extends Controller
 
             
                 DB::commit();
+                return[
+                    'id'=>$persona->id
+                ]
             }
             catch (Exeption $e)
             {

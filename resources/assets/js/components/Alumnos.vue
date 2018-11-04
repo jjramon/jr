@@ -16,23 +16,32 @@
                             <div class="col-md-12">
                                 <div class="input-group" >
                                     
-                                        <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"></label>
-                                          <select class="form-control"  v-model="criterio" v-on:click="selectGrado(criterio)">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
-                                            </select>
-                                        <label class="col-md-1 form-control-label" for="text-input" v-text="'Grado:'"></label>
-                                        <select class="form-control"   v-model="buscar" >
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
-                                        </select>       
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"></label>
+                                    <select class="form-control"  v-model="criterio" v-on:click="selectGrado(criterio)">
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
+                                    </select>
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Grado:'"></label>
+                                    <select class="form-control"   v-model="buscar" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option  v-if="criterio != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
+                                        <option  v-else v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                    </select>       
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'ciclo:'"></label>
+                                    <select class="form-control"   v-model="idCiclo" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
+                                        
+                                    </select> 
+                                    
                                     <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
-                                        <select class="form-control"   v-model="std" >
-                                            <option value="0" disabled>Seleccione</option>
-                                            <option value="1" v-text="'Activo'"></option>
-                                            <option value="2" v-text="'Inactivo'"></option>
-                                        </select>   
-                                    <button type="submit" @click="listarPersona(1, buscar, criterio,std)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
+                                    <select class="form-control"   v-model="std" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option value="1" v-text="'Activo'"></option>
+                                        <option value="2" v-text="'Inactivo'"></option>
+                                    </select>  
+
+                                    <button type="submit" @click="listarPersona(1, buscar, criterio,std,idCiclo)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +86,8 @@
                                     </td>
                                     <td v-text="persona.nombre + ' ' + persona.apellido" class="align-middle"></td>
                                     <td v-text="persona.identificacion" class="align-middle"></td>
-                                    <td v-text="persona.nombreNivel+ '/' +persona.nombreCarrera+' '+persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
+                                    <td v-if="persona.idNivel != 4" v-text="persona.nombreNivel+ '/' +persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
+                                    <td v-else v-text="persona.nombreNivel+ '/' +persona.nombreCarrera+' '+persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
                                     <td v-text="persona.anio"></td>
                                     <td v-text="persona.nombrePadre + ' '+persona.apellidoPadre"></td>
                                     <td v-text="persona.identificacionPadre"></td>
@@ -204,10 +214,24 @@
                                         <div class="col-md-6">
                                             <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
                                                 <option value="0" disabled>Seleccione</option>
-                                                <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                                <option  v-if="idNivel != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
+                                                <option  v-else v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
                                             </select>
                                           <input type="text" v-if="tipoAccion == 3" v-model="nombreGrado" class="form-control bg-white" disabled>
                                         </div>
+                                    </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Ciclo:</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control col-md-6"  v-if="tipoAccion == 1 || tipoAccion == 2" v-model="ciclo" >
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
+                                            </select> 
+                                            <select class="form-control col-md-6"   v-if="tipoAccion == 3" v-model="ciclo" disabled>
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
+                                            </select>
+                                        </div> 
                                     </div>
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Encargado:</label>
@@ -271,6 +295,7 @@
         data (){
             return{
                 idAlumno: 0,
+                idCiclo: 0,
                 idPersona:0,
                 idGenero: 0,
                 idTipoPersona: 0,
@@ -282,6 +307,7 @@
                 idAsigGrado:0,
                 idAsigPadreAlumno:0,
                 nombrePadre:'',
+                ciclo:'',
                 nombre: '',
                 apellido:'',
                 identificacion:'',
@@ -301,6 +327,7 @@
                 arrayTipo_persona : [],
                 arrayGenero : [],
                 arrayPadre:[],
+                arrayCiclo:[],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
@@ -351,17 +378,18 @@
             },       
         },
         methods : {
-            listarPersona(page, buscar, criterio, std){
+            listarPersona(page, buscar, criterio, std, idCiclo){
                 this.selectTypoPersona();
                 this.selectGenero();
                 this.selectNivel();
+                this.selectCiclo();
                 if(buscar==0 && criterio==0 && std==0)
                 {
                     
                 }
                 else{
                 let me = this;           
-                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio + '&std='+std;
+                var url = '/alumno?page=' + page + '&buscar=' + buscar + '&criterio='+ criterio + '&std='+std + '&idCiclo='+idCiclo;
                 
                 axios.get(url)
                 .then(function (response) {
@@ -443,6 +471,20 @@
                 console.log(error);
                 });
             },
+            selectCiclo(){
+                let me = this;   
+                var url = '/alumno/selectCiclo';
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayCiclo = respuesta.ciclo;
+                    
+                })
+                .catch(function (error){
+                console.log(error);
+                });
+            },
             cambiarPagina(page, buscar, criterio, std){
                 let me = this;
                 me.pagination.current_page = page;
@@ -464,11 +506,12 @@
                     'idTipoPersona':this.idTipoPersona,
                     'idGenero':this.idGenero,
                     'idGrado' :this.idGrado,
-                    'idPadre' :this.idPadre
+                    'idPadre' :this.idPadre,
+                    'idCiclo' :this.ciclo,
                 }).then(function(response){
                     me.correcto();
                     me.cerrarModal();
-                    me.listarPersona(1, this.buscar, this.criterio, this.std);
+                    me.listarPersona(1, this.buscar, this.criterio, this.std, this.idCiclo);
                     
                 })
                 .catch(function (error){
@@ -503,12 +546,13 @@
                     'idGrado' :this.idGrado,
                     'idPadre' :this.idPadre,
                     'idAsigAlumnoGrado' :this.idAsigGrado,
-                    'idAsigPadreAlumno' :this.idAsigPadreAlumno
+                    'idAsigPadreAlumno' :this.idAsigPadreAlumno,
+                    'idCiclo' :this.ciclo
      
                 }).then(function(response){
                     me.correcto();
                     me.cerrarModal();
-                    me.listarPersona(1,this.buscar, this.criterio, this.std);
+                    me.listarPersona(1,this.buscar, this.criterio, this.std, idCiclo);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -621,6 +665,7 @@
                 this.idAlumno =0; 
                 this.nombrePadre =""; 
                 this.identificacionPadre =""; 
+                this.ciclo=0,
                 this.idAsigGrado =0; 
                 this.idAsigPadreAlumno=0;
 
@@ -648,6 +693,7 @@
                                 this.identificacionPadre="";
                                 this.nombrePadre="";
                                 this.idPadre=0;
+                                this.ciclo=0,
                                 this.telPadre="";
                                 this.tipoAccion=1;
                                 this.filtro="";
@@ -672,6 +718,7 @@
                                 this.selectPadre(this.filtro);
                                 this.idPadre=data['idPadre'];
                                 this.idAlumno = data['idAlumno'];
+                                this.ciclo=data['idCiclo'];
                                 this.nombrePadre = data['nombrePadre']+' '+data['apellidoPadre'];
                                 this.identificacionPadre = data['identificacionPadre'];
                                 this.idAsigGrado = data['idAsignacionGrado'];

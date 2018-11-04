@@ -87,7 +87,7 @@
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Personas</a>
                         </li>
                         <li @click="menu = 14" class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Alumno</a>
+                            <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Inscripción</a>
                         </li>
                         <li @click="menu = 15" class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i>Asignar padres</a>
