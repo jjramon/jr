@@ -92,7 +92,7 @@ Route::put('/persona/activarUsuario', 'PersonaController@activarUsuario');
 Route::get('/persona/selectRol', 'RolController@selectRol');
 Route::get('/persona/selectTipoPersona', 'Tipo_personaController@selectTipoPersona');
 Route::get('/persona/selectGenero', 'GeneroController@selectGenero');
-Route::get('/persona/personaPdf/{id}/{pass}','PersonaController@pdfPersonal')->name('personal_pdf');
+Route::get('/persona/personaPdf/{id}','PersonaController@pdfPersonal')->name('personal_pdf');
 
 Route::get('/alumno','AlumnoController@index');
 Route::post('/alumno/registrar', 'AlumnoController@store');
@@ -103,6 +103,7 @@ Route::get('/alumno/selectTipoPersona', 'AlumnoController@selectTipoPersona');
 Route::get('/alumno/selectGenero', 'AlumnoController@selectGenero');
 Route::get('/alumno/selectGrado', 'GradoController@selectGrado');
 Route::get('/alumno/selectCiclo', 'CicloController@selectCiclo');
+Route::post('/alumno/reinscripcion', 'AlumnoController@reinscripcion');
 
 Route::get('/user','UserController@index');
 Route::post('/user/registrar', 'UserController@store');
@@ -145,6 +146,8 @@ Route::get('/asignarmateria/selectNivel','Asignar_MateriaController@selectNivel'
 Route::get('/asignarmateria/selectMateria','Asignar_MateriaController@selectMateria');
 Route::post('/asignarmateria/registrar', 'Asignar_MateriaController@store');
 Route::put('/asignarmateria/actualizar', 'Asignar_MateriaController@update');
+Route::put('/asignarmateria/activar', 'Asignar_MateriaController@activar');
+Route::put('/asignarmateria/desactivar', 'Asignar_MateriaController@desactivar');
 
 
 Route::get('/asignar-alumnos','Asignar_alumnoController@index');

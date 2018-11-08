@@ -46,7 +46,6 @@ class AlumnoController extends Controller
                     ->where('grados.id', '=', $buscar)
                     ->where('niveles.id', '=', $criterio)
                     ->where('ciclos.id', '=', $idCiclo)
-                    ->where('ciclo.id','=', $idCiclo)
                     ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','ciclos.id as idCiclo','niveles.id as idNivel','grados.id as idGrado',
                     'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
                     'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
@@ -56,41 +55,116 @@ class AlumnoController extends Controller
                     'ciclos.nombre as nombreCiclo','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
                     'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
                     ->orderBy('personas.apellido', 'asc')->paginate(15);  
+                    
                 }
-                
+                if($criterio == 4)
+                {
+                    $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
+                    ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
+                    ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                    ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
+                    ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
+                    ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
+                    ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
+                    ->join('niveles', 'niveles.id','=','grados.idNivel')
+                    ->join('carreras', 'carreras.id', '=', 'grados.idCarrera')
+                    ->join('secciones', 'secciones.id','=','grados.idSeccion')
+                    ->join('ciclos', 'ciclos.id','=','asignar_padre_alumnos.idCiclo')
+                    ->join('ciclos as ciclo', 'ciclo.id','=','asignar_alumnos.idCiclo')
+                    ->where('tipo_personas.estado','=', '1')
+                    ->where('generos.estado','=', '1')
+                    ->where('grados.estado','=','1')
+                    ->where('personas.estado', '=','1')
+                    ->where('asignar_padre_alumnos.estado','=','1')
+                    ->where('asignar_alumnos.estado','=','1')
+                    ->where('grados.id', '=', $buscar)
+                    ->where('niveles.id', '=', $criterio)
+                    ->where('ciclos.id', '=', $idCiclo)
+                    ->select('asignar_alumnos.id as idAsignacionGrado', 'carreras.id as idCarrera', 'secciones.id as idSeccion','ciclos.id as idCiclo','niveles.id as idNivel','grados.id as idGrado',
+                    'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
+                    'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
+                    'padres.identificacion as identificacionPadre',  'padres.direccion as direccionPadre', 'padres.tel as telPadre',
+                    'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
+                    'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
+                    'ciclos.nombre as nombreCiclo', 'carreras.nombre as nombreCarrera', 'secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
+                    'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
+                    ->orderBy('personas.apellido', 'asc')->paginate(15);  
+                    
+                }
 
             }
         if($std == 2)
             {
-                $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
-                ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
-                ->join('generos', 'personas.idGenero', '=', 'generos.id')
-                ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
-                ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
-                ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
-                ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
-                ->join('niveles', 'niveles.id','=','grados.idNivel')
-                ->join('secciones', 'secciones.id','=','grados.idSeccion')
-                ->join('carreras', 'carreras.id','=','grados.idCarrera')
-                ->where('tipo_personas.estado','=', '1')
-                ->where('generos.estado','=', '1')
-                ->where('grados.estado','=','1')
-                ->where('personas.estado', '=','0')
-                ->where('asignar_padre_alumnos.estado','=','0')
-                ->where('asignar_alumnos.estado','=','0')
-                ->where('grados.id', '=', $buscar)
-                ->where('niveles.id', '=', $criterio)
-                ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','carreras.id as idCarrera','niveles.id as idNivel','grados.id as idGrado',
-                'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
-                'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
-                'padres.identificacion as identificacionPadre', 'padres.direccion as direccionPadre', 'padres.tel as telPadre',
-                'personas.nombre', 'personas.apellido', 'alumnos.anio', 'generos.genero as nombreGenero', 'personas.identificacion', 
-                'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
-                'carreras.nombre as nombreCarrera','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
-                'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
-                ->orderBy('personas.apellido', 'asc')->paginate(15);         
+                if($criterio != 4)
+                {
+                    $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
+                    ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
+                    ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                    ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
+                    ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
+                    ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
+                    ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
+                    ->join('niveles', 'niveles.id','=','grados.idNivel')
+                    ->join('secciones', 'secciones.id','=','grados.idSeccion')
+                    ->join('ciclos', 'ciclos.id','=','asignar_padre_alumnos.idCiclo')
+                    ->join('ciclos as ciclo', 'ciclo.id','=','asignar_alumnos.idCiclo')
+                    ->where('tipo_personas.estado','=', '1')
+                    ->where('generos.estado','=', '1')
+                    ->where('grados.estado','=','1')
+                    ->where('personas.estado', '=','0')
+                    ->where('asignar_padre_alumnos.estado','=','0')
+                    ->where('asignar_alumnos.estado','=','0')
+                    ->where('grados.id', '=', $buscar)
+                    ->where('niveles.id', '=', $criterio)
+                    ->where('ciclos.id', '=', $idCiclo)
+                    ->select('asignar_alumnos.id as idAsignacionGrado','secciones.id as idSeccion','ciclos.id as idCiclo','niveles.id as idNivel','grados.id as idGrado',
+                    'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
+                    'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
+                    'padres.identificacion as identificacionPadre',  'padres.direccion as direccionPadre', 'padres.tel as telPadre',
+                    'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
+                    'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
+                    'ciclos.nombre as nombreCiclo','secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
+                    'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
+                    ->orderBy('personas.apellido', 'asc')->paginate(15);  
+                    
+                }
+                if($criterio == 4)
+                {
+                    $leer = Alumno::join('personas', 'alumnos.idPersona', '=', 'personas.id')
+                    ->join('tipo_personas', 'personas.idTipoPersona', '=', 'tipo_personas.id')
+                    ->join('generos', 'personas.idGenero', '=', 'generos.id')
+                    ->join('asignar_padre_alumnos', 'alumnos.id', '=', 'asignar_padre_alumnos.idAlumno')
+                    ->join('personas as padres', 'asignar_padre_alumnos.idPersona','=','padres.id')
+                    ->join('asignar_alumnos', 'alumnos.id', '=', 'asignar_alumnos.idAlumno')
+                    ->join('grados', 'asignar_alumnos.idGrado','=','grados.id')
+                    ->join('niveles', 'niveles.id','=','grados.idNivel')
+                    ->join('carreras', 'carreras.id', '=', 'grados.idCarrera')
+                    ->join('secciones', 'secciones.id','=','grados.idSeccion')
+                    ->join('ciclos', 'ciclos.id','=','asignar_padre_alumnos.idCiclo')
+                    ->join('ciclos as ciclo', 'ciclo.id','=','asignar_alumnos.idCiclo')
+                    ->where('tipo_personas.estado','=', '1')
+                    ->where('generos.estado','=', '1')
+                    ->where('grados.estado','=','1')
+                    ->where('personas.estado', '=','0')
+                    ->where('asignar_padre_alumnos.estado','=','0')
+                    ->where('asignar_alumnos.estado','=','0')
+                    ->where('grados.id', '=', $buscar)
+                    ->where('niveles.id', '=', $criterio)
+                    ->where('ciclos.id', '=', $idCiclo)
+                    ->select('asignar_alumnos.id as idAsignacionGrado', 'carreras.id as idCarrera', 'secciones.id as idSeccion','ciclos.id as idCiclo','niveles.id as idNivel','grados.id as idGrado',
+                    'generos.id as idGenero','tipo_personas.id as idTipoPersona', 'alumnos.id as idAlumno', 'personas.id as idPersona',
+                    'padres.id as idPadre', 'asignar_padre_alumnos.id as idAsigPadreAlumno','padres.nombre as nombrePadre','padres.apellido as apellidoPadre', 
+                    'padres.identificacion as identificacionPadre',  'padres.direccion as direccionPadre', 'padres.tel as telPadre',
+                    'personas.nombre', 'personas.apellido', 'generos.genero as nombreGenero', 'personas.identificacion', 
+                    'tipo_personas.nombre as nombreTipoPersona', 'grados.nombre as nombreGrado','niveles.nombre as nombreNivel',
+                    'ciclos.nombre as nombreCiclo', 'carreras.nombre as nombreCarrera', 'secciones.nombre as nombreSeccion','alumnos.fechaNacimiento as fechaNac',
+                    'personas.estado as estadoPersona', 'asignar_padre_alumnos.estado as estadoAsigPadreAlumno', 'asignar_alumnos.estado as estadoGrado')
+                    ->orderBy('personas.apellido', 'asc')->paginate(15);  
+                    
+                }
+                 
             }       
-      
+            
         return [
             'pagination'=> [
                 'total'         =>  $leer ->total(),
@@ -162,6 +236,31 @@ class AlumnoController extends Controller
         }
     }
     
+    public function reinscripcion(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        try{
+            DB::beginTransaction();
+            $asignar = new Asignar_alumno();
+            $asignar -> idAlumno = $request->idAlumno;
+            $asignar -> idGrado = $request->idGrado;
+            $asignar -> idCiclo = $request->idCiclo;
+            $asignar -> estado = '1';
+            $asignar-> save();
+
+            $asigPadre = new Asignar_padre_alumno();
+            $asigPadre -> idAlumno = $request->idAlumno;
+            $asigPadre -> idPersona = $request->idPadre;
+            $asigPadre -> idCiclo = $request->idCiclo;
+            $asigPadre -> save();
+            DB::commit();
+
+        }
+        catch (Exeption $e)
+        {
+            DB::rollBack();
+        }
+    }
     
     public function update(Request $request)
     {

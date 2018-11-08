@@ -42158,6 +42158,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -42201,8 +42204,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             criterio: '',
             buscar: '',
             tipoBusqueda: '',
-            std: ''
-
+            std: '',
+            idpdf: 0
         };
     },
 
@@ -42296,7 +42299,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 timer: 1500
             });
         },
-        registrarPersona: function registrarPersona() {
+        registrarPersona: function registrarPersona(buscar, criterio, std) {
             if (this.validarPersona()) {
                 return;
             }
@@ -42315,18 +42318,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'usuario': this.usuario,
                 'password': this.password
             }).then(function (response) {
-                console.log(response.data.id);
-                windows.open('http://localhost:8000/persona/personaPdf/' + response.data.id + '/' + this.password + ',' + '_blank');
+                window.open('http://localhost:8000/persona/personaPdf/' + response.data.id);
                 me.cerrarModal();
                 me.correcto();
-                me.listarPersona(1, '', this.criterio, this.std);
+                me.listarPersona(1, '', criterio, std);
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        cargarPdf: function cargarPdf(id, pass) {
-            console.log(id, pass);
-            windows.open('http://localhost:8000/persona/personaPdf/' + id + pass);
+        cargarPdf: function cargarPdf(id) {
+
+            window.open('http://localhost:8000/persona/personaPdf/' + id + ',' + 'on_blanck');
         },
         actualizarPersona: function actualizarPersona() {
             if (this.validarPersona()) {
@@ -42350,6 +42352,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'usuario': this.usuario,
                 'password': this.password
             }).then(function (response) {
+                console.log(response.data.id);
+                window.open('http://localhost:8000/persona/personaPdf/' + response.data.id + ',' + 'on_blanck');
                 me.cerrarModal();
                 me.correcto();
                 me.listarPersona(1, '', this.criterio, this.std);
@@ -42953,7 +42957,23 @@ var render = function() {
                                   },
                                   [_c("i", { staticClass: "icon-check" })]
                                 )
-                              ]
+                              ],
+                          _c("br"),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-sm ",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  _vm.cargarPdf(persona.idPersona)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "icon-doc" })]
+                          )
                         ],
                         2
                       ),
@@ -44775,6 +44795,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -44949,13 +44973,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio, std) {
+        cambiarPagina: function cambiarPagina(page, buscar, criterio, std, idCiclo) {
             var me = this;
             me.pagination.current_page = page;
-            me.listarPersona(page, buscar, criterio, std);
+            me.listarPersona(page, buscar, criterio, std, idCiclo);
         },
         registrarPersona: function registrarPersona() {
-            console.log(this.buscar, this.criterio, this.std);
+
             if (this.validarPersona()) {
                 return;
             }
@@ -44972,6 +44996,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'idGrado': this.idGrado,
                 'idPadre': this.idPadre,
                 'idCiclo': this.ciclo
+            }).then(function (response) {
+                me.correcto();
+                me.cerrarModal();
+                me.listarPersona(1, this.buscar, this.criterio, this.std, this.idCiclo);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        registPersona: function registPersona() {
+            console.log(this.idAlumno, this.idPadre, this.idGrado, this.ciclo);
+            var me = this;
+            axios.post('/alumno/reinscripcion', {
+
+                'idAlumno': this.idAlumno,
+                'idPadre': this.idPadre,
+                'idGrado': this.idGrado,
+                'idCiclo': this.ciclo
+
             }).then(function (response) {
                 me.correcto();
                 me.cerrarModal();
@@ -45019,7 +45061,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        desactivar: function desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std) {
+        desactivar: function desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std, idCiclo) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -45043,7 +45085,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         'idAsigGrado': idAsigGrado,
                         'idAsigPadreAlumno': idAsigPadreAlumno
                     }).then(function (response) {
-                        me.listarPersona(1, buscar, criterio, std);
+                        me.listarPersona(1, buscar, criterio, std, idCiclo);
                         swalWithBootstrapButtons('Descativado!', 'el registro se a desactivado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -45051,7 +45093,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
-        activar: function activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std) {
+        activar: function activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std, idCiclo) {
             var _this2 = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -45076,7 +45118,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         'idAsigPadreAlumno': idAsigPadreAlumno
                     }).then(function (response) {
 
-                        me.listarPersona(1, buscar, criterio, std);
+                        me.listarPersona(1, buscar, criterio, std, idCiclo);
                         swalWithBootstrapButtons('Ativado!', 'el registro se activado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -45171,7 +45213,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                 }
                             case 'visualizar':
                                 {
-
+                                    console.log(data['idNivel']);
                                     this.modal = 1;
                                     this.tituloModal = "Visualizar datos";
                                     this.tipoAccion = 3;
@@ -45179,7 +45221,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.apellido = data['apellido'];
                                     this.identificacion = data['identificacion'];
                                     this.nombreNivel = data['nombreNivel'];
-                                    this.nombreGrado = data['nombreGrado'] + '/' + data['nombreSeccion'] + '/' + data['nombreCarrera'];
+                                    if (data['idNivel'] == 4) {
+                                        this.nombreGrado = data['nombreGrado'] + '/' + data['nombreSeccion'] + '/' + data['nombreCarrera'];
+                                    }
+                                    if (data['idNivel'] != 4) {
+                                        this.nombreGrado = data['nombreGrado'] + '/' + data['nombreSeccion'];
+                                    }
                                     this.idGenero = data['idGenero'];
                                     this.nombreTPersona = data['nombreTipoPersona'];
                                     this.fechaNac = data['fechaNac'];
@@ -45187,9 +45234,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.identificacionPadre = data['identificacionPadre'];
                                     this.direccionPadre = data['direccionPadre'];
                                     this.telPadre = data['telPadre'];
+                                    this.ciclo = data['idCiclo'];
 
                                     break;
                                 }
+                            case 'reinscripcion':
+                                {
+                                    this.modal = 1;
+                                    this.tituloModal = "reinscribir alumno";
+                                    this.tipoAccion = 4;
+                                    this.nombre = data['nombre'];
+                                    this.apellido = data['apellido'];
+                                    this.identificacion = data['identificacion'];
+                                    this.idNivel = data['idNivel'];
+                                    this.selectGrado(this.idNivel);
+                                    this.idGrado = data['idGrado'];
+                                    this.idPersona = data['idPersona'];
+                                    this.filtro = data['nombrePadre'];
+                                    this.selectPadre(this.filtro);
+                                    this.idPadre = data['idPadre'];
+                                    this.idAlumno = data['idAlumno'];
+                                    this.ciclo = data['idCiclo'];
+                                    this.nombrePadre = data['nombrePadre'] + ' ' + data['apellidoPadre'];
+                                    this.identificacionPadre = data['identificacionPadre'];
+                                    this.idAsigGrado = data['idAsignacionGrado'];
+                                    this.idAsigPadreAlumno = data['idAsigPadreAlumno'];
+
+                                    break;
+                                }
+
                         }
                     }
             }
@@ -45531,6 +45604,24 @@ var render = function() {
                             [_c("i", { staticClass: "icon-pencil" })]
                           ),
                           _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-info btn-sm ",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  _vm.abrirModal(
+                                    "persona",
+                                    "reinscripcion",
+                                    persona
+                                  )
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-repeat" })]
+                          ),
+                          _vm._v(" "),
                           persona.estadoPersona == 1 &&
                           persona.estadoAsigPadreAlumno == 1 &&
                           persona.estadoGrado == 1
@@ -45629,10 +45720,12 @@ var render = function() {
                           }),
                       _vm._v(" "),
                       _c("td", {
-                        domProps: { textContent: _vm._s(persona.anio) }
+                        staticClass: "align-middle",
+                        domProps: { textContent: _vm._s(persona.nombreCiclo) }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: {
                           textContent: _vm._s(
                             persona.nombrePadre + " " + persona.apellidoPadre
@@ -45641,12 +45734,14 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: {
                           textContent: _vm._s(persona.identificacionPadre)
                         }
                       }),
                       _vm._v(" "),
                       _c("td", {
+                        staticClass: "align-middle",
                         domProps: {
                           textContent: _vm._s(persona.direccionPadre)
                         }
@@ -45859,7 +45954,9 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                          _vm.tipoAccion == 1 ||
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c(
                                 "select",
                                 {
@@ -45979,7 +46076,7 @@ var render = function() {
                               })
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.tipoAccion == 3
+                          _vm.tipoAccion == 3 || _vm.tipoAccion == 4
                             ? _c("input", {
                                 directives: [
                                   {
@@ -46044,7 +46141,7 @@ var render = function() {
                               })
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.tipoAccion == 3
+                          _vm.tipoAccion == 3 || _vm.tipoAccion == 4
                             ? _c("input", {
                                 directives: [
                                   {
@@ -46109,7 +46206,7 @@ var render = function() {
                               })
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.tipoAccion == 3
+                          _vm.tipoAccion == 3 || _vm.tipoAccion == 4
                             ? _c("input", {
                                 directives: [
                                   {
@@ -46136,14 +46233,16 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-md-3 form-control-label",
-                            attrs: { for: "text-input" }
-                          },
-                          [_vm._v("Fecha de Nacimiento:")]
-                        ),
+                        _vm.tipoAccion != 4
+                          ? _c(
+                              "label",
+                              {
+                                staticClass: "col-md-3 form-control-label",
+                                attrs: { for: "text-input" }
+                              },
+                              [_vm._v("Fecha de Nacimiento:")]
+                            )
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9" }, [
                           _vm.tipoAccion == 1 || _vm.tipoAccion == 2
@@ -46200,125 +46299,133 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-md-3 form-control-label",
-                            attrs: { for: "text-input" }
-                          },
-                          [_vm._v("Genero:")]
-                        ),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
-                            ? _c(
-                                "select",
-                                {
-                                  directives: [
+                      _vm.tipoAccion != 4
+                        ? _c("div", { staticClass: "form-group row" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "col-md-3 form-control-label",
+                                attrs: { for: "text-input" }
+                              },
+                              [_vm._v("Genero:")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                                ? _c(
+                                    "select",
                                     {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.idGenero,
-                                      expression: "idGenero"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.idGenero = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    }
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "option",
-                                    { attrs: { value: "0", disabled: "" } },
-                                    [_vm._v("Seleccione")]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.arrayGenero, function(genero) {
-                                    return _c("option", {
-                                      key: genero.id,
-                                      domProps: {
-                                        value: genero.id,
-                                        textContent: _vm._s(genero.genero)
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.idGenero,
+                                          expression: "idGenero"
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      on: {
+                                        change: function($event) {
+                                          var $$selectedVal = Array.prototype.filter
+                                            .call(
+                                              $event.target.options,
+                                              function(o) {
+                                                return o.selected
+                                              }
+                                            )
+                                            .map(function(o) {
+                                              var val =
+                                                "_value" in o
+                                                  ? o._value
+                                                  : o.value
+                                              return val
+                                            })
+                                          _vm.idGenero = $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        }
                                       }
-                                    })
-                                  })
-                                ],
-                                2
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.tipoAccion == 3
-                            ? _c(
-                                "select",
-                                {
-                                  directives: [
+                                    },
+                                    [
+                                      _c(
+                                        "option",
+                                        { attrs: { value: "0", disabled: "" } },
+                                        [_vm._v("Seleccione")]
+                                      ),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.arrayGenero, function(genero) {
+                                        return _c("option", {
+                                          key: genero.id,
+                                          domProps: {
+                                            value: genero.id,
+                                            textContent: _vm._s(genero.genero)
+                                          }
+                                        })
+                                      })
+                                    ],
+                                    2
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.tipoAccion == 3
+                                ? _c(
+                                    "select",
                                     {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.idGenero,
-                                      expression: "idGenero"
-                                    }
-                                  ],
-                                  staticClass: "form-control bg-white",
-                                  attrs: { disabled: "" },
-                                  on: {
-                                    change: function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.idGenero = $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    }
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "option",
-                                    { attrs: { value: "0", disabled: "" } },
-                                    [_vm._v("Seleccione")]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.arrayGenero, function(genero) {
-                                    return _c("option", {
-                                      key: genero.id,
-                                      domProps: {
-                                        value: genero.id,
-                                        textContent: _vm._s(genero.genero)
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.idGenero,
+                                          expression: "idGenero"
+                                        }
+                                      ],
+                                      staticClass: "form-control bg-white",
+                                      attrs: { disabled: "" },
+                                      on: {
+                                        change: function($event) {
+                                          var $$selectedVal = Array.prototype.filter
+                                            .call(
+                                              $event.target.options,
+                                              function(o) {
+                                                return o.selected
+                                              }
+                                            )
+                                            .map(function(o) {
+                                              var val =
+                                                "_value" in o
+                                                  ? o._value
+                                                  : o.value
+                                              return val
+                                            })
+                                          _vm.idGenero = $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        }
                                       }
-                                    })
-                                  })
-                                ],
-                                2
-                              )
-                            : _vm._e()
-                        ])
-                      ]),
+                                    },
+                                    [
+                                      _c(
+                                        "option",
+                                        { attrs: { value: "0", disabled: "" } },
+                                        [_vm._v("Seleccione")]
+                                      ),
+                                      _vm._v(" "),
+                                      _vm._l(_vm.arrayGenero, function(genero) {
+                                        return _c("option", {
+                                          key: genero.id,
+                                          domProps: {
+                                            value: genero.id,
+                                            textContent: _vm._s(genero.genero)
+                                          }
+                                        })
+                                      })
+                                    ],
+                                    2
+                                  )
+                                : _vm._e()
+                            ])
+                          ])
+                        : _vm._e(),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group row" }, [
                         _c(
@@ -46331,7 +46438,9 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-6 input-group" }, [
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                          _vm.tipoAccion == 1 ||
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c(
                                 "select",
                                 {
@@ -46425,7 +46534,8 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-6" }, [
                           (_vm.idNivel != 0 && _vm.tipoAccion == 1) ||
-                          _vm.tipoAccion == 2
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c(
                                 "select",
                                 {
@@ -46535,7 +46645,9 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-6" }, [
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                          _vm.tipoAccion == 1 ||
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c(
                                 "select",
                                 {
@@ -46600,7 +46712,8 @@ var render = function() {
                                       expression: "ciclo"
                                     }
                                   ],
-                                  staticClass: "form-control col-md-6",
+                                  staticClass:
+                                    "form-control col-md-6  bg-white",
                                   attrs: { disabled: "" },
                                   on: {
                                     change: function($event) {
@@ -46655,7 +46768,9 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-9 input-group" }, [
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                          _vm.tipoAccion == 1 ||
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c("input", {
                                 directives: [
                                   {
@@ -46694,7 +46809,9 @@ var render = function() {
                               })
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                          _vm.tipoAccion == 1 ||
+                          _vm.tipoAccion == 2 ||
+                          _vm.tipoAccion == 4
                             ? _c(
                                 "select",
                                 {
@@ -46909,6 +47026,22 @@ var render = function() {
                       )
                     : _vm._e(),
                   _vm._v(" "),
+                  _vm.tipoAccion == 4
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              _vm.registPersona()
+                            }
+                          }
+                        },
+                        [_vm._v("Guardar")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
                   _vm.tipoAccion == 2
                     ? _c(
                         "button",
@@ -46940,7 +47073,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", { staticClass: "table-primary" }, [
-        _c("th", { staticClass: "text-center", attrs: { width: "100 px" } }, [
+        _c("th", { staticClass: "text-center", attrs: { width: "150 px" } }, [
           _vm._v("Opciones")
         ]),
         _vm._v(" "),
@@ -53243,6 +53376,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -53251,6 +53401,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         return _ref = {
             idAsignacion: 0,
+            idCiclo: 0,
             idGrado: 0,
             idNivel: 0,
             idMateria: 0,
@@ -53259,6 +53410,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             arrayGrado: [],
             nombreGrado: '',
             nombreMateria: '',
+            ciclo: 0,
             arrayNivel: [],
             nombreNivel: ''
         }, _defineProperty(_ref, 'idGrado', 0), _defineProperty(_ref, 'modal', 0), _defineProperty(_ref, 'tituloModal', ''), _defineProperty(_ref, 'tipoAccion', 0), _defineProperty(_ref, 'errorPersona', 0), _defineProperty(_ref, 'errorMostrarMsPersona', []), _defineProperty(_ref, 'pagination', {
@@ -53268,7 +53420,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             'last_page': 0,
             'from': 0,
             'to': 0
-        }), _defineProperty(_ref, 'offset', 3), _defineProperty(_ref, 'criterio', ''), _defineProperty(_ref, 'buscar', ''), _defineProperty(_ref, 'tipoBusqueda', ''), _defineProperty(_ref, 'listado', 1), _defineProperty(_ref, 'filtro', ''), _defineProperty(_ref, 'filtro2', ''), _defineProperty(_ref, 'std', 0), _defineProperty(_ref, 'idAsig', ''), _defineProperty(_ref, 'arrayGrd', []), _defineProperty(_ref, 'arrayMtr', ""), _defineProperty(_ref, 'ideMtr', ''), _defineProperty(_ref, 'ciclo', ''), _defineProperty(_ref, 'arrayCiclo', []), _ref;
+        }), _defineProperty(_ref, 'offset', 3), _defineProperty(_ref, 'criterio', 0), _defineProperty(_ref, 'buscar', 0), _defineProperty(_ref, 'std', 0), _defineProperty(_ref, 'tipoBusqueda', ''), _defineProperty(_ref, 'listado', 1), _defineProperty(_ref, 'filtro', ''), _defineProperty(_ref, 'filtro2', ''), _defineProperty(_ref, 'std', 0), _defineProperty(_ref, 'idAsig', ''), _defineProperty(_ref, 'arrayGrd', []), _defineProperty(_ref, 'arrayMtr', ""), _defineProperty(_ref, 'ideMtr', ''), _defineProperty(_ref, 'ciclo', ''), _defineProperty(_ref, 'arrayCiclo', []), _defineProperty(_ref, 'cnd', 0), _defineProperty(_ref, 'filtro', ''), _ref;
     },
 
     components: {
@@ -53299,13 +53451,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
     },
     methods: {
-        listarPersona: function listarPersona(page, criterio, buscar, std) {
+        listarPersona: function listarPersona(page, criterio, buscar, std, idCiclo) {
             this.selectNivel();
             this.selectMateria();
+            this.selectCiclo();
 
             if (criterio != 0 && criterio != '' || buscar != 0 && buscar != '') {
                 var me = this;
-                var url = '/asignarmateria?page=' + page + '&criterio=' + criterio + '&buscar=' + buscar + '&std=' + std;
+                var url = '/asignarmateria?page=' + page + '&criterio=' + criterio + '&buscar=' + buscar + '&std=' + std + '&idCiclo=' + idCiclo;
 
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
@@ -53320,10 +53473,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
             }
         },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio, std) {
+        cambiarPagina: function cambiarPagina(page, criterio, buscar, std, idCiclo) {
             var me = this;
             me.pagination.current_page = page;
-            me.listarPersona(page, buscar, criterio, std);
+            me.listarPersona(page, criterio, buscar, std, idCiclo);
         },
         selectNivel: function selectNivel() {
             var me = this;
@@ -53332,6 +53485,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 var respuesta = response.data;
                 me.arrayNivel = respuesta.nivel;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        selectCiclo: function selectCiclo() {
+            var me = this;
+            var url = '/alumno/selectCiclo';
+            axios.get(url).then(function (response) {
+
+                var respuesta = response.data;
+                me.arrayCiclo = respuesta.ciclo;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -53361,7 +53525,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         getDatosMateria: function getDatosMateria(materia) {
             this.idMateria = materia.idMateria;
         },
-        registrarPersona: function registrarPersona() {
+        registrarPersona: function registrarPersona(buscar, criterio, std, idCiclo) {
             var _this = this;
 
             var _loop = function _loop() {
@@ -53370,11 +53534,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 var me = _this;
                 axios.post('/asignarmateria/registrar', {
                     'idGrado': _this.idGrado,
-                    'idMateria': _this.idMtr
+                    'idMateria': _this.idMtr,
+                    'idCiclo': _this.ciclo
                 }).then(function (response) {
+                    me.listarPersona('1', buscar, criterio, std, idCiclo);
                     me.cerrarModal();
-                    me.listarPersona(1, '', '');
-                    me.correcto();
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -53386,7 +53550,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         correcto: function correcto() {
             swal({
-                position: 'top-center',
                 type: 'success',
                 title: 'Proceso finalizado correctamente',
                 showConfirmButton: false,
@@ -53395,29 +53558,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         sinRegistro: function sinRegistro() {
             swal({
-                position: 'top-center',
+
                 type: 'success',
                 title: 'no se encuentran registros',
                 showConfirmButton: false,
                 timer: 1500
             });
         },
-        actualizarPersona: function actualizarPersona() {
+        actualizarPersona: function actualizarPersona(buscar, criterio, std, idCiclo) {
             this.ideMtr = this.idMateria['id'];
             var me = this;
             axios.put('/asignarmateria/actualizar', {
                 'id': this.idAsignacion,
                 'idGrado': this.idGrado,
-                'idMateria': this.ideMtr
+                'idMateria': this.ideMtr,
+                'idCiclo': this.ciclo
             }).then(function (response) {
                 me.cerrarModal();
-
+                me.listarPersona('1', buscar, criterio, std, idCiclo);
                 me.correcto();
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        desactivar: function desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std) {
+        desactivar: function desactivar(id, criterio, buscar, std, idCiclo) {
             var _this2 = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -53436,12 +53600,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }).then(function (result) {
                 if (result.value) {
                     var _me = _this2;
-                    axios.put('/alumno/desactivar', {
-                        'idPersona': idPersona,
-                        'idAsigGrado': idAsigGrado,
-                        'idAsigPadreAlumno': idAsigPadreAlumno
+                    axios.put('/asignarmateria/desactivar', {
+                        'idAsig': id
                     }).then(function (response) {
-                        _me.listarPersona(1, buscar, criterio, std);
+                        _me.listarPersona(1, criterio, buscar, std, idCiclo);
                         swalWithBootstrapButtons('Descativado!', 'el registro se a desactivado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -53449,7 +53611,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }
             });
         },
-        activar: function activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std) {
+        activar: function activar(id, criterio, buscar, std, idCiclo) {
             var _this3 = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -53468,13 +53630,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }).then(function (result) {
                 if (result.value) {
                     var _me2 = _this3;
-                    axios.put('/alumno/activar', {
-                        'idPersona': idPersona,
-                        'idAsigGrado': idAsigGrado,
-                        'idAsigPadreAlumno': idAsigPadreAlumno
+                    axios.put('/asignarmateria/activar', {
+                        'idAsig': id
                     }).then(function (response) {
-
-                        _me2.listarPersona(1, buscar, criterio, std);
+                        _me2.listarPersona(1, criterio, buscar, std, idCiclo);
                         swalWithBootstrapButtons('Ativado!', 'el registro se activado.');
                     });
                 } else if (result.dismiss === swal.DismissReason.cancel) {
@@ -53502,6 +53661,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             this.filtro = "";
             this.idMateria = [];
             this.idMtr = [];
+            this.ciclo = 0;
         },
         abrirModal: function abrirModal(modelo, accion) {
             var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -53513,9 +53673,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             case 'registrar':
                                 {
                                     this.modal = 1;
-                                    this.tituloModal = 'Registrar alumno';
+                                    this.tituloModal = 'Registrar asignación';
                                     this.idGrado = 0;
                                     this.idNivel = 0;
+                                    this.ciclo = 0;
                                     this.idMateria = '';
                                     this.tipoAccion = 1;
                                     this.filtro = "";
@@ -53530,6 +53691,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                     this.idNivel = data['idNivel'];
                                     this.idGrado = data['idGrado'];
                                     this.idMateria = data['nombreMateria'];
+                                    this.ciclo = data['idCiclo'];
 
                                     break;
                                 }
@@ -53557,7 +53719,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v("Alumnos\n                    "),
+          _vm._v("Asignar Materias a Grados\n                    "),
           _c(
             "button",
             {
@@ -53675,17 +53837,81 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _vm._l(_vm.arrayGrado, function(grado) {
+                      return _vm.criterio != 4
+                        ? _c("option", {
+                            key: grado.idGrado,
+                            domProps: {
+                              value: grado.idGrado,
+                              textContent: _vm._s(
+                                grado.nombreGrado + "/" + grado.nombreSeccion
+                              )
+                            }
+                          })
+                        : _vm._l(_vm.arrayGrado, function(grado) {
+                            return _c("option", {
+                              key: grado.idGrado,
+                              domProps: {
+                                value: grado.idGrado,
+                                textContent: _vm._s(
+                                  grado.nombreGrado +
+                                    "/" +
+                                    grado.nombreSeccion +
+                                    " " +
+                                    grado.nombreCarrera
+                                )
+                              }
+                            })
+                          })
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("label", {
+                  staticClass: "col-md-1 form-control-label",
+                  attrs: { for: "text-input" },
+                  domProps: { textContent: _vm._s("ciclo:") }
+                }),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.idCiclo,
+                        expression: "idCiclo"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.idCiclo = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "0", disabled: "" } }, [
+                      _vm._v("Seleccione")
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.arrayCiclo, function(ciclo) {
                       return _c("option", {
-                        key: grado.idGrado,
+                        key: ciclo.id,
                         domProps: {
-                          value: grado.idGrado,
-                          textContent: _vm._s(
-                            grado.nombreGrado +
-                              "/" +
-                              grado.nombreSeccion +
-                              " " +
-                              grado.nombreCarrera
-                          )
+                          value: ciclo.id,
+                          textContent: _vm._s(ciclo.nombre)
                         }
                       })
                     })
@@ -53744,64 +53970,6 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("label", {
-                  staticClass: "col-md-1 form-control-label",
-                  attrs: { for: "text-input" },
-                  domProps: { textContent: _vm._s("Estado:") }
-                }),
-                _vm._v(" "),
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.ciclo,
-                        expression: "ciclo"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.ciclo = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "0", disabled: "" } }, [
-                      _vm._v("Seleccione")
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(_vm.arrayGrado, function(ciclo) {
-                      return _c("option", {
-                        key: ciclo.id,
-                        domProps: {
-                          value: ciclo.id,
-                          textContent: _vm._s(
-                            ciclo.nombreGrado +
-                              "/" +
-                              _vm.grado.nombreSeccion +
-                              " " +
-                              _vm.grado.nombreCarrera
-                          )
-                        }
-                      })
-                    })
-                  ],
-                  2
-                ),
-                _vm._v(" "),
                 _c(
                   "button",
                   {
@@ -53811,10 +53979,10 @@ var render = function() {
                       click: function($event) {
                         _vm.listarPersona(
                           1,
-                          _vm.criterio,
                           _vm.buscar,
+                          _vm.criterio,
                           _vm.std,
-                          _vm.ciclo
+                          _vm.idCiclo
                         )
                       }
                     }
@@ -53879,7 +54047,13 @@ var render = function() {
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.desactivar()
+                                        _vm.desactivar(
+                                          asigMateria.id,
+                                          _vm.buscar,
+                                          _vm.criterio,
+                                          _vm.std,
+                                          _vm.idCiclo
+                                        )
                                       }
                                     }
                                   },
@@ -53895,7 +54069,13 @@ var render = function() {
                                     attrs: { type: "button" },
                                     on: {
                                       click: function($event) {
-                                        _vm.activar()
+                                        _vm.activar(
+                                          asigMateria.id,
+                                          _vm.buscar,
+                                          _vm.criterio,
+                                          _vm.std,
+                                          _vm.idCiclo
+                                        )
                                       }
                                     }
                                   },
@@ -53909,6 +54089,12 @@ var render = function() {
                       _c("td", {
                         domProps: {
                           textContent: _vm._s(asigMateria.nombreMateria)
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("td", {
+                        domProps: {
+                          textContent: _vm._s(asigMateria.nombreCiclo)
                         }
                       }),
                       _vm._v(" "),
@@ -53951,9 +54137,10 @@ var render = function() {
                               $event.preventDefault()
                               _vm.cambiarPagina(
                                 _vm.pagination.current_page - 1,
-                                _vm.buscar,
                                 _vm.criterio,
-                                _vm.std
+                                _vm.buscar,
+                                _vm.std,
+                                _vm.idCiclo
                               )
                             }
                           }
@@ -53981,9 +54168,10 @@ var render = function() {
                             $event.preventDefault()
                             _vm.cambiarPagina(
                               page,
-                              _vm.buscar,
                               _vm.criterio,
-                              _vm.std
+                              _vm.buscar,
+                              _vm.std,
+                              _vm.idCiclo
                             )
                           }
                         }
@@ -54004,9 +54192,10 @@ var render = function() {
                               $event.preventDefault()
                               _vm.cambiarPagina(
                                 _vm.pagination.current_page + 1,
-                                _vm.buscar,
                                 _vm.criterio,
-                                _vm.std
+                                _vm.buscar,
+                                _vm.std,
+                                _vm.idCiclo
                               )
                             }
                           }
@@ -54201,19 +54390,37 @@ var render = function() {
                                   ),
                                   _vm._v(" "),
                                   _vm._l(_vm.arrayGrado, function(grado) {
-                                    return _c("option", {
-                                      key: grado.idGrado,
-                                      domProps: {
-                                        value: grado.idGrado,
-                                        textContent: _vm._s(
-                                          grado.nombreGrado +
-                                            "/" +
-                                            grado.nombreSeccion +
-                                            " " +
-                                            grado.nombreCarrera
-                                        )
-                                      }
-                                    })
+                                    return _vm.idNivel == 4
+                                      ? _c("option", {
+                                          key: grado.idGrado,
+                                          domProps: {
+                                            value: grado.idGrado,
+                                            textContent: _vm._s(
+                                              grado.nombreGrado +
+                                                "/" +
+                                                grado.nombreSeccion +
+                                                " " +
+                                                grado.nombreCarrera
+                                            )
+                                          }
+                                        })
+                                      : _vm._e()
+                                  }),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.arrayGrado, function(grado) {
+                                    return _vm.idNivel != 4
+                                      ? _c("option", {
+                                          key: grado.idGrado,
+                                          domProps: {
+                                            value: grado.idGrado,
+                                            textContent: _vm._s(
+                                              grado.nombreGrado +
+                                                "/" +
+                                                grado.nombreSeccion
+                                            )
+                                          }
+                                        })
+                                      : _vm._e()
                                   })
                                 ],
                                 2
@@ -54302,6 +54509,72 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
+                      _c("div", { staticClass: "form-group row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-md-3 form-control-label",
+                            attrs: { for: "text-input" }
+                          },
+                          [_vm._v("Ciclo:")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-6" }, [
+                          _vm.tipoAccion == 1 || _vm.tipoAccion == 2
+                            ? _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.ciclo,
+                                      expression: "ciclo"
+                                    }
+                                  ],
+                                  staticClass: "form-control col-md-6",
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.ciclo = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "0", disabled: "" } },
+                                    [_vm._v("Seleccione")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.arrayCiclo, function(ciclo) {
+                                    return _c("option", {
+                                      key: ciclo.id,
+                                      domProps: {
+                                        value: ciclo.id,
+                                        textContent: _vm._s(ciclo.nombre)
+                                      }
+                                    })
+                                  })
+                                ],
+                                2
+                              )
+                            : _vm._e()
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "div",
                         {
@@ -54355,7 +54628,12 @@ var render = function() {
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
-                              _vm.registrarPersona()
+                              _vm.registrarPersona(
+                                _vm.buscar,
+                                _vm.criterio,
+                                _vm.std,
+                                _vm.idCiclo
+                              )
                             }
                           }
                         },
@@ -54371,7 +54649,12 @@ var render = function() {
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
-                              _vm.actualizarPersona()
+                              _vm.actualizarPersona(
+                                _vm.buscar,
+                                _vm.criterio,
+                                _vm.std,
+                                _vm.idCiclo
+                              )
                             }
                           }
                         },
@@ -54401,6 +54684,8 @@ var staticRenderFns = [
         _c("th", { staticClass: "text-center", attrs: { width: "350 px" } }, [
           _vm._v("Materias")
         ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Ciclo")]),
         _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [_vm._v("Estado")])
       ])

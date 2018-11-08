@@ -50,7 +50,7 @@
                             <thead>
                                <tr class="table-primary">
                                     
-                                        <th class="text-center" width="100 px">Opciones</th>
+                                        <th class="text-center" width="150 px">Opciones</th>
                                         <th class="text-center" width="350 px">Nombre</th>
                                         <th class="text-center">Codigo Unico</th>
                                         <th class="text-center">Grado</th>
@@ -70,6 +70,9 @@
                                         <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
                                             <i class="icon-pencil"></i>
                                         </button>
+                                        <button type="button" @click= "abrirModal('persona','reinscripcion',persona)" class="btn btn-info btn-sm " >
+                                            <i class="fa fa-repeat"></i>
+                                        </button>
                                             
                                         <template v-if="persona.estadoPersona == 1 && persona.estadoAsigPadreAlumno == 1 && persona.estadoGrado == 1">
                                             <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(persona.idPersona, persona.idAsignacionGrado,
@@ -88,10 +91,10 @@
                                     <td v-text="persona.identificacion" class="align-middle"></td>
                                     <td v-if="persona.idNivel != 4" v-text="persona.nombreNivel+ '/' +persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
                                     <td v-else v-text="persona.nombreNivel+ '/' +persona.nombreCarrera+' '+persona.nombreGrado + ' ' + persona.nombreSeccion" class="align-middle"></td>
-                                    <td v-text="persona.anio"></td>
-                                    <td v-text="persona.nombrePadre + ' '+persona.apellidoPadre"></td>
-                                    <td v-text="persona.identificacionPadre"></td>
-                                    <td v-text="persona.direccionPadre" ></td>
+                                    <td v-text="persona.nombreCiclo" class="align-middle"></td>
+                                    <td v-text="persona.nombrePadre + ' '+persona.apellidoPadre" class="align-middle"></td>
+                                    <td v-text="persona.identificacionPadre" class="align-middle"></td>
+                                    <td v-text="persona.direccionPadre" class="align-middle"></td>
                                     <td>
                                         
                                         <template>
@@ -149,25 +152,25 @@
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Tipo de persona:</label>
                                         <div class="col-md-9">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idTipoPersona">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2 || tipoAccion == 4" v-model="idTipoPersona">
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option v-for="tipo_persona in arrayTipo_persona" :key="tipo_persona.id" :value="tipo_persona.id" v-text="tipo_persona.nombre"></option>
                                             </select>
-                                             <input type="text" v-if="tipoAccion == 3" v-model="nombreTPersona" class="form-control bg-white" disabled>
+                                             <input type="text" v-if="tipoAccion == 3 " v-model="nombreTPersona" class="form-control bg-white" disabled>
                                             </div>
                                     </div>
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Nombre:</label>
                                         <div class="col-md-9">
                                             <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="nombre" class="form-control" placeholder="Ingrese nombre" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="nombre" class="form-control bg-white" disabled>
+                                            <input type="text" v-if="tipoAccion == 3 || tipoAccion == 4" v-model="nombre" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Apellido:</label>
                                         <div class="col-md-9">
                                             <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="apellido" class="form-control" placeholder="Ingrese apellido" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="apellido" class="form-control bg-white" disabled>
+                                            <input type="text" v-if="tipoAccion == 3 || tipoAccion == 4" v-model="apellido" class="form-control bg-white" disabled>
                                         
                                         </div>
                                     </div>
@@ -175,17 +178,17 @@
                                         <label class="col-md-3 form-control-label" for="text-input">Codigo Unico:</label>
                                         <div class="col-md-9">
                                             <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="identificacion" class="form-control" placeholder="Ingrese codigo de estudiante" required>
-                                            <input type="text" v-if="tipoAccion == 3" v-model="identificacion" class="form-control bg-white" disabled>
+                                            <input type="text" v-if="tipoAccion == 3 || tipoAccion == 4" v-model="identificacion" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Fecha de Nacimiento:</label>
+                                        <label v-if="tipoAccion != 4" class="col-md-3 form-control-label" for="text-input">Fecha de Nacimiento:</label>
                                         <div class="col-md-9">
                                             <input type="date" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="fechaNac" class="form-control" placeholder="Ingese fecha de nacimiento" required>
                                             <input type="date" v-if="tipoAccion == 3" v-model="fechaNac" class="form-control bg-white" disabled>
                                         </div>
                                     </div>
-                                    <div class="form-group row" >
+                                    <div class="form-group row" v-if="tipoAccion != 4">
                                         <label class="col-md-3 form-control-label" for="text-input">Genero:</label>
                                         <div class="col-md-6">
                                             <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idGenero">
@@ -202,7 +205,7 @@
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Nivel:</label>
                                         <div class="col-md-6 input-group">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idNivel" v-on:click="selectGrado(idNivel)">
+                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2 || tipoAccion == 4" v-model="idNivel" v-on:click="selectGrado(idNivel)">
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
                                             </select>
@@ -212,7 +215,7 @@
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Grado:</label>
                                         <div class="col-md-6">
-                                            <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
+                                            <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2 || tipoAccion == 4"  v-model="idGrado" >
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option  v-if="idNivel != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
                                                 <option  v-else v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
@@ -223,11 +226,11 @@
                                     <div class="form-group row" >
                                         <label class="col-md-3 form-control-label" for="text-input">Ciclo:</label>
                                         <div class="col-md-6">
-                                            <select class="form-control col-md-6"  v-if="tipoAccion == 1 || tipoAccion == 2" v-model="ciclo" >
+                                            <select class="form-control col-md-6"  v-if="tipoAccion == 1 || tipoAccion == 2 || tipoAccion == 4" v-model="ciclo" >
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
                                             </select> 
-                                            <select class="form-control col-md-6"   v-if="tipoAccion == 3" v-model="ciclo" disabled>
+                                            <select class="form-control col-md-6  bg-white"   v-if="tipoAccion == 3" v-model="ciclo" disabled>
                                                 <option value="0" disabled>Seleccione</option>
                                                 <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
                                             </select>
@@ -238,8 +241,8 @@
                                         
                                         
                                         <div class="col-md-9 input-group">
-                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="filtro" @keyup.enter="selectPadre(filtro)" class="form-control col-md-4" >
-                                            <select class="form-control col-md-4" v-model="idPadre" v-if="tipoAccion==1 || tipoAccion ==2">
+                                            <input type="text" v-if="tipoAccion == 1 || tipoAccion == 2 || tipoAccion == 4" v-model="filtro" @keyup.enter="selectPadre(filtro)" class="form-control col-md-4" >
+                                            <select class="form-control col-md-4" v-model="idPadre" v-if="tipoAccion==1 || tipoAccion ==2 || tipoAccion == 4">
                                             <option value="0" disabled v-text="'Seleccione'"></option>
                                             <option v-for="padre in arrayPadre" :key="padre.idPadreF" :value="padre.idPadreF" v-text="padre.nombrePadreF"></option>
                                             </select>
@@ -275,6 +278,7 @@
                                                                 
                                 <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                                 <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
+                                <button type="button" v-if="tipoAccion==4" class="btn btn-primary" @click="registPersona()">Guardar</button>
                                 <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
                             </div>
                         </div>
@@ -485,13 +489,13 @@
                 console.log(error);
                 });
             },
-            cambiarPagina(page, buscar, criterio, std){
+            cambiarPagina(page, buscar, criterio, std, idCiclo){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPersona(page, buscar, criterio, std);
+                me.listarPersona(page, buscar, criterio, std, idCiclo);
             },
             registrarPersona(){
-                console.log(this.buscar, this.criterio, this.std)
+                
                 if(this.validarPersona()){
                     return;
                 }
@@ -508,6 +512,26 @@
                     'idGrado' :this.idGrado,
                     'idPadre' :this.idPadre,
                     'idCiclo' :this.ciclo,
+                }).then(function(response){
+                    me.correcto();
+                    me.cerrarModal();
+                    me.listarPersona(1, this.buscar, this.criterio, this.std, this.idCiclo);
+                    
+                })
+                .catch(function (error){
+                    console.log(error);
+                });
+            },
+            registPersona(){
+                console.log(this.idAlumno, this.idPadre, this.idGrado, this.ciclo)
+                let me = this;
+                axios.post('/alumno/reinscripcion',{
+                    
+                    'idAlumno':this.idAlumno,
+                    'idPadre' :this.idPadre,
+                    'idGrado' :this.idGrado,
+                    'idCiclo' :this.ciclo,
+
                 }).then(function(response){
                     me.correcto();
                     me.cerrarModal();
@@ -559,7 +583,7 @@
                 });
             },
             
-            desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+            desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std, idCiclo){
                 
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
@@ -582,7 +606,7 @@
                             'idAsigGrado': idAsigGrado,
                             'idAsigPadreAlumno':idAsigPadreAlumno,
                         }).then(function(response){
-                            me.listarPersona(1, buscar, criterio, std);
+                            me.listarPersona(1, buscar, criterio, std, idCiclo);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -598,7 +622,7 @@
                         }
                 })
             },
-            activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+            activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std, idCiclo){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -621,7 +645,7 @@
                             'idAsigPadreAlumno':idAsigPadreAlumno,
                         }).then(function(response){
                             
-                            me.listarPersona(1,  buscar, criterio, std);
+                            me.listarPersona(1,  buscar, criterio, std, idCiclo);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -728,7 +752,7 @@
                             }
                             case 'visualizar':
                             {
-                                
+                                console.log(data['idNivel']);
                                 this.modal = 1;
                                 this.tituloModal = "Visualizar datos";
                                 this.tipoAccion = 3;
@@ -736,7 +760,14 @@
                                 this.apellido = data['apellido'];
                                 this.identificacion = data['identificacion'];
                                 this.nombreNivel = data['nombreNivel'];
-                                this.nombreGrado = data['nombreGrado']+'/'+data['nombreSeccion']+'/'+data['nombreCarrera'];
+                                if(data['idNivel'] == 4)
+                                {
+                                    this.nombreGrado = data['nombreGrado']+'/'+data['nombreSeccion']+'/'+data['nombreCarrera'];
+                                }
+                                if(data['idNivel'] != 4)
+                                {
+                                    this.nombreGrado = data['nombreGrado']+'/'+data['nombreSeccion'];
+                                }
                                 this.idGenero = data['idGenero'];
                                 this.nombreTPersona = data['nombreTipoPersona'];
                                 this.fechaNac = data['fechaNac'];
@@ -744,9 +775,35 @@
                                 this.identificacionPadre = data['identificacionPadre'];
                                 this.direccionPadre = data['direccionPadre'];
                                 this.telPadre=data['telPadre'];
+                                this.ciclo=data['idCiclo'];
 
                                 break;
-                            }                                                          
+                            }   
+                            case 'reinscripcion':
+                            {
+                                this.modal = 1;
+                                this.tituloModal = "reinscribir alumno";
+                                this.tipoAccion = 4;
+                                this.nombre = data['nombre'];
+                                this.apellido = data['apellido'];
+                                this.identificacion = data['identificacion'];
+                                this.idNivel=data['idNivel']
+                                this.selectGrado(this.idNivel);
+                                this.idGrado = data['idGrado'];
+                                this.idPersona = data['idPersona'];
+                                this.filtro=data['nombrePadre'];
+                                this.selectPadre(this.filtro);
+                                this.idPadre=data['idPadre'];
+                                this.idAlumno = data['idAlumno'];
+                                this.ciclo=data['idCiclo'];
+                                this.nombrePadre = data['nombrePadre']+' '+data['apellidoPadre'];
+                                this.identificacionPadre = data['identificacionPadre'];
+                                this.idAsigGrado = data['idAsignacionGrado'];
+                                this.idAsigPadreAlumno=data['idAsigPadreAlumno'];
+                                
+                                break;
+                            }
+                            
                         }
                     }
                 }

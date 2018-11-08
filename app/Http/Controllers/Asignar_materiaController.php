@@ -12,11 +12,11 @@ class Asignar_materiaController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $std = $request->std;
-        $cilco= $request->ciclo;
+        $idCiclo = $request->idCiclo;
 
         
             if($std == 1 ){
@@ -27,11 +27,13 @@ class Asignar_materiaController extends Controller
                 ->join('ciclos', 'ciclos.id', '=', 'asignar_materia.idCiclo')
                 ->where('grados.estado','=','1')
                 ->where('materias.estado','=','1')
-                ->where('niveles.id','=', $criterio)
-                ->where('grados.id', '=', $buscar)
+                ->where('niveles.id','=', $buscar)
+                ->where('grados.id', '=', $criterio)
+                ->where('ciclos.id', '=', $idCiclo)
                 ->where('asignar_materia.estado', '=', '1')
                 ->select('asignar_materia.id as id', 'asignar_materia.idMateria as idMateria', 'niveles.id as idNivel',
-                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado')
+                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado', 'ciclos.id as idCiclo',
+                'ciclos.nombre as nombreCiclo')
                 ->orderby('nombreMateria')->paginate(10);
 
             }
@@ -39,13 +41,16 @@ class Asignar_materiaController extends Controller
                 $materia = Asignar_materia::join('materias','idMateria','=','materias.id')
                 ->join('grados','asignar_materia.idGrado','=','grados.id')
                 ->join('niveles','niveles.id','=','grados.idNivel')
+                ->join('ciclos', 'ciclos.id', '=', 'asignar_materia.idCiclo')
                 ->where('grados.estado','=','1')
                 ->where('materias.estado','=','1')
-                ->where('niveles.id','=', $criterio)
-                ->where('grados.id', '=', $buscar)
+                ->where('niveles.id','=', $buscar)
+                ->where('grados.id', '=', $criterio)
+                ->where('ciclos.id', '=', $idCiclo)
                 ->where('asignar_materia.estado', '=', '0')
                 ->select('asignar_materia.id as id', 'asignar_materia.idMateria as idMateria', 'niveles.id as idNivel',
-                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado')
+                'grados.id as idGrado', 'materias.nombre as nombreMateria', 'asignar_materia.estado as estado','ciclos.id as idCiclo',
+                'ciclos.nombre as nombreCiclo')
                 ->orderby('nombreMateria')->paginate(10);
             }
         return [
@@ -94,6 +99,7 @@ class Asignar_materiaController extends Controller
         $insertar = new Asignar_materia();
         $insertar -> idGrado = $request->idGrado;
         $insertar -> idMateria = $request->idMateria;
+        $insertar -> idCiclo = $request->idCiclo;
         $insertar -> save();
             
     }
@@ -105,6 +111,7 @@ class Asignar_materiaController extends Controller
             $actualizar = Asignar_materia::findOrFail($request->id); 
             $actualizar -> idGrado = $request->idGrado;
             $actualizar -> idMateria = $request->idMateria;
+            $actualizar -> idCiclo = $request->idCiclo;
             $actualizar -> estado = '1';
             $actualizar -> save();
     }
@@ -112,7 +119,7 @@ class Asignar_materiaController extends Controller
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-            $desactivar=  Asignar_padre_alumno::findOrFail($request->idAsig);
+            $desactivar=  Asignar_materia::findOrFail($request->idAsig);
             $desactivar-> estado = '0';
             $desactivar-> save();
 
@@ -122,7 +129,7 @@ class Asignar_materiaController extends Controller
     public function activar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-            $activar =  Asignar_padre_alumno::findOrFail($request->idAsig);
+            $activar =  Asignar_materia::findOrFail($request->idAsig);
             $activar -> estado = '1';
             $activar -> save();
 

@@ -22,7 +22,7 @@ class CreateAsignarPadreAlumnosTable extends Migration
             $table->timestamps();
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idAlumno')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('idCiclo')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';
         });
     }

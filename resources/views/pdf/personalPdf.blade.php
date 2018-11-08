@@ -26,7 +26,7 @@
                 }
         
                 #imagen{
-                width: 80px;
+                width: 125px;
                 }
         
                 #datos{
@@ -53,94 +53,56 @@
                 font-size: 20px;
                 }
         
-                section{
+                #marco{
                 clear: left;
                 }
-        
-                #cliente{
-                text-align: left;
+                #registro{
+                    margin:10px;
+                    padding: 10px;
                 }
         
                 #facliente{
-                width: 40%;
-                border-collapse: collapse;
-                border-spacing: 0;
-                margin-bottom: 15px;
+                    background: #2f3640;
+                    color: #fff;
+                    width: 100%;
+                    text-align: center;
                 }
-        
-                #fac, #fv, #fa{
-                color: #FFFFFF;
-                font-size: 15px;
-                }
-        
-                #facliente thead{
-                padding: 20px;
-                background: #2183E3;
-                text-align: left;
-                border-bottom: 1px solid #FFFFFF;  
-                }
-        
-                #facvendedor{
-                width: 100%;
-                border-collapse: collapse;
-                border-spacing: 0;
-                margin-bottom: 15px;
-                }
-        
-                #facvendedor thead{
-                padding: 20px;
-                background: #2183E3;
-                text-align: center;
-                border-bottom: 1px solid #FFFFFF;  
-                }
-        
-                #facarticulo{
-                width: 100%;
-                border-collapse: collapse;
-                border-spacing: 0;
-                margin-bottom: 15px;
-                }
-        
-                #facarticulo thead{
-                padding: 20px;
-                background: #2183E3;
-                text-align: center;
-                border-bottom: 1px solid #FFFFFF;  
-                }
-        
+
                 #gracias{
                 text-align: center; 
                 }
     </style>
 </head>
 <body>
-    <header>
-        <div id="logo">
-            <img id="imagen"  src="img/logo.png" alt="">
-        </div>
-        <div id="datos">
-            <h1>Colegio Evángelico Shaddai</h1>
-            <h2>Chiquimulilla, Santa Rosa</h2>
-            <h2>{{now()}}</h2>
+    <header >
+        <div >
+            <div id="logo">
+                <img id="imagen"  src="img/logo.png" alt="">
+            </div>
+            <div id="datos">
+                <h2>Colegio Evángelico Shaddai</h2>
+                <h4>Chiquimulilla, Santa Rosa</h4>
+                <h4>{{now()}}</h4>
+            </div>
         </div>
     </header>
     <br>
-    <section>
-        <div>
+    <section id="marco">
+        <div id="registro">
             @foreach($persona as $p)
            
-            <h1 id="fac">{{$p->nombreTp}}</h1><br><br>
-            <p>Nombre: {{$p->nombrep}}<br> Apellido: {{$p->apellido}}<br>
-            Identificación: {{$p->identifiacion}}<br> Genero:{{$p->nombreGenero}}<br>
+            <h2 id="facliente">{{$p->nombreTPersona}}</h2><br>
+            <p>Nombre: {{$p->nombrePersona}}<br> Apellido: {{$p->apellido}}<br>
+            Identificación: {{$p->identificacion}}<br> Genero:{{$p->nombreGenero}}<br>
             Dirección: {{$p->direccion}}<br> Tel: {{$p->tel}}<br>
             Correo: {{$p->correo}}<br>Usuario: {{$p->usuario}}<br>
-            Contraseña: {{$p->pass}}<br></p>
+            Contraseña: {{$pass}}<br></p> <br><br>
             @endforeach    
         </div>
     </section>
     <footer>
         <div id="gracias">
-                <p><strong>Por seguridad cambie su contraseña al iniciar seción por primera vez</strong></p>
+                <p><strong>Por seguridad cambie su contraseña al iniciar seción</strong></p>
         </div>
     </footer>
 

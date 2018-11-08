@@ -72,7 +72,10 @@
                                             <button type="button" class="btn btn-success btn-sm align-center" @click="activar(persona.idPersona, persona.idUsuario, criterio, std)">
                                                 <i class="icon-check"></i>
                                             </button>
-                                        </template>
+                                        </template><br><br>
+                                        <button type="button" @click="cargarPdf(persona.idPersona)" class="btn btn-danger btn-sm " >
+                                            <i class="icon-doc"></i>
+                                        </button>
                                     </td>
                                     <td  v-text="persona.nombrePersona + ' ' + persona.apellido" class="align-middle"></td>
                                     <td  v-text="persona.identificacion" class="align-middle"></td>
@@ -341,7 +344,7 @@
                 buscar : '',
                 tipoBusqueda:'',
                 std:'',
-                
+                idpdf:0,
             }
         },
 
@@ -443,7 +446,7 @@
                         timer: 1500
                         })
             },
-            registrarPersona(){
+            registrarPersona(buscar, criterio,std){
                 if(this.validarPersona()){
                     return;
                 }
@@ -462,19 +465,18 @@
                     'usuario':this.usuario,
                     'password':this.password
                 }).then(function(response){
-                    console.log(response.data.id);
-                    windows.open('http://localhost:8000/persona/personaPdf/' + response.data.id +'/'+ this.password+','+'_blank');
+                    window.open('http://localhost:8000/persona/personaPdf/' + response.data.id );
                     me.cerrarModal();
                     me.correcto();
-                    me.listarPersona(1,'',this.criterio, this.std);
+                    me.listarPersona(1, '', criterio, std);
                 })
                 .catch(function (error){
                     console.log(error);
                 });
             },
-            cargarPdf(id, pass){
-                console.log(id, pass);
-                windows.open('http://localhost:8000/persona/personaPdf/' + id+ pass);
+            cargarPdf(id){
+                
+                window.open('http://localhost:8000/persona/personaPdf/' + id +','+'on_blanck');
             },
             actualizarPersona(){
                 if(this.validarPersona()){
@@ -498,6 +500,8 @@
                     'usuario':this.usuario,
                     'password':this.password,        
                 }).then(function(response){
+                    console.log( response.data.id);
+                    window.open('http://localhost:8000/persona/personaPdf/' + response.data.id +','+'on_blanck');
                     me.cerrarModal();
                     me.correcto();
                     me.listarPersona(1,'',this.criterio,this.std);

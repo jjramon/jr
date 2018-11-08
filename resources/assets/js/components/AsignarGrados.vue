@@ -7,7 +7,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i>Alumnos
+                        <i class="fa fa-align-justify"></i>Asignar Materias a Grados
                         <button type="button" @click="abrirModal('AsignarMateria','registrar')" class="btn btn-success" >
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <div class="input-group" >
+                              <div class="input-group" >
                                     
                                     <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"></label>
                                     <select class="form-control"  v-model="criterio" v-on:click="selectGrado(criterio)">
@@ -25,20 +25,24 @@
                                     <label class="col-md-1 form-control-label" for="text-input" v-text="'Grado:'"></label>
                                     <select class="form-control"   v-model="buscar" >
                                         <option value="0" disabled>Seleccione</option>
-                                        <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                        <option  v-if="criterio != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
+                                        <option  v-else v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
                                     </select>       
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'ciclo:'"></label>
+                                    <select class="form-control"   v-model="idCiclo" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
+                                        
+                                    </select> 
+                                    
                                     <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
                                     <select class="form-control"   v-model="std" >
                                         <option value="0" disabled>Seleccione</option>
                                         <option value="1" v-text="'Activo'"></option>
                                         <option value="2" v-text="'Inactivo'"></option>
-                                    </select>   
-                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Estado:'"></label>
-                                    <select class="form-control"   v-model="ciclo" >
-                                        <option value="0" disabled>Seleccione</option>
-                                        <option  v-for="ciclo in arrayGrado " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
                                     </select>  
-                                    <button type="submit" @click="listarPersona(1, criterio, buscar, std, ciclo)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
+
+                                    <button type="submit" @click="listarPersona(1, buscar, criterio,std,idCiclo)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
                                 </div>
                             </div>
                         </div>
@@ -50,6 +54,7 @@
                                     
                                         <th class="text-center" width="100 px">Opciones</th>
                                         <th class="text-center" width="350 px">Materias</th>
+                                        <th class="text-center" >Ciclo</th>
                                         <th class="text-center" >Estado</th>
                                     
                                 </tr>
@@ -63,17 +68,18 @@
                                         </button>
                                                     
                                         <template v-if="asigMateria.estado == 1 ">
-                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar()">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(asigMateria.id, buscar, criterio,std,idCiclo)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar()">
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(asigMateria.id, buscar, criterio,std,idCiclo)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
                                     </td>
                                      <td v-text="asigMateria.nombreMateria"></td>
+                                     <td v-text="asigMateria.nombreCiclo"></td>
                                     <td >
                                         <div v-if="asigMateria.estado == 1 ">
                                             <span class="badge badge-success">Activo</span>
@@ -90,14 +96,14 @@
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio, std)" >Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,  criterio, buscar, std, idCiclo)" >Ant</a>
                                 </li>
                                 <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio, std)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, criterio, buscar, std, idCiclo)" v-text="page"></a>
                                 </li>
 
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio, std)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, criterio, buscar, std, idCiclo)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -132,7 +138,8 @@
                                         <div class="col-md-6">
                                             <select class="form-control" v-if="idNivel !=0 && tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" >
                                                 <option value="0" disabled>Seleccione</option>
-                                                <option  v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                                <option  v-if="idNivel == 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
+                                                <option  v-if="idNivel != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
                                             </select>
                                           <input type="text" v-if="tipoAccion == 3" v-model="nombreGrado" class="form-control bg-white" disabled>
                                         </div>
@@ -161,6 +168,16 @@
                                             </v-select>
                                         </div>
                                     </div>
+                                    <div class="form-group row" >
+                                        <label class="col-md-3 form-control-label" for="text-input">Ciclo:</label>
+                                        <div class="col-md-6">
+                                            <select class="form-control col-md-6"  v-if="tipoAccion == 1 || tipoAccion == 2" v-model="ciclo" >
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
+                                            </select> 
+                                            
+                                        </div> 
+                                    </div>
                                     <div v-show="errorPersona" class="form-group row div-error">
                                         <div class="text-center text-error">
                                             <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
@@ -176,8 +193,8 @@
                                 
                                                                 
                                 <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona(buscar, criterio,std,idCiclo)">Guardar</button>
+                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona(buscar, criterio,std,idCiclo)">Actualizar</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
@@ -198,6 +215,7 @@ import vSelect from 'vue-select';
 
             return{
                 idAsignacion: 0,
+                idCiclo: 0,
                 idGrado:0,
                 idNivel:0,
                 idMateria:0,
@@ -206,6 +224,7 @@ import vSelect from 'vue-select';
                 arrayGrado:[],
                 nombreGrado:'',
                 nombreMateria:'',
+                ciclo:0,
                 arrayNivel:[],
                 nombreNivel:'',
                 idGrado:0,
@@ -223,8 +242,9 @@ import vSelect from 'vue-select';
                     'to': 0,   
                 },
                 offset : 3,
-                criterio :'',
-                buscar : '',
+                criterio :0,
+                buscar : 0,
+                std : 0,
                 tipoBusqueda:'',
                 listado:1,
                 filtro:'',
@@ -236,6 +256,8 @@ import vSelect from 'vue-select';
                 ideMtr:'',
                 ciclo:'',
                 arrayCiclo:[],
+                cnd:0,
+                filtro:'',
             }
         },
         components:{
@@ -266,14 +288,15 @@ import vSelect from 'vue-select';
             },       
         },
         methods : {
-            listarPersona(page, criterio, buscar, std){
+            listarPersona(page, criterio, buscar, std, idCiclo){
                 this.selectNivel();
                 this.selectMateria();
+                this.selectCiclo();
                 
                     
                 if(criterio!=0 && criterio!='' || buscar != 0 && buscar != ''){
                     let me = this;           
-                    var url = '/asignarmateria?page=' + page + '&criterio='+ criterio + '&buscar=' + buscar + '&std='+ std;
+                    var url = '/asignarmateria?page=' + page + '&criterio='+ criterio + '&buscar=' + buscar + '&std='+ std + '&idCiclo='+idCiclo;
                     
                     axios.get(url)
                     .then(function (response) {
@@ -284,6 +307,7 @@ import vSelect from 'vue-select';
                         if(me.arrayAsigMateria.length<1)
                         {
                             me.sinRegistro();
+
                         }
                     })
                     .catch(function (error){
@@ -293,10 +317,10 @@ import vSelect from 'vue-select';
             },
             
 
-            cambiarPagina(page, buscar, criterio, std){
+            cambiarPagina(page, criterio, buscar, std, idCiclo){
                 let me = this;
                 me.pagination.current_page = page;
-                me.listarPersona(page, buscar, criterio, std);
+                me.listarPersona(page, criterio, buscar, std, idCiclo);
             },
             selectNivel(){
                 let me=this;
@@ -306,6 +330,20 @@ import vSelect from 'vue-select';
                     
                     let respuesta = response.data;
                     me.arrayNivel = respuesta.nivel;
+                    
+                })
+                .catch(function (error){
+                console.log(error);
+                });
+            },
+            selectCiclo(){
+                let me = this;   
+                var url = '/alumno/selectCiclo';
+                axios.get(url)
+                .then(function (response) {
+                    
+                    var respuesta = response.data;
+                    me.arrayCiclo = respuesta.ciclo;
                     
                 })
                 .catch(function (error){
@@ -342,67 +380,66 @@ import vSelect from 'vue-select';
                 this.idMateria = materia.idMateria;
                     
             },
-            registrarPersona(){
+            registrarPersona(buscar, criterio,std,idCiclo){
+
                 for (var i = 0; i < this.idMateria.length; i++){
                     this.idMtr=this.idMateria[i]['id'];
                 
-                let me = this;  
-                axios.post('/asignarmateria/registrar',{
-                    'idGrado':this.idGrado,
-                    'idMateria':this.idMtr
-                }).then(function(response){
-                    me.cerrarModal();
-                    me.listarPersona(1,'','');
-                    me.correcto();
-                    
-                })
-                .catch(function (error){
-                    console.log(error);
-                });
+                    let me = this;  
+                    axios.post('/asignarmateria/registrar',{
+                        'idGrado':this.idGrado,
+                        'idMateria':this.idMtr,
+                        'idCiclo' :this.ciclo
+                    }).then(function(response){
+                            me.listarPersona('1', buscar, criterio, std, idCiclo);
+                            me.cerrarModal();
+
+                    })
+                    .catch(function (error){
+                        console.log(error);
+                    });
                 }
+               
             },
-          
+
             correcto(){
                 swal({
-                    position: 'top-center',
                     type: 'success',
                     title: 'Proceso finalizado correctamente',
                     showConfirmButton: false,
                     timer: 1500
                 })
             },
+
             sinRegistro(){
                 swal({
-                    position: 'top-center',
+                    
                     type: 'success',
                     title: 'no se encuentran registros',
                     showConfirmButton: false,
                     timer: 1500
                 })
             },
-            actualizarPersona(){
+            actualizarPersona(buscar, criterio,std,idCiclo){
                 this.ideMtr = this.idMateria['id'];
                 let me = this;  
                 axios.put('/asignarmateria/actualizar',{
                     'id':this.idAsignacion,
                     'idGrado':this.idGrado,
-                    'idMateria':this.ideMtr
+                    'idMateria':this.ideMtr,
+                    'idCiclo' :this.ciclo,
                 }).then(function(response){
                     me.cerrarModal();
-                    
+                    me.listarPersona('1', buscar, criterio, std, idCiclo);
                     me.correcto();
                     
                 })
                 .catch(function (error){
                     console.log(error);
                 });
-                
-
-
             },
             
-            desactivar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
-                
+            desactivar(id, criterio, buscar, std, idCiclo){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -419,12 +456,10 @@ import vSelect from 'vue-select';
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/alumno/desactivar',{
-                            'idPersona': idPersona,
-                            'idAsigGrado': idAsigGrado,
-                            'idAsigPadreAlumno':idAsigPadreAlumno,
+                        axios.put('/asignarmateria/desactivar',{
+                            'idAsig': id
                         }).then(function(response){
-                            me.listarPersona(1, buscar, criterio, std);
+                            me.listarPersona(1,  criterio, buscar, std, idCiclo);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -440,7 +475,7 @@ import vSelect from 'vue-select';
                         }
                 })
             },
-            activar(idPersona, idAsigGrado, idAsigPadreAlumno, buscar, criterio, std){
+            activar(id, criterio, buscar, std, idCiclo){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -457,13 +492,10 @@ import vSelect from 'vue-select';
                 }).then((result) => {
                     if (result.value) {
                         let me = this;
-                        axios.put('/alumno/activar',{
-                            'idPersona': idPersona,
-                            'idAsigGrado': idAsigGrado,
-                            'idAsigPadreAlumno':idAsigPadreAlumno,
+                        axios.put('/asignarmateria/activar',{
+                            'idAsig': id
                         }).then(function(response){
-                            
-                            me.listarPersona(1,  buscar, criterio, std);
+                            me.listarPersona(1,  criterio, buscar, std, idCiclo);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'
@@ -500,9 +532,8 @@ import vSelect from 'vue-select';
                 this.filtro="";
                 this.idMateria=[];
                 this.idMtr=[];
-
-                                
-
+                this.ciclo=0;
+                
             },
             abrirModal(modelo, accion, data=[]){
                 switch(modelo){
@@ -512,9 +543,10 @@ import vSelect from 'vue-select';
                             case 'registrar':
                             {
                                 this.modal=1;
-                                this.tituloModal='Registrar alumno';
+                                this.tituloModal='Registrar asignación';
                                 this.idGrado=0;
                                 this.idNivel=0;
+                                this.ciclo=0;
                                 this.idMateria = '';
                                 this.tipoAccion=1;
                                 this.filtro="";
@@ -529,6 +561,7 @@ import vSelect from 'vue-select';
                                 this.idNivel=data['idNivel'];
                                 this.idGrado = data['idGrado'];
                                 this.idMateria = data['nombreMateria'];
+                                this.ciclo=data['idCiclo'];
                                 
                                 break;
                             }
