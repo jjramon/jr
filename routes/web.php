@@ -139,6 +139,8 @@ Route::get('/asignarDocente/selectDocente','PersonaController@buscarDocente');
 Route::get('/asignarDocente/selectMateria','MateriaController@buscarMateria');
 Route::post('/asignarDocente/registrar', 'Asignar_docenteController@store');
 Route::put('/asignarDocente/actualizar', 'Asignar_docenteController@update');
+Route::put('/asignarDocente/activar', 'Asignar_docenteController@activar');
+Route::put('/asignarDocente/desactivar', 'Asignar_docenteController@desactivar');
 
 Route::get('/asignarmateria','Asignar_MateriaController@index');
 Route::get('/asignarmateria/selectGrado','Asignar_MateriaController@selectGrado');

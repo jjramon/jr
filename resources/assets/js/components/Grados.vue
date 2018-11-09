@@ -53,12 +53,12 @@
                                         </button>
                                             
                                         <template v-if="grado.estadoGrado">
-                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(grado.idGrado)">
+                                            <button type="button" class="btn btn-warning btn-sm align-center" @click="desactivar(grado.idGrado, buscar, criterio)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(grado.idGrado)">
+                                            <button type="button" class="btn btn-success btn-sm align-center" @click="activar(grado.idGrado, buscar, criterio)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
@@ -157,8 +157,8 @@
                             
                             <div class="modal-footer">                              
                                 <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrar()">Guardar</button>
-                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizar()">Actualizar</button>
+                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrar(buscar, criterio)">Guardar</button>
+                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizar(buscar, criterio)">Actualizar</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
@@ -325,7 +325,7 @@
                 me.pagination.current_page = page;
                 me.listar(page, buscar, criterio);
             },
-            registrar(){
+            registrar(buscar, criterio){
                 if(this.validar()){
                     return;
                 }
@@ -341,7 +341,7 @@
                     'idNivel':this.idNivel,
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listar('','','');
+                    me.listar('1',buscar, criterio);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -367,7 +367,7 @@
                 });
             },
             
-            desactivar(id){
+            desactivar(id, buscar, criterio){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-dark',
                 cancelButtonClass: 'btn btn-danger',
@@ -387,7 +387,7 @@
                         axios.put('/grado/desactivar',{
                             'id': id,
                         }).then(function(response){
-                            me.listar('','','');
+                            me.listar('',buscar, criterio);
                             swalWithBootstrapButtons(
                                 'Descativado!',
                                 'el registro se a desactivado.'
@@ -403,7 +403,7 @@
                         }
                 })
             },
-            activar(id){
+            activar(id, buscar, criterio){
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -424,7 +424,7 @@
                             'id': id,
                         }).then(function(response){
                             
-                            me.listar('','','');
+                            me.listar('',buscar, criterio);
                             swalWithBootstrapButtons(
                                 'Ativado!',
                                 'el registro se activado.'

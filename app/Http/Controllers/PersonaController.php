@@ -118,17 +118,14 @@ class PersonaController extends Controller
     }
     public function buscarDocente(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
-        $filtro = $request->filtro;
+       // if (!$request->ajax()) return redirect('/');
+
        
         $docente = Persona::join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
-        ->where('personas.apellido','like','%'.$filtro.'%')
-        ->orwhere('personas.nombre','like','%'.$filtro.'%')
-        ->orwhere('personas.identificacion','like','%'.$filtro.'%')
         ->where('personas.estado','=',"1")
         ->where('tipo_personas.nombre','=',"Docente")
-        ->select('personas.id as idDocente' , 'personas.nombre as nombreDocente', 'personas.apellido as apellidoDocente')
-        ->orderBy('personas.nombre' , 'asc')->take(1)->get();
+        ->select('personas.id as id' , DB::raw('CONCAT(personas.nombre, " ", personas.apellido, " / ", personas.identificacion) as nombre'))
+        ->orderBy('personas.nombre' , 'asc')->get();
 
         return ['docente' => $docente];
     }

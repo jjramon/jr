@@ -285,8 +285,8 @@
                                 </button>
                                 
                                 <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona(criterio,std)">Guardar</button>
+                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona(criterio,std)">Actualizar</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
@@ -446,7 +446,7 @@
                         timer: 1500
                         })
             },
-            registrarPersona(buscar, criterio,std){
+            registrarPersona(criterio, std){
                 if(this.validarPersona()){
                     return;
                 }
@@ -468,7 +468,7 @@
                     window.open('http://localhost:8000/persona/personaPdf/' + response.data.id );
                     me.cerrarModal();
                     me.correcto();
-                    me.listarPersona(1, '', criterio, std);
+                    me.listarPersona(1,'',criterio, std);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -478,7 +478,7 @@
                 
                 window.open('http://localhost:8000/persona/personaPdf/' + id +','+'on_blanck');
             },
-            actualizarPersona(){
+            actualizarPersona(criterio, std){
                 if(this.validarPersona()){
                     return;
                 }                 
@@ -504,7 +504,7 @@
                     window.open('http://localhost:8000/persona/personaPdf/' + response.data.id +','+'on_blanck');
                     me.cerrarModal();
                     me.correcto();
-                    me.listarPersona(1,'',this.criterio,this.std);
+                    me.listarPersona(1,'',criterio, std);
                 })
                 .catch(function (error){
                     console.log(error);
@@ -569,7 +569,6 @@
                             'idPersona': id,
                             'idUsuario': idd
                         }).then(function(response){
-                            
                             me.listarPersona(1,'',criterio, std);
                             swalWithBootstrapButtons(
                                 'Ativado!',

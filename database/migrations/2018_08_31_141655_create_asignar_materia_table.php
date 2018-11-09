@@ -17,12 +17,10 @@ class CreateAsignarMateriaTable extends Migration
             $table->increments('id');
             $table->integer('idGrado')->unsigned();
             $table->integer('idMateria')->unsigned();
-            $table->integer('idCiclo')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idGrado')->references('id')->on('grados')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';
         });
     }

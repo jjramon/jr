@@ -70,7 +70,7 @@
                                         <button type="button" @click= "abrirModal('persona','actualizar',persona)" class="btn btn-info btn-sm " >
                                             <i class="icon-pencil"></i>
                                         </button>
-                                        <button type="button" @click= "abrirModal('persona','reinscripcion',persona)" class="btn btn-info btn-sm " >
+                                        <button type="button" @click= "abrirModal('persona','reinscripcion',persona)" class="btn btn-success btn-sm " >
                                             <i class="fa fa-repeat"></i>
                                         </button>
                                             

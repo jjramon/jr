@@ -4,6 +4,9 @@ namespace colegioShaddai\Http\Controllers;
 
 use Illuminate\Http\Request;
 use colegioShaddai\Materia;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class MateriaController extends Controller
 {
     /**
@@ -59,19 +62,42 @@ class MateriaController extends Controller
     public function buscarMateria(Request $request)
     {
         //if (!$request->ajax()) return redirect('/');
-        $filtro = $request->filtro;
-       
-        $materia = Materia::join('asignar_materia','materias.id','=','asignar_materia.idMateria')
-        ->join('grados', 'asignar_materia.idGrado','=','grados.id')
-        ->join('secciones', 'secciones.id','=','grados.idSeccion')
-        ->join('niveles', 'niveles.id','=','grados.idNivel')
-        ->join('carreras', 'carreras.id','=','grados.idCarrera')
-        ->where('materias.nombre','like','%'.$filtro.'%')
-        ->where('materias.estado','=',"1")
-        ->select('materias.id as idMateria', 'materias.nombre as nombreMateria',
-        'grados.nombre as nombreGrado','secciones.nombre as nombreSeccion','carreras.nombre as nombreCarrera',
-        'niveles.nombre as nombreNivel')
-        ->orderBy('materias.nombre' , 'asc')->take(1)->get();
+        $filtro= $request->filtro;
+        
+        $date = Carbon::now();
+        $anio = $date->format('Y');
+        $mes = $date->format('m');
+        if ($mes > 10)
+        {
+            $date = new Carbon('next year');
+            $anio = $date->format('Y');
+        }
+
+        
+        if($filtro != 4){
+            $materia = Materia::join('asignar_materia','materias.id','=','asignar_materia.idMateria')
+            ->join('grados', 'asignar_materia.idGrado','=','grados.id')
+            ->join('secciones', 'secciones.id','=','grados.idSeccion')
+            ->join('niveles', 'niveles.id','=','grados.idNivel')
+            ->where('materias.estado','=',"1")
+            ->where('niveles.id', '=', $filtro)
+            ->select('materias.id', DB::raw('CONCAT(materias.nombre, " / ", grados.nombre, " / ", 
+            secciones.nombre) as nombre'))
+            ->orderBy('nombre' , 'asc')->get();
+        }
+        if($filtro == 4){
+            $materia = Materia::join('asignar_materia','materias.id','=','asignar_materia.idMateria')
+            ->join('grados', 'asignar_materia.idGrado','=','grados.id')
+            ->join('niveles', 'niveles.id','=','grados.idNivel')
+            ->join('secciones', 'secciones.id','=','grados.idSeccion')
+            ->join('carreras', 'carreras.id','=','grados.idCarrera')
+            ->where('materias.estado','=',"1")
+            ->where('niveles.id', '=', $filtro)
+            ->select('materias.id', DB::raw('CONCAT(materias.nombre, " / ", grados.nombre, " / ", 
+            secciones.nombre, " / ", carreras.nombre) as nombre'))
+            ->orderBy('nombre' , 'asc')->get();
+        }
+        
 
         return ['materia' => $materia];
     }

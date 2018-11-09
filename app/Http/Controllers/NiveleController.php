@@ -60,7 +60,7 @@ class NiveleController extends Controller
 
     public function selectNivel(Request $request)
     {
-        $nivel=Nivele::all();
+        $nivel=Nivele::where('estado','=', "1")->select('id', 'nombre')->get();
 
         return ['nivel' => $nivel];
     
