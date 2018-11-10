@@ -59,5 +59,10 @@ class Kernel extends HttpKernel
         'guest' => \colegioShaddai\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'Admin' =>\colegioShaddai\Http\Middleware\Admin::class,
+        'Padre' =>\colegioShaddai\Http\Middleware\Padre::class,
+        'Secretaria' =>\colegioShaddai\Http\Middleware\Secretaria::class,
+        'Direccion' =>\colegioShaddai\Http\Middleware\Direccion::class,
+        'Docente' =>\colegioShaddai\Http\Middleware\Docente::class
     ];
 }

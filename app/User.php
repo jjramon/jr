@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'idPersona', 'idRol', 'usuario', 'password', 'estado',
+        'id', 'idPersona', 'idRol', 'usuario', 'password', 'pdef','estado',
     ];
 
     /**
@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
     */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'pdef', 'remember_token',
     ]; 
     public function rol(){
         return $this->belongsTo('colegioShaddai\Rol');

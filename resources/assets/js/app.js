@@ -26,12 +26,13 @@ Vue.component('tipopersona', require('./components/Tipo_personas.vue'));
 Vue.component('persona', require('./components/Personas.vue'));
 Vue.component('alumno', require('./components/Alumnos.vue'));
 Vue.component('usuario', require('./components/Users.vue'));
-Vue.component('padrealumno', require('./components/Asig_pad_alum.vue'));
+Vue.component('campass', require('./components/CambiarPass.vue'));
 Vue.component('materia', require('./components/Materias.vue'));
 Vue.component('carrera', require('./components/Carreras.vue'));
 Vue.component('grado', require('./components/Grados.vue'));
 Vue.component('asignargrado', require('./components/AsignarGrados.vue'));
 Vue.component('asignardocente', require('./components/Asig_docentes.vue'));
+Vue.component('asignotas', require('./components/AsigNotas.vue'));
 
 
 const app = new Vue({

@@ -101,17 +101,22 @@ class PersonaController extends Controller
         ->join('generos', 'personas.idGenero', '=', 'generos.id')
         ->join('tipo_personas','personas.idTipoPersona','=','tipo_personas.id')
         ->where('personas.id','=', $id)        
-        ->select('users.usuario', 'users.password','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 
+        ->select('users.usuario', 'users.pdef','personas.nombre as nombrePersona', 'personas.apellido', 'generos.genero as nombreGenero', 
         'personas.identificacion', 'tipo_personas.nombre as nombreTPersona', 'personas.direccion', 
         'personas.tel', 'personas.tel2', 'personas.correo')
         ->get();
-        $password= decrypt($persona[0]->password);
+        $password= Persona::join('users', 'personas.id', '=', 'users.idPersona')
+        ->where('personas.id','=', $id)  
+        ->select('users.pdef')
+        ->get();
+        $pass= decrypt($password[0]['pdef']);
         $date = Carbon::now();
         $date = $date->format('d-m-Y');
         $nombre= Persona::where('personas.id','=', $id)
         ->select( DB::raw('CONCAT(personas.nombre, " ", personas.apellido) as nombrePersona'))->get();
         $pdf = \PDF::loadView('pdf.personalPdf', [
-            'persona' => $persona, 'pass' =>$password
+            'persona' => $persona,
+            'pass' => $pass
         ]);
         return $pdf->download($nombre[0]->nombrePersona.'-'.$date.'.pdf');
       
@@ -183,7 +188,8 @@ class PersonaController extends Controller
                 $usuario -> idPersona = $persona->id;
                 $usuario -> idRol = $request->idRol;
                 $usuario -> usuario = $request->usuario;
-                $usuario -> password = encrypt($request->password);
+                $usuario -> password = bcrypt($request->password);
+                $usuario -> pdef = encrypt($request->password);
                 $usuario -> save();
 
             
@@ -220,7 +226,8 @@ class PersonaController extends Controller
             $usuario -> idPersona = $actualizar->id;
             $usuario -> idRol = $request->idRol;
             $usuario -> usuario = $request->usuario;
-            $usuario -> password = encrypt($request->password);
+            $usuario -> password = bcrypt($request->password);
+            $usuario -> pdef = encrypt($request->password);
             $usuario -> save();
 
             DB::commit();

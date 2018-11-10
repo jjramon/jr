@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->integer('idPersona')->unsigned();
             $table->string('usuario',30)->unique();
             $table->string('password',255);
+            $table->string('pdef', 255)->nullable();
             $table->foreign('idRol')->references('id')->on('rols')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idPersona')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('estado')->default('1');
