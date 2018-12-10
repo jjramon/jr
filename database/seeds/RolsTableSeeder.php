@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use ColegioShaddai\Rol;
+use colegioShaddai\Rol;
 
 class RolsTableSeeder extends Seeder
 {

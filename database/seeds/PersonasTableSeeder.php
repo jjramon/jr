@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use ColegioShaddai\Persona;
-use ColegioShaddai\Genero;
-use ColegioShaddai\Tipo_persona;
-use ColegioShaddai\Rol;
-use ColegioShaddai\User;
+use colegioShaddai\Persona;
+use colegioShaddai\Genero;
+use colegioShaddai\Tipo_persona;
+use colegioShaddai\Rol;
+use colegioShaddai\User;
+use colegioShaddai\Nivele; 
+use colegioShaddai\Empresa;       
+
 
 
 class PersonasTableSeeder extends Seeder
@@ -20,6 +23,11 @@ class PersonasTableSeeder extends Seeder
         //
         $genero = new Genero();
         $genero -> genero = 'Masculino';
+        $genero -> estado = '1';
+        $genero -> save();
+
+        $genero = new Genero();
+        $genero -> genero = 'Femenino';
         $genero -> estado = '1';
         $genero -> save();
 
@@ -52,5 +60,30 @@ class PersonasTableSeeder extends Seeder
         $usuario -> password = bcrypt('JJRAMON');
         $usuario -> pdef = encrypt('JJRAMON');
         $usuario -> save();
+
+        $nivel = new Nivele();
+        $nivel -> nombre = 'Pre-primaria';
+        $nivel -> estado = '1';
+        $nivel -> save();
+
+        $nivel = new Nivele();
+        $nivel -> nombre = 'Primaria';
+        $nivel -> estado = '1';
+        $nivel -> save();
+
+        $nivel = new Nivele();
+        $nivel -> nombre = 'Básico';
+        $nivel -> estado = '1';
+        $nivel -> save();
+
+        $nivel = new Nivele();
+        $nivel -> nombre = 'Diversificado';
+        $nivel -> estado = '1';
+        $nivel -> save();
+
+        $empresa = new Empresa();
+        $empresa-> Nombre = 'Colegio Evangélico Shaddai';
+        $empresa-> Direccion ='Chiquimulilla, Santa Rosa';
+        $empresa -> save();
     }
 }

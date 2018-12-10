@@ -18,6 +18,9 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');   
     Route::post('/log', 'Auth\LoginController@login')->name('log');
 });
+
+
+
 Route::group(['middleware' => ['auth']], function () {
     
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
@@ -25,17 +28,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/main', function () {
 
         $this->middleware('auth');
-
-        return view('plantilla/contenido');
+        $colegio = colegioShaddai\Empresa::select('empresas.*')->first();
+        return view('plantilla/contenido', compact('colegio'));
     })->name('main');
 
-    Route::group(['middleware' => ['Admin']], function () {
 
+
+    Route::group(['middleware' => ['Admin']], function () {
         Route::get('/genero','GeneroController@index');
         Route::post('/genero/registrar', 'GeneroController@store');
         Route::put('/genero/actualizar', 'GeneroController@update');
         Route::put('/genero/desactivar', 'GeneroController@desactivar');
         Route::put('/genero/activar', 'GeneroController@activar');
+
         
         Route::get('/rol','RolController@index');
         Route::post('/rol/registrar', 'RolController@store');
@@ -164,7 +169,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/asignarmateria/activar', 'Asignar_MateriaController@activar');
         Route::put('/asignarmateria/desactivar', 'Asignar_MateriaController@desactivar');
         
-        
+        Route::get('/regCalificaciones','registrarCalificacionController@index');
+        Route::get('/verCalificaciones','CalificacionController@index');
+        Route::get('/regCalificaciones/data', function(){
+            $data= Auth::user()->idPersona;
+            return ($data);   
+        });
+        Route::get('/regCal/materias','CalificacionController@buscarMateria');
     });
 
     Route::group(['middleware' => ['Direccion']], function () {
@@ -281,6 +292,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/asignarmateria/activar', 'Asignar_MateriaController@activar');
         Route::put('/asignarmateria/desactivar', 'Asignar_MateriaController@desactivar');
 
+        Route::get('/registrarCalificaciones','registrarCalificacionController@index');
+        Route::get('/verCalificaciones','VerCalificacionController@index');
     });
 
     Route::group(['middleware' => ['Secretaria']], function () {
@@ -385,15 +398,34 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/asignarmateria/activar', 'Asignar_MateriaController@activar');
         Route::put('/asignarmateria/desactivar', 'Asignar_MateriaController@desactivar');
 
+        Route::get('/registrarCalificaciones','registrarCalificacionController@index');
+        Route::get('/verCalificaciones','VerCalificacionController@index');
+        Route::get('/vercalificaciones/alumnoPdf/{criterio}/{idCiclo}/{idBimestre}','CalificacionController@pdfVerCalificaciones');
     });
 
     Route::group(['middleware' => ['Padre']], function () {
-        Route::get('/verCalificaciones','VerCalificacionController@index');
+        Route::get('/verCalificaciones','CalificacionController@verCalificacion');
+        Route::get('/verCalificaciones/data', function(){
+            $data= Auth::user()->idPersona;
+            return ($data); });
+        Route::get('/verCal/alumnos','CalificacionController@filtroAlumno');
     });
 
     Route::group(['middleware' => ['Docente']], function () {
-        Route::get('/registrarCalificaciones','registrarCalificacionController@index');
-    });
+        Route::get('/regCalificaciones','CalificacionController@index');
+        Route::get('/grado/selectNivel', 'NiveleController@selectNivel');
+        Route::get('/alumno/selectCiclo', 'CicloController@selectCiclo');
+        Route::get('/regCalificaciones/selectGrado', 'GradoController@buscarGrado');
+        Route::get('/regCalificaciones/data', function(){
+            $data= Auth::user()->idPersona;
+            return ($data); });
+        Route::get('/regCal/materias','CalificacionController@buscarMateria');
+        Route::get('/regCalificaciones/selectBimestre','CalificacionController@buscarBimestre');
+        Route::get('/regCal/alumnos','CalificacionController@buscarAlumno');
+        Route::post('/regCal/registrar','CalificacionController@store');  
+        });
+        
+
 
 });
 

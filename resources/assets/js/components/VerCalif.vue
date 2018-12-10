@@ -8,50 +8,33 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i>Calificaciones
-                        
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-12">
                               <div class="input-group" >
-
-                                  <label class="col-md-2 form-control-label" for="text-input" v-text="'ciclo:'"></label>
-                                    <select class="form-control"   v-model="idCiclo" >
+                                    
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Alumnos:'"></label>
+                                    <select class="form-control"  v-model="criterio" >
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option v-for="nivel in arrayAlumno" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"  ></option>
+                                    </select>
+                                         
+                                    
+                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'ciclo:'"></label>
+                                    <select class="form-control"   v-model="idCiclo" v-on:click="selectData(criterio,idCiclo)">
                                         <option value="0" disabled>Seleccione</option>
                                         <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
-                                    </select>   
-                                    
-                                    <label class="col-md-1 form-control-label" for="text-input" v-text="'Nivel:'"  ></label>
-                                    <select class="form-control"  v-model="idNivel" v-on:click="selectGrado(idNivel)" >
-                                        <option value="0" disabled>Seleccione</option>
-                                        <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre" ></option>
-                                    </select>
+                                        
+                                    </select>  
 
-                                    <label class="col-md-2 form-control-label" for="text-input">Grado:</label>
-                                    <select class="form-control"  v-model="idGrado" v-on:click="selectData(idNivel,idCiclo)" >
-                                        <option value="0" disabled>Seleccione</option>
-                                        <option  v-if="idNivel  == 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
-                                        <option  v-if="idNivel != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
-                                    </select>
-                                    <br><br><br>
-                                </div>
-                                <div class="input-group" >
-                                    
-                                    <label class="col-md-2 form-control-label" for="text-input">Materia:</label>
-                                    <select class="form-control"   v-model="idMateria" >
-                                        <option value="0" disabled>Seleccione</option>
-                                        <option  v-if="idNivel != 4" v-for="grado in arrayMatr" :key="grado.id" :value="grado.id" v-text="grado.nombre "></option>
-                                        <option  v-else v-for="grado in arrayMatr" :key="grado.id" :value="grado.id" v-text="grado.nombre"></option>
-                                    </select>
-
-                                    <label  class="col-md-2 form-control-label" for="text-input" v-text="'Bimestre:'"></label>
+                                    <label  class="col-md-1 form-control-label" for="text-input" v-text="'Bimestre:'"></label>
                                     <select  class="form-control"   v-model="idBimestre" >
                                         <option value="0" disabled>Seleccione</option>
                                         <option  v-for="bimestre in arrayBimestre" :key="bimestre.id" :value="bimestre.id" v-text="bimestre.nombre "></option>
                                     </select>  
-                                        
-                                                                            
-                                    <button type="submit" @click="listarPersona(1,   idMateria, idNivel, idCiclo, idBimestre, idGrado)"  class="btn btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
+                                    <button type="submit" @click="listarPersona(1, criterio,idCiclo, idBimestre)"  class="btn btn-sm btn-primary"><i class="fa  fa-get-pocket"></i> Listar</button>
+                                    <button type="submit" @click="imprimirPDF(criterio,idCiclo, idBimestre)"  class="btn btn-sm btn-danger"><i class="fa   fa-file-pdf-o"></i> PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -63,10 +46,14 @@
                                     
                                         <th class="text-center" width="100 px">Opciones</th>
                                         <th class="text-center" width="350 px">Nombre</th>
-                                        <th class="text-center" width="150 px">Calificación</th>
+                                        <th class="text-center" width="200 px">Conducta</th>
+                                        <th class="text-center" width="200 px">Colaboración</th>
+                                        <th class="text-center" width="200 px">Asistencia</th>
+                                        <th class="text-center" width="200 px">Uniforme</th>
+                                        <th class="text-center" width="200 px">Actividades</th>
+                                        <th class="text-center" width="200 px">Examen</th>
+                                        <th class="text-center" width="200 px">Calificación</th>
                                         <th class="text-center" width="450 px">Observaciones</th>
-                                        <th class="text-center" width="100 px">Guardar</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,19 +64,15 @@
                                             <i class="icon-pencil"></i>
                                         </button>
                                                     
-                                        <button type="button" @click="abrirModal('AsignarMateria','registrar')" class="btn btn-success" >
-                                            <i class="icon-plus"></i>
-                                        </button>
+
                                     </td>
+                                     <td v-text="calificacion.nombreMateria"></td>
+                                     <td v-text="calificacion.calificacion"></td>
+                                     <td v-text="calificacion.observaciones"></td>
+
+                                     
+                                   
                                     
-                                    <td v-text="calificacion.nombre"></td>
-                                    <td v-text="calificacion.calificacion"></td>
-                                    <td v-text="calificacion.observacion"></td>
-                                    <td class="align-midle ">  
-                                        <button type="button" @click= "'prueba'" class="btn btn-success btn-lg " >
-                                            <i class="fa fa-save"></i>
-                                        </button>
-                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -97,14 +80,14 @@
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,  criterio, buscar, idCiclo, idBimestre)" >Ant</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,  criterio, idCiclo, idBimestre)" >Ant</a>
                                 </li>
                                 <li class="page-item " v-for="page in pagesNumber" :key ="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, criterio, buscar, idCiclo, idBimestre)" v-text="page"></a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page, criterio, idCiclo, idBimestre)" v-text="page"></a>
                                 </li>
 
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, criterio, buscar, idCiclo, idBimestre)">Sig</a>
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, criterio, idCiclo, idBimestre)">Sig</a>
                                 </li>
                             </ul>
                         </nav>
@@ -112,165 +95,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             
-                <!--Inicio del modal agregar/actualizar-->
-                <div class="modal fullscreen-modal fade "  tabindex="-1" :class="{'mostrar':modal}"  role="dialog" aria-labelledby="myModalLabel" style="display: none;" >
-                    <div class="modal-dialog modal-primary modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" v-text="tituloModal"></h4>
-                                <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                    <div class="form-group row" >
-                                        
-                                    <label class="col-md-3 form-control-label" for="text-input" v-text="'ciclo:'"></label>
-                                    <div class="col-md-6 input-group">
-                                    <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="ciclo" >
-                                        <option value="0" disabled>Seleccione</option>
-                                        <option  v-for="ciclo in arrayCiclo " :key="ciclo.id" :value="ciclo.id" v-text="ciclo.nombre"></option>
-                                        
-                                    </select> 
-                                    </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Nivel:</label>
-                                        <div class="col-md-6 input-group">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2" v-model="idNivel" v-on:click="selectGrado(idNivel)">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option v-for="nivel in arrayNivel" :key="nivel.id" :value="nivel.id" v-text="nivel.nombre"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Grado:</label>
-                                        <div class="col-md-6">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="idGrado" v-on:click="selectData(idNivel,ciclo)">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option  v-if="idNivel == 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion +' '+grado.nombreCarrera"></option>
-                                                <option  v-if="idNivel != 4" v-for="grado in arrayGrado " :key="grado.idGrado" :value="grado.idGrado" v-text="grado.nombreGrado + '/' + grado.nombreSeccion"></option>
-                                                
-                                            </select>
-                                        
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Materia:</label>
-                                            
-                                        <div class="col-md-6 input-group">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="idMateria" >
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option  v-if="idNivel != 4" v-for="grado in arrayMatr" :key="grado.id" :value="grado.id" v-text="grado.nombre "></option>
-                                                <option  v-else v-for="grado in arrayMatr" :key="grado.id" :value="grado.id" v-text="grado.nombre"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Bimestre:</label>
 
-                                        <div class="col-md-6 input-group">
-                                            <select class="form-control" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="bimestre" v-on:click="selectAlumno(idData, idGrado, ciclo)" >
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option  v-for="bimestre in arrayBimestre" :key="bimestre.id" :value="bimestre.id" v-text="bimestre.nombre "></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row" >
-                                        <label class="col-md-3 form-control-label" for="text-input">Alumno:</label>
-
-                                        <div class="col-md-6 input-group">
-                                            <v-select v-if="tipoAccion == 1" 
-                                            label="nombre"
-                                            :options="arrayAlumno"
-                                            :selected="idAlumno + arrayAlumno['id']"
-                                            v-model="idAlumno"
-                                            id="v-select"
-                                            >
-                                            </v-select>
-                                            <input type="text" v-if="tipoAccion == 2" v-model="nombreAlumno" class="form-control bg-white" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Conducta:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="8" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="conducta" class="form-control" placeholder="Ingrese el punteo por conducta" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Colaboracion:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="4" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="colaboracion" class="form-control" placeholder="Ingrese el punteo por colaboración" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Asistencia:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="4" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="asistencia" class="form-control" placeholder="Ingrese el punteo por asistencia" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Uniforme:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="4" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="uniforme" class="form-control" placeholder="Ingrese el punteo por uniforme" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Actividades:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="30" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="actividades" class="form-control" placeholder="Ingrese el punteo de las actividades " required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Examen:</label>
-                                        <div class="col-md-3">
-                                            <input type="number" min="0" max="50" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="examen" class="form-control" placeholder="Ingrese el punteo de examen" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Calificacion:</label>
-                                        <div class="col-md-3">
-                                            <span>{{total=calcluarCalificacion}}</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group row">
-                                        <label class="col-md-3 form-control-label" for="text-input">Observaciones:</label>
-                                        <div class="col-md-9">
-                                            <input type="text" max="150" v-if="tipoAccion == 1 || tipoAccion == 2"  v-model="observacion" class="form-control bg-white"  placeholder="Ingrese las observaciones sobre el alumno" required>
-                                        </div>
-                                    </div>
-                                    <div v-show="errorPersona" class="form-group row div-error">
-                                        <div class="text-center text-error">
-                                            <div v-for="error in errorMostrarMsPersona" :key="error" v-text="error"></div>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                            
-                               
-                            
-                            <div class="modal-footer">
-                                
-                                                                
-                                <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                                <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="docent(criterio, buscar, idCiclo, idBimestre)">Guardar</button>
-                                <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona(buscar, criterio,std)">Actualizar</button>
-                            </div>
-                        </div>
-                        <!-- /.modal-content -->
-                    
-                    </div>
-                    <!-- /.modal-dialog -->
-                </div>
                 <!--Fin del modal-->
         </div>
             
@@ -378,25 +203,22 @@ import vSelect from 'vue-select';
             var resultado = 0.0;
             resultado = parseInt(this.conducta)+parseInt(this.colaboracion)+parseInt(this.asistencia)+parseInt(this.uniforme)+parseInt(this.actividades)+parseInt(this.examen);
             this.calificacion=resultado;
-            if(resultado>100){
-                swal('La calificación no puede ser mayor a 100 puntos');
-            }
             return resultado;
         }       
 
         },
         methods : {
-            listarPersona(page, criterio, buscar, idCiclo, idBimestre){
-                this.selectNivel();
-                this.selectCiclo();
+            listarPersona(page, criterio, idCiclo, idBimestre){
                 this.selectBimestre();
+                this.selectCiclo();
+                this.selectData();
                 
-                console.log(criterio, buscar, idCiclo, idBimestre)
+
                 
                     
-                if(criterio!=0 && criterio!='' || buscar != 0 && buscar != ''){
+                if(criterio!=0 && criterio!=''){
                     let me = this;           
-                    var url = '/regCalificaciones?page=' + page + '&criterio='+ criterio + '&buscar=' + buscar + '&idCiclo='+ idCiclo + '&idBimestre='+idBimestre;
+                    var url = '/verCalificaciones?page=' + page + '&criterio='+ criterio + '&idCiclo='+ idCiclo + '&idBimestre='+idBimestre;
                     
                     axios.get(url)
                     .then(function (response) {
@@ -410,6 +232,7 @@ import vSelect from 'vue-select';
                             me.sinRegistro();
 
                         }
+                        
                     })
                     .catch(function (error){
                         console.log(error);
@@ -423,19 +246,9 @@ import vSelect from 'vue-select';
                 me.pagination.current_page = page;
                 me.listarPersona(page, criterio, buscar, idCiclo, idBimestre);
             },
-            selectAlumno(idDocente, idGrado, idCiclo){
-               let me=this;
-                var url = '/regCal/alumnos?idDocente='+idDocente+'&idGrado='+ idGrado+'&idCiclo='+ idCiclo
-                axios.get(url)
-                .then(function (response) {
-                    
-                    let respuesta = response.data;
-                    me.arrayAlumno = respuesta.alumno;
-                    
-                })
-                .catch(function (error){
-                console.log(error);
-                }); 
+            
+            imprimirPDF(criterio,idCiclo, idBimestre){
+                window.open('http://localhost:8000/vercalificaciones/alumnoPdf/' + criterio + '/' + idCiclo + '/' + idBimestre);
             },
             selectNivel(){
                 let me=this;
@@ -479,15 +292,14 @@ import vSelect from 'vue-select';
                 console.log(error);
                 });
             },
-            selectData(criterio, idCiclo){
+            selectData(){
                 let me=this;
-                var url = '/regCalificaciones/data'
+                var url = '/verCalificaciones/data'
                 axios.get(url)
                 .then(function (response) {
                     
                     me.idData = response.data;
-                    
-                    me.selectMat(me.idData, criterio, idCiclo);
+                    me.selectMat(me.idData);
                     
                 })
                 .catch(function (error){
@@ -495,22 +307,21 @@ import vSelect from 'vue-select';
                 });
 
             },
-            selectMat(id, criterio, idCiclo){
-                if(idCiclo != 0)
-                {
+            selectMat(id){
+                
                 let me = this;   
-                var url = '/regCal/materias?id='+id+'&criterio='+criterio+'&idCiclo='+idCiclo;
+                var url = '/verCal/alumnos?id='+id;
                 axios.get(url)
                 .then(function (response) {
-                    
+
                     var respuesta = response.data;
-                    me.arrayMatr = respuesta.materia;
+                    me.arrayAlumno = respuesta.Alumnos;
                     
                 })
                 .catch(function (error){
                 console.log(error);
                 });
-                }
+
             },
             
             selectCiclo(){
@@ -569,7 +380,7 @@ import vSelect from 'vue-select';
                     'idAlumno':this.idAlum,
                     'idCiclo':this.ciclo,
                     'calificacion':this.calificacion,
-                    'conducta':this.conducta,
+                    'conducta':this.conduct,
                     'colaboracion':this.colaboracion,
                     'asistencia':this.asistencia,
                     'uniforme':this.uniforme,
@@ -601,7 +412,7 @@ import vSelect from 'vue-select';
                 swal({
                     
                     type: 'success',
-                    title: 'no se encuentran registros',
+                    title: 'no se encuentran solvente',
                     showConfirmButton: false,
                     timer: 1500
                 })

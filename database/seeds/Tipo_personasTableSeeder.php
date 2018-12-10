@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use ColegioShaddai\Tipo_persona;
+use colegioShaddai\Tipo_persona;
 
 class Tipo_personasTableSeeder extends Seeder
 {

@@ -1,14 +1,14 @@
 <?php
+
 namespace colegioShaddai;
-use Carbon\Carbon;
-use  Jenssegers \ Date \ Date ;
+
 use Illuminate\Database\Eloquent\Model;
-class Alumno extends Model
+
+class calificacione extends Model
 {
     //
-    protected $filelable = ['id', 'idPersona', 'condicion'];
-    protected $dates = ['fechaNacimiento'];
-    
+    protected $filelable = ['id', 'idMateria', 'idBimestre', 'idDocente', 'idAlumno', 'idCiclo', 'calificacion',  'estado'];
+
     public function persona(){
         return $this->belongsTo('colegioShaddai\Persona');
     }
@@ -18,4 +18,8 @@ class Alumno extends Model
     public function asignaralumno(){
         return $this->hasOne('colegioShaddai\Asignar_alumno');
     }
+    public function ciclo(){
+        return $this->hasOne('colegioShaddai\Ciclo');
+    }
+        
 }

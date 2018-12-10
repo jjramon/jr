@@ -11,8 +11,8 @@ class Asignar_docenteController extends Controller
 {
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
-        $buscar = $request->buscar;
+        if (!$request->ajax()) return redirect('/');
+        
         $criterio = $request->criterio;
         $std = $request->std;
         $idCiclo = $request->idCiclo;

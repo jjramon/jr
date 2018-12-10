@@ -25,7 +25,7 @@
                     <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-graduation-cap"></i> Materias</a>
                     <ul class="nav-dropdown-items">    
                       
-                        <li @click="menu = 23"class="nav-item">
+                        <li @click="menu = 24"class="nav-item">
                             <a class="nav-link" href="#"><i class="fa fa-bullseye"></i> Ver calificación</a>
                         </li>
                     </ul>

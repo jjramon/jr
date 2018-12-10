@@ -21,7 +21,6 @@ class CreateCalificacionesTable extends Migration
             $table->integer('idAlumno')->unsigned();
             $table->integer('calificacion');
             $table->integer('idCiclo')->unsigned();
-            $table->integer('promedio');
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');

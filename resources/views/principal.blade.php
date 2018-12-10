@@ -31,10 +31,10 @@
             </button>
             <ul class="nav navbar-nav d-md-down-none">
                 <li class="nav-item px-3 ">
-                    <a class="navsuperior nav-link " href="#"><h3>Colegio Evangelico Shaddai </h3></a>
+                    <a class="navsuperior nav-link " href="#"><h3>{{$colegio->Nombre}}</h3></a>
                 </li>
                 <li class="nav-item px-3 ">
-                    <a class="navsuperior nav-link " href="#"><h5>Chiquimulilla, Santa Rosa</h5></a>
+                    <a class="navsuperior nav-link " href="#"><h5>{{$colegio->Direccion}}</h5></a>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">

@@ -20,7 +20,7 @@ class CreateAsignarDocenteTable extends Migration
             $table->integer('idCiclo')->unsigned();
             $table->boolean('estado')->default(1);
             $table->timestamps();
-            $table->foreign('idCiclo')->references('id')->on('alumnos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('idCiclo')->references('id')->on('ciclos')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idDocente')->references('id')->on('personas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onUpdate('cascade')->onDelete('cascade');
             $table->engine = 'InnoDB';

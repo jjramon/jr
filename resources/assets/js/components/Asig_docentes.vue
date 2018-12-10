@@ -409,6 +409,7 @@ import vSelect from 'vue-select';
                 for (var i = 0; i < this.idMateria.length; i++){
                     this.idMtr=this.idMateria[i]['id'];
                     let me = this;  
+                    
                     axios.post('/asignarDocente/registrar',{
                         'idDocente':this.idDocente,
                         'idMateria':this.idMtr,

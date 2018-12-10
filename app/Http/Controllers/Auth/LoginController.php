@@ -6,6 +6,7 @@ use colegioShaddai\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use colegioShaddai\Empresa;
 class LoginController extends Controller
 {
     public function showLoginForm(){
@@ -16,6 +17,7 @@ class LoginController extends Controller
         $this->validateLogin($request);        
 
         if (Auth::attempt(['usuario' => $request->usuario,'password' => $request->password,'estado'=>1])){
+             
             return redirect()->route('main');
         }
 

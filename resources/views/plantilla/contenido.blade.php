@@ -120,8 +120,8 @@
                         <campass></campass>       
                     </template>
 
-                    <template v-if="menu==23">
-                        <h1>VerNotas</h1> 
+                    <template v-if="menu==24">
+                        <vercalif></vercalif> 
                     </template>
                 @elseif(Auth::user()->idRol == 3)
                 <template v-if="menu==0">

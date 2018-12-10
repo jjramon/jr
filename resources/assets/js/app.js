@@ -33,6 +33,7 @@ Vue.component('grado', require('./components/Grados.vue'));
 Vue.component('asignargrado', require('./components/AsignarGrados.vue'));
 Vue.component('asignardocente', require('./components/Asig_docentes.vue'));
 Vue.component('asignotas', require('./components/AsigNotas.vue'));
+Vue.component('vercalif', require('./components/VerCalif.vue'));
 
 
 const app = new Vue({

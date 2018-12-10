@@ -24,6 +24,7 @@ class CreatePersonasTable extends Migration
             $table->string('direccion', 80)->nullable();
             $table->string('identificacion', 30)->nullable()->unique();
             $table->string('correo', 80)->nullable()->unique();
+            $table->string('imagen', 255)->nullable();
             $table->boolean('estado')->default(1);
             $table->timestamps();
             $table->foreign('idGenero')->references('id')->on('generos')->onUpdate('cascade')->onDelete('cascade');
